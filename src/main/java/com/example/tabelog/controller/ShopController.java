@@ -49,19 +49,19 @@ public class ShopController {
 			}
 		} else if (priceUpper != null) {
 			if (order != null && order.equals("priceAsc")) {
-				shopPage = shopRepository.findByPriceLessThanEqualOrderByPriceAsc(priceUpper, pageable);
+				shopPage = shopRepository.findByPriceLessThanEqualOrderBypriceUpperAsc(priceUpper, pageable);
 			} else {
 				shopPage = shopRepository.findByPriceLessThanEqualOrderByCreatedAtDesc(priceUpper, pageable);
 			}
 		} else if (priceLower != null) {
 			if (order != null && order.equals("priceAsc")) {
-				shopPage = shopRepository.findByPriceLessThanEqualOrderByPriceAsc(priceLower, pageable);
+				shopPage = shopRepository.findByPriceLessThanEqualOrderBypriceUpperAsc(priceLower, pageable);
 			} else {
 				shopPage = shopRepository.findByPriceLessThanEqualOrderByCreatedAtDesc(priceLower, pageable);
 			}
 		} else {
 			if (order != null && order.equals("priceAsc")) {
-				shopPage = shopRepository.findAllByOrderByPriceAsc(priceLower, pageable);
+				shopPage = shopRepository.findAllByOrderBypriceUpperAsc(priceLower, pageable);
 			} else {
 				shopPage = shopRepository.findAllByOrderByCreatedAtDesc(pageable);
 			}

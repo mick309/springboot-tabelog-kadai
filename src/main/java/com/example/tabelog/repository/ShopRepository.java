@@ -29,11 +29,11 @@ public interface ShopRepository extends JpaRepository<Shop, Integer> {
 
 	Page<Shop> findByPriceLessThanEqual(Integer priceLower, Pageable pageable);
 
-	Page<Shop> findByPriceLessThanEqualOrderByPriceAsc(Integer priceUpper, Pageable pageable);
+	Page<Shop> findByPriceLessThanEqualOrderBypriceUpperAsc(Integer priceUpper, Pageable pageable);
 
 	Page<Shop> findByPriceLessThanEqualOrderByCreatedAtDesc(Integer priceLower, Pageable pageable);
 
-	Page<Shop> findAllByOrderByPriceAsc(Integer priceUpper, Pageable pageable);
+	Page<Shop> findAllByOrderBypriceUpperAsc(Integer priceUpper, Pageable pageable);
 
 	Page<Shop> findByShopNameLikeOrAddressLikeOrderByPriceUpperAsc(String shopName, String address, Pageable pageable);
 
