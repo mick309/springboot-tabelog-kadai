@@ -185,7 +185,7 @@
 						</div>
 
 						<div class="mb-3" th:each="shop : ${shopPage}">
-							<a th:href="@{/houses/__${shop.getId()}__}" class="link-dark tabelog-card-link">
+							<a th:href="@{/shops/__${shop.getId()}__}" class="link-dark tabelog-card-link">
 								<div class="card h-100">
 									<div class="row g-0">
 										<div class="col-md-4">
@@ -229,7 +229,7 @@
 									<li class="page-item">
 										<span th:if="${shopPage.isFirst()}" class="page-link disabled">前</span>
 										<a th:unless="${shopPage.isFirst()}"
-											th:href="@{/houses(page = ${shopPage.getNumber() - 1}, keyword = ${keyword}, area = ${area}, priceUpper = ${priceUpper}, priceLower = ${priceLower}, order = ${order})}"
+											th:href="@{/shops(page = ${shopPage.getNumber() - 1}, keyword = ${keyword}, area = ${area}, priceUpper = ${priceUpper}, priceLower = ${priceLower}, order = ${order})}"
 											class="page-link tabelog-page-link">前</a>
 									</li>
 									<li th:each="i : ${#numbers.sequence(0, shopPage.getTotalPages() - 1)}"
@@ -237,13 +237,13 @@
 										<span th:if="${i == shopPage.getNumber()}"
 											class="page-link active tabelog-active" th:text="${i + 1}"></span>
 										<a th:unless="${i == shopPage.getNumber()}"
-											th:href="@{/houses(page = ${i}, keyword = ${keyword}, area = ${area},  priceUpper = ${priceUpper}, priceLower = ${priceLower}, order = ${order})}"
+											th:href="@{/shops(page = ${i}, keyword = ${keyword}, area = ${area},  priceUpper = ${priceUpper}, priceLower = ${priceLower}, order = ${order})}"
 											class="page-link tabelog-page-link" th:text="${i + 1}"></a>
 									</li>
 									<li class="page-item">
 										<span th:if="${shopPage.isLast()}" class="page-link disabled">次</span>
 										<a th:unless="${shopPage.isLast()}"
-											th:href="@{/houses(page = ${shopPage.getNumber() + 1}, keyword = ${keyword}, area = ${area},  priceUpper = ${priceUpper}, priceLower = ${priceLower}, order = ${order})}"
+											th:href="@{/shops(page = ${shopPage.getNumber() + 1}, keyword = ${keyword}, area = ${area},  priceUpper = ${priceUpper}, priceLower = ${priceLower}, order = ${order})}"
 											class="page-link tabelog-page-link">次</a>
 									</li>
 								</ul>

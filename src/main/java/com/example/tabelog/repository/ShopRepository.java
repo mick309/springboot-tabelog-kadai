@@ -11,10 +11,11 @@ import com.example.tabelog.entity.Shop;
 public interface ShopRepository extends JpaRepository<Shop, Integer> {
 
 	// 下限価格で検索し、作成日時の降順で並べ替え
-	Page<Shop> findByPriceLowerLessThanEqualOrderByCreatedAtDesc(Integer priceLower, Pageable pageable);
+	// Correction on the method name
+	Page<Shop> findByPriceLowerGreaterThanEqualOrderByCreatedAtDesc(Integer priceLower, Pageable pageable);
 
 	// 下限価格で検索し、上限価格の昇順で並べ替え
-	Page<Shop> findByPriceLowerLessThanEqualOrderByPriceUpperAsc(Integer priceUpper, Pageable pageable);
+	Page<Shop> findByPriceLowerGreaterThanEqualOrderByPriceUpperAsc(Integer priceUpper, Pageable pageable);
 
 	// 全てのデータを作成日時の降順で取得
 	Page<Shop> findAllByOrderByCreatedAtDesc(Pageable pageable);
@@ -27,22 +28,23 @@ public interface ShopRepository extends JpaRepository<Shop, Integer> {
 
 	Page<Shop> findByAddressLike(String area, Pageable pageable);
 
-	Page<Shop> findByPriceLessThanEqual(Integer priceLower, Pageable pageable);
+	Page<Shop> findByPriceUpperGreaterThanEqualOrderByPriceUpperAsc(Integer priceUpper, Pageable pageable);
 
-	Page<Shop> findByPriceLessThanEqualOrderBypriceUpperAsc(Integer priceUpper, Pageable pageable);
+	Page<Shop> findByPriceUpperGreaterThanEqualOrderByCreatedAtDesc(Integer priceUpper, Pageable pageable);
 
-	Page<Shop> findByPriceLessThanEqualOrderByCreatedAtDesc(Integer priceLower, Pageable pageable);
-
-	Page<Shop> findAllByOrderBypriceUpperAsc(Integer priceUpper, Pageable pageable);
+	Page<Shop> findAllByOrderByPriceUpperAsc(Integer priceUpper, Pageable pageable);
 
 	Page<Shop> findByShopNameLikeOrAddressLikeOrderByPriceUpperAsc(String shopName, String address, Pageable pageable);
 
 	Page<Shop> findByShopNameLikeOrAddressLikeOrderByCreatedAtDesc(String shopName, String address, Pageable pageable);
 
-	Page<Shop> findByAddressLikeOrderByPriceAsc(String shopName, String address, Pageable pageable);
+	Page<Shop> findByAddressLikeOrderByPriceUpperAsc(String shopName, String address, Integer priceUpper,
+			Pageable pageable);
 
-	Page<Shop> findByAddressLikeOrderByCreatedAtDesc(String shopName, String address, Pageable pageable);
+	Page<Shop> findByAddressLikeOrderByCreatedAtDesc(String shopName, String address, Integer priceLower,
+			Pageable pageable);
 
-	Page<Shop> findByAddressLikeOrderByCreatedAtAsc(String shopName, String address, Pageable pageable);
+	Page<Shop> findByAddressLikeOrderByCreatedAtAsc(String shopName, String address, Integer priceLower,
+			Pageable pageable);
 
 }
