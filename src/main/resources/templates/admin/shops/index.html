@@ -78,7 +78,7 @@
 													<button type="button" class="btn-close" data-bs-dismiss="modal"
 														aria-label="閉じる"></button>
 												</div>
-												<div class="modal-footer">
+												<div sec:authorize="isAuthenticated()" class="modal-footer">
 													<form method="post"
 														th:action="@{/admin/shops/__${shop.id}__/delete}">
 														<button type="submit"
@@ -88,44 +88,44 @@
 											</div>
 										</div>
 									</div>
-								</tr>
-							</tbody>
-						</table>
+					</div>
+					</tr>
+					</tbody>
+					</table>
 
-						<!-- ページネーション -->
-						<div th:if="${shopPage.totalPages > 1}" class="d-flex justify-content-center">
-							<nav aria-label="店舗一覧ページ">
-								<ul class="pagination">
-									<li class="page-item">
-										<span th:if="${shopPage.isFirst()}" class="page-link disabled">前</span>
-										<a th:unless="${shopPage.isFirst()}"
-											th:href="@{/admin/shops(page=${shopPage.number - 1}, keyword=${keyword})}"
-											class="page-link tabelog-page-link">前</a>
-									</li>
-									<li th:each="i : ${#numbers.sequence(0, shopPage.totalPages - 1)}"
-										class="page-item">
-										<span th:if="${i == shopPage.number}" class="page-link active tabelog-active"
-											th:text="${i + 1}"></span>
-										<a th:unless="${i == shopPage.number}"
-											th:href="@{/admin/shops(page=${i}, keyword=${keyword})}"
-											class="page-link tabelog-page-link" th:text="${i + 1}"></a>
-									</li>
-									<li class="page-item">
-										<span th:if="${shopPage.isLast()}" class="page-link disabled">次</span>
-										<a th:unless="${shopPage.isLast()}"
-											th:href="@{/admin/shops(page=${shopPage.number + 1}, keyword=${keyword})}"
-											class="page-link tabelog-page-link">次</a>
-									</li>
-								</ul>
-							</nav>
-						</div>
+					<!-- ページネーション -->
+					<div th:if="${shopPage.totalPages > 1}" class="d-flex justify-content-center">
+						<nav aria-label="店舗一覧ページ">
+							<ul class="pagination">
+								<li class="page-item">
+									<span th:if="${shopPage.isFirst()}" class="page-link disabled">前</span>
+									<a th:unless="${shopPage.isFirst()}"
+										th:href="@{/admin/shops(page=${shopPage.number - 1}, keyword=${keyword})}"
+										class="page-link tabelog-page-link">前</a>
+								</li>
+								<li th:each="i : ${#numbers.sequence(0, shopPage.totalPages - 1)}" class="page-item">
+									<span th:if="${i == shopPage.number}" class="page-link active tabelog-active"
+										th:text="${i + 1}"></span>
+									<a th:unless="${i == shopPage.number}"
+										th:href="@{/admin/shops(page=${i}, keyword=${keyword})}"
+										class="page-link tabelog-page-link" th:text="${i + 1}"></a>
+								</li>
+								<li class="page-item">
+									<span th:if="${shopPage.isLast()}" class="page-link disabled">次</span>
+									<a th:unless="${shopPage.isLast()}"
+										th:href="@{/admin/shops(page=${shopPage.number + 1}, keyword=${keyword})}"
+										class="page-link tabelog-page-link">次</a>
+								</li>
+							</ul>
+						</nav>
 					</div>
 				</div>
 			</div>
-		</main>
+	</div>
+	</main>
 
-		<!-- フッター -->
-		<div th:replace="~{fragment :: footer}"></div>
+	<!-- フッター -->
+	<div th:replace="~{fragment :: footer}"></div>
 	</div>
 
 	<div th:replace="~{fragment :: scripts}"></div>

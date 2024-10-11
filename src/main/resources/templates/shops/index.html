@@ -197,7 +197,7 @@
 										</div>
 										<div class="col-md-8">
 											<div class="card-body">
-												<h3 class="card-title mb-3" th:text="${shop.getName()}"></h3>
+												<h3 class="card-title mb-3" th:text="${shop.getShoptName()}"></h3>
 
 												<hr class="mb-3">
 
@@ -212,8 +212,10 @@
 												</p>
 
 												<p class="card-text">
-													<span
-														th:text="${#numbers.formatInteger(shop.getPrice(), 1, 'COMMA') + '円 / 泊'}"></span>
+												
+														 <span th:text="${#numbers.formatInteger(shop.getPriceLower(), 1, 'COMMA') + '円 / 下限'}"></span>
+
+														 <span th:text="${#numbers.formatInteger(shop.getPriceUpper(), 1, 'COMMA') + '円 / 上限'}"></span>
 												</p>
 											</div>
 										</div>
