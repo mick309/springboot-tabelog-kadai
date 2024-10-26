@@ -43,9 +43,10 @@ public class ShopController {
 			}
 		} else if (area != null && !area.isEmpty()) {
 			if (order != null && order.equals("priceAsc")) {
-				shopPage = shopRepository.findByAddressLikeOrderByCreatedAtAsc("%" + area + "%", order, priceLower,pageable);
+				shopPage = shopRepository.findByAddressLikeOrderByCreatedAtAsc("%" + area + "%", pageable);
 			} else {
-				shopPage = shopRepository.findByAddressLikeOrderByCreatedAtDesc("%" + area + "%", order, priceLower, pageable);
+				shopPage = shopRepository.findByAddressLikeOrderByCreatedAtDesc("%" + area + "%", pageable);
+
 			}
 		} else if (priceUpper != null) {
 			if (order != null && order.equals("priceAsc")) {

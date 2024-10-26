@@ -38,13 +38,10 @@ public interface ShopRepository extends JpaRepository<Shop, Integer> {
 
 	Page<Shop> findByShopNameLikeOrAddressLikeOrderByCreatedAtDesc(String shopName, String address, Pageable pageable);
 
-	Page<Shop> findByAddressLikeOrderByPriceUpperAsc(String shopName, String address, Integer priceUpper,
-			Pageable pageable);
+	//Page<Shop> findByAddressLikeOrderByPriceUpperAsc(String address, Pageable pageable);
 
-	Page<Shop> findByAddressLikeOrderByCreatedAtDesc(String shopName, String address, Integer priceLower,
-			Pageable pageable);
+	Page<Shop> findByAddressLikeOrderByCreatedAtDesc(String address, Pageable pageable);
 
-	Page<Shop> findByAddressLikeOrderByCreatedAtAsc(String shopName, String address, Integer priceLower,
-			Pageable pageable);
+	Page<Shop> findByAddressLikeOrderByCreatedAtAsc(String address, Pageable pageable);
 
 }
