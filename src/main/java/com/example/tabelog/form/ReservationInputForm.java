@@ -14,20 +14,16 @@ public class ReservationInputForm {
 	@NotNull(message = "予約時間を入力してください。")
 	private LocalTime reservationTime;
 
-	  // 1人以上100人以下の制限を設定
-    @Min(1)
-    @Max(100)
-    private Integer numberOfPeople;
-
+	// 1人以上100人以下の制限を設定
+	@Min(1)
+	@Max(100)
+	private Integer numberOfPeople;
 
 	@NotNull(message = "店舗IDを入力してください。")
-	
-	private Integer shopId;
-	
-	private Integer userId() {
-		return null;
-	}
 
+	private Integer shopId;
+
+	private Integer userId;
 
 	// 既存の開店時間と閉店時間
 	private static final LocalTime OPEN_TIME = LocalTime.of(9, 0);
@@ -73,12 +69,12 @@ public class ReservationInputForm {
 	}
 
 	public Integer getUserId() {
-		return userId();
+		return userId;
 	}
 
 	public void setUserId(Integer userId) {
+		this.userId = userId;
 	}
-
 
 	public static LocalTime getOpenTime() {
 		return OPEN_TIME;
@@ -88,5 +84,4 @@ public class ReservationInputForm {
 		return CLOSE_TIME;
 	}
 
-	
 }

@@ -63,14 +63,14 @@ public class ReservationController {
 		if (user == null) {
 			// 必要に応じてエラーハンドリング
 			bindingResult.rejectValue("user", "error.user", "ユーザー情報を取得できませんでした。");
-			return "reservation/index";
+			return "reservation/form";
 		}
 
 		// 店舗情報の取得
 		Shop shop = shopRepository.findById(form.getShopId()).orElse(null);
 		if (shop == null) {
 			bindingResult.rejectValue("shopId", "error.shop", "店舗情報を取得できませんでした。");
-			return "reservation/index";
+			return "reservation/form";
 		}
 
 		// 予約日と予約時間のバリデーション
@@ -83,7 +83,7 @@ public class ReservationController {
 		}
 
 		if (bindingResult.hasErrors()) {
-			return "reservation/index"; // フォームにエラーがある場合、再表示
+			return "reservation/form"; // フォームにエラーがある場合、再表示
 		}
 
 		Reservation reservation = new Reservation();
@@ -112,28 +112,23 @@ public class ReservationController {
 
 		return "reservations/confirm"; // 正しいテンプレートパスを指定
 	}
-
+	
+	
 	@PostMapping("/shops/{id}/reservations/input")
 	public String input(@PathVariable(name = "id") Integer id,
-			@Valid @ModelAttribute ReservationInputForm reservationInputForm, // ここでバリデーション
-			BindingResult bindingResult, Model model) {
-
-		// バリデーションエラーの場合、入力フォームに戻す
-		if (bindingResult.hasErrors()) {
-			return "reservation/confirm"; // フォーム画面へ戻すテンプレートパス
-		}
-
+			@ModelAttribute ReservationInputForm reservationInputForm,
+			Model model) {
 		Shop shop = shopRepository.findById(id).orElse(null);
 
 		if (shop == null) {
 			return "error/404";
 		}
 
+		// セッションスコープにデータを保存
 		model.addAttribute("shop", shop);
 		model.addAttribute("reservationInputForm", reservationInputForm);
 
-		// 予約確認画面を直接表示するように変更
-		return "reservations/confirm";
+		return String.format("redirect:/shops/%d/reservations/confirm", id);
 	}
 
 	@PostMapping("/shops/{id}/reservations/create")
