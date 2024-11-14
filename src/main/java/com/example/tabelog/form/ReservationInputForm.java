@@ -3,8 +3,9 @@ package com.example.tabelog.form;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 
 public class ReservationInputForm {
 	@NotNull(message = "予約日を入力してください。")
@@ -13,9 +14,11 @@ public class ReservationInputForm {
 	@NotNull(message = "予約時間を入力してください。")
 	private LocalTime reservationTime;
 
-	@NotNull(message = "人数を入力してください。")
-	@Size(min = 1, message = "少なくとも1名を入力してください。")
-	private Integer numberOfPeople;
+	  // 1人以上100人以下の制限を設定
+    @Min(1)
+    @Max(100)
+    private Integer numberOfPeople;
+
 
 	@NotNull(message = "店舗IDを入力してください。")
 	
