@@ -6,7 +6,9 @@ import java.time.LocalTime;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import lombok.Data;
 
+@Data
 public class ReservationInputForm {
 	@NotNull(message = "予約日を入力してください。")
 	private LocalDate reservationsDate;
@@ -14,18 +16,15 @@ public class ReservationInputForm {
 	@NotNull(message = "予約時間を入力してください。")
 	private LocalTime reservationTime;
 
-	// 1人以上100人以下の制限を設定
 	@Min(1)
 	@Max(100)
 	private Integer numberOfPeople;
 
 	@NotNull(message = "店舗IDを入力してください。")
-
 	private Integer shopId;
 
-	private Integer userId;
+	private Integer userId; // メソッドではなくフィールドを定義
 
-	// 既存の開店時間と閉店時間
 	private static final LocalTime OPEN_TIME = LocalTime.of(9, 0);
 	private static final LocalTime CLOSE_TIME = LocalTime.of(21, 0);
 
@@ -35,47 +34,6 @@ public class ReservationInputForm {
 		}
 	}
 
-	// Getters and Setters
-	public LocalDate getReservationsDate() {
-		return reservationsDate;
-	}
-
-	public void setReservationsDate(LocalDate reservationsDate) {
-		this.reservationsDate = reservationsDate;
-	}
-
-	public LocalTime getReservationTime() {
-		return reservationTime;
-	}
-
-	public void setReservationTime(LocalTime reservationTime) {
-		this.reservationTime = reservationTime;
-	}
-
-	public Integer getNumberOfPeople() {
-		return numberOfPeople;
-	}
-
-	public void setNumberOfPeople(Integer numberOfPeople) {
-		this.numberOfPeople = numberOfPeople;
-	}
-
-	public Integer getShopId() {
-		return shopId;
-	}
-
-	public void setShopId(Integer shopId) {
-		this.shopId = shopId;
-	}
-
-	public Integer getUserId() {
-		return userId;
-	}
-
-	public void setUserId(Integer userId) {
-		this.userId = userId;
-	}
-
 	public static LocalTime getOpenTime() {
 		return OPEN_TIME;
 	}
@@ -83,5 +41,4 @@ public class ReservationInputForm {
 	public static LocalTime getCloseTime() {
 		return CLOSE_TIME;
 	}
-
 }
