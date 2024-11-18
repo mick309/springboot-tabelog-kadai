@@ -30,7 +30,7 @@
 						<h1 class="mb-4 text-center">予約内容確認</h1>
 
 						<form method="post"
-							th:action="@{/shops/{shopId}/reservations/create(shopId=${reservationInputForm.shopId})}"
+							th:action="@{/shops/${shopId}/reservations/create(shopId=${reservationInputForm.shopId})}"
 							th:object="${reservationInputForm}">
 
 							<input type="hidden" th:field="*{shopId}">
