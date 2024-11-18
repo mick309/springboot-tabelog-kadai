@@ -112,8 +112,7 @@ public class ReservationController {
 
 		return "reservations/confirm"; // 正しいテンプレートパスを指定
 	}
-	
-	
+
 	@PostMapping("/shops/{id}/reservations/input")
 	public String input(@PathVariable(name = "id") Integer id,
 			@ModelAttribute ReservationInputForm reservationInputForm,
@@ -128,7 +127,7 @@ public class ReservationController {
 		model.addAttribute("shop", shop);
 		model.addAttribute("reservationInputForm", reservationInputForm);
 
-		return String.format("redirect:/shops/%d/reservations/confirm", id);
+		return "reservations/confirm";
 	}
 
 	@PostMapping("/shops/{id}/reservations/create")
