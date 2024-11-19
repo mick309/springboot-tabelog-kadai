@@ -32,13 +32,10 @@ public class ReservationController {
 
 	private final ReservationRepository reservationRepository;
 	private final ShopRepository shopRepository;
-	private final ReservationService reservationService;
-
 	public ReservationController(ReservationRepository reservationRepository, ShopRepository shopRepository,
 			ReservationService reservationService) {
 		this.reservationRepository = reservationRepository;
 		this.shopRepository = shopRepository;
-		this.reservationService = reservationService;
 	}
 
 	@GetMapping("/reservations")
@@ -52,51 +49,6 @@ public class ReservationController {
 
 		return "reservations/index";
 
-	}
-
-	@PostMapping("/reservations")
-	public String createReservation(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl,
-			@Valid @ModelAttribute ReservationInputForm form, BindingResult bindingResult,
-			RedirectAttributes redirectAttributes) {
-		// ユーザー情報の取得
-		User user = userDetailsImpl.getUser();
-		if (user == null) {
-			// 必要に応じてエラーハンドリング
-			bindingResult.rejectValue("user", "error.user", "ユーザー情報を取得できませんでした。");
-			return "reservation/form";
-		}
-
-		// 店舗情報の取得
-		Shop shop = shopRepository.findById(form.getShopId()).orElse(null);
-		if (shop == null) {
-			bindingResult.rejectValue("shopId", "error.shop", "店舗情報を取得できませんでした。");
-			return "reservation/form";
-		}
-
-		// 予約日と予約時間のバリデーション
-		if (!reservationService.isReservationDateValid(form.getReservationsDate())) {
-			bindingResult.rejectValue("reservationDate", "error.reservationDate", "予約日は本日以降の日付を入力してください。");
-		}
-
-		if (!reservationService.isReservationTimeValid(form.getReservationTime())) {
-			bindingResult.rejectValue("reservationTime", "error.reservationTime", "予約時間は開店時間後、閉店時間の1時間前までに設定してください。");
-		}
-
-		if (bindingResult.hasErrors()) {
-			return "reservation/form"; // フォームにエラーがある場合、再表示
-		}
-
-		Reservation reservation = new Reservation();
-		reservation.setReservationsDate(form.getReservationsDate());
-		reservation.setReservationTime(form.getReservationTime());
-		reservation.setUser(user);
-		reservation.setShop(shop);
-		reservation.setNumberOfPeople(form.getNumberOfPeople());
-		reservationRepository.save(reservation);
-
-		redirectAttributes.addFlashAttribute("message", "予約が正常に作成されました。");
-
-		return "redirect:/reservations";
 	}
 
 	@GetMapping("/shops/{id}/reservations/confirm")
@@ -138,12 +90,30 @@ public class ReservationController {
 			return "reservations/confirm"; // エラーメッセージを表示するためのページ
 		}
 
-		// 既存の予約作成処理コード
-		String errorMessage = createReservation(userDetailsImpl, form, bindingResult, redirectAttributes);
-		if (errorMessage != null) {
-			return errorMessage;
+		// 店舗情報の取得
+		Shop shop = shopRepository.findById(shopId).orElse(null);
+		if (shop == null) {
+			bindingResult.rejectValue("shopId", "error.shop", "店舗情報を取得できませんでした。");
+			return "reservation/form";
 		}
 
+		// 既存の予約作成処理コードを直に実施
+		User user = userDetailsImpl.getUser();
+		if (user == null) {
+			bindingResult.rejectValue("user", "error.user", "ユーザー情報を取得できませんでした。");
+			return "reservation/form";
+		}
+
+		Reservation reservation = new Reservation();
+		reservation.setReservationsDate(form.getReservationsDate());
+		reservation.setReservationTime(form.getReservationTime());
+		reservation.setUser(user);
+		reservation.setShop(shop);
+		reservation.setNumberOfPeople(form.getNumberOfPeople());
+
+		reservationRepository.save(reservation);
+
+		redirectAttributes.addFlashAttribute("message", "予約が正常に作成されました。");
 		return "redirect:/reservations";
 	}
 
