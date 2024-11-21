@@ -152,7 +152,8 @@
 								<div sec:authorize="isAuthenticated()" class="col-lg-4 px-0 ps-lg-4 mb-4">
 									<div class="card">
 										<div class="card-body">
-											<form method="post" th:action="@{/shops/{shop.getId()}/reservations/input}"
+											<form method="post"
+												th:action="@{/shops/{id}/reservations/input(id=${shop.id})}"
 												th:object="${reservationInputForm}">
 												<div class="form-group mb-2">
 													<label for="reservationsDate"

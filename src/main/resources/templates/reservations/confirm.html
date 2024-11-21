@@ -29,13 +29,14 @@
 
 						<h1 class="mb-4 text-center">予約内容確認</h1>
 
-						<form method="post" th:action="@{/shops/{shopId}/reservations/create(shopId={shop.getId()})}"
+						<form method="post" th:action="@{/shops/{shopId}/reservations/create(shopId=${shop.id})}"
 							th:object="${reservationInputForm}">
-							<input type="hidden" th:field="*{shopId}">
-							<input type="hidden" th:field="*{userId}">
-							<input type="hidden" th:field="*{reservationsDate}">
-							<input type="hidden" th:field="*{reservationTime}">
-							<input type="hidden" th:field="*{numberOfPeople}">
+
+							<input type="hidden" th:field="*{shopId}" />
+							<input type="hidden" th:field="*{userId}" />
+							<input type="hidden" th:field="*{reservationsDate}" />
+							<input type="hidden" th:field="*{reservationTime}" />
+							<input type="hidden" th:field="*{numberOfPeople}" />
 
 							<div class="container mb-4">
 								<div class="row pb-2 mb-2 border-bottom">

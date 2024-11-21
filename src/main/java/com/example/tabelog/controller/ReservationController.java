@@ -32,6 +32,7 @@ public class ReservationController {
 
 	private final ReservationRepository reservationRepository;
 	private final ShopRepository shopRepository;
+
 	public ReservationController(ReservationRepository reservationRepository, ShopRepository shopRepository,
 			ReservationService reservationService) {
 		this.reservationRepository = reservationRepository;
@@ -75,7 +76,8 @@ public class ReservationController {
 			return "error/404";
 		}
 
-		// セッションスコープにデータを保存
+		reservationInputForm.setShopId(id); // shopIdを設定
+
 		model.addAttribute("shop", shop);
 		model.addAttribute("reservationInputForm", reservationInputForm);
 
