@@ -1,6 +1,7 @@
 package com.example.tabelog.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.tabelog.entity.Category; // ここを確認
-import com.example.tabelog.entity.Review;
 import com.example.tabelog.entity.Shop;
+import com.example.tabelog.form.ReservationInputForm;
 import com.example.tabelog.form.ShopRegisterForm;
 import com.example.tabelog.repository.ReviewRepository;
 import com.example.tabelog.repository.ShopRepository;
@@ -97,38 +98,19 @@ public class ShopController {
 		return "shops/index";
 	}
 
-	// 店舗詳細ページ表示
 	@GetMapping("/{id}")
 	public String show(@PathVariable(name = "id") Integer id, Model model) {
-	    // 通常の店舗表示用ロジック
-	    Shop shop = shopRepository.findById(id).orElseThrow(
-	        () -> new IllegalArgumentException("無効な店舗ID: " + id)
-	    );
+		Optional<Shop> optionalShop = shopRepository.findById(id);
+		if (optionalShop.isPresent()) {
+			model.addAttribute("shop", optionalShop.get());
+		} else {
+			model.addAttribute("errorMessage", "指定された店舗は存在しません。");
+			return "shops/error"; // エラーページを用意
+		}
+		model.addAttribute("reservationInputForm", new ReservationInputForm());
+		return "shops/show";
 
-	    List<Review> reviews = reviewRepository.findByShopOrderByCreatedAtDesc(shop);
-
-	    model.addAttribute("shop", shop);
-	    model.addAttribute("newReviews", reviews);
-	    // ここでは仮にテンプレートを指定
-	    return "shops/show";
 	}
-
-	// 店舗詳細なページ
-	@GetMapping("/{id}/details")
-	public String showShopDetails(@PathVariable Integer id, Model model) {
-	    // 詳細表示用の形式、特別な処理がある場合はここに追加
-	    Shop shop = shopRepository.findById(id).orElseThrow(
-	        () -> new IllegalArgumentException("無効な店舗ID: " + id)
-	    );
-
-	    List<Review> reviews = reviewRepository.findByShopOrderByCreatedAtDesc(shop);
-
-	    model.addAttribute("shop", shop);
-	    model.addAttribute("newReviews", reviews);
-	    // 詳細情報用のテンプレートを指定
-	    return "shops/details";
-	}
-
 
 	@GetMapping("/admin/shops/register")
 	public String showRegisterForm(Model model) {
