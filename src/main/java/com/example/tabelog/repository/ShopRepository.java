@@ -41,5 +41,6 @@ public interface ShopRepository extends JpaRepository<Shop, Integer> {
 	Page<Shop> findByAddressLikeOrderByCreatedAtDesc(String address, Pageable pageable);
 
 	Page<Shop> findByAddressLikeOrderByCreatedAtAsc(String address, Pageable pageable);
-
+	
+	
 }

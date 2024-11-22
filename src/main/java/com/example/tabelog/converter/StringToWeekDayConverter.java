@@ -32,3 +32,4 @@ public class StringToWeekDayConverter implements Converter<String, WeekDay> {
 		return day;
 	}
 }
+
