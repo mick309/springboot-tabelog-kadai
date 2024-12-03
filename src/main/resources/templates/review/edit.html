@@ -25,11 +25,7 @@
 										<li class="breadcrumb-item active" aria-current="page">レビュー編集</li>
 									</ol>
 								</nav>
-<<<<<<< HEAD
 								<h1 class="mb-4 text-center" th:text="${shop.getShopName} + ' レビュー編集'">レビュー編集</h1>
-=======
-								<h1 class="mb-4 text-center" th:text="${shop.name} + ' レビュー編集'">レビュー編集</h1>
->>>>>>> branch 'main' of https://github.com/mick309/springboot-tabelog-kadai.git
 								<form
 									th:action="@{/shops/{shopId}/reviews/{reviewId}/update(shopId=${shop.id}, reviewId=${review.id})}"
 									th:object="${reviewEditForm}" method="post">

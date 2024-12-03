@@ -2,7 +2,6 @@ package com.example.tabelog.form;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-<<<<<<< HEAD
 import lombok.Data;
 
 @Data
@@ -49,32 +48,3 @@ public class UserEditForm {
 		this.password = ""; // パスワードは空文字で初期化
 	}
 }
-=======
-import lombok.AllArgsConstructor;
-import lombok.Data;
-
-@Data
-@AllArgsConstructor
-public class UserEditForm {
-	@NotNull
-	private Integer id;
-
-	@NotBlank(message = "氏名を入力してください。")
-	private String name;
-
-	@NotBlank(message = "フリガナを入力してください。")
-	private String furigana;
-
-	@NotBlank(message = "郵便番号を入力してください。")
-	private String postalCode;
-
-	@NotBlank(message = "住所を入力してください。")
-	private String address;
-
-	@NotBlank(message = "電話番号を入力してください。")
-	private String phoneNumber;
-
-	@NotBlank(message = "メールアドレスを入力してください。")
-	private String email;
-}
->>>>>>> branch 'main' of https://github.com/mick309/springboot-tabelog-kadai.git

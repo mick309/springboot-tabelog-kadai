@@ -55,7 +55,6 @@
 																<div class="modal-header">
 																	<h5 class="modal-title"
 																		th:id="${'deleteReviewModalLabel' + review.id}"
-<<<<<<< HEAD
 																		th:text="'このレビュー：' + ${shop.shopName} + ' を削除してもよろしいですか？'">
 																	</h5>
 
@@ -78,30 +77,6 @@
 
 											<p class="card-text mb-1">
 												<span class="tabelog-star" th:each="star : ${#numbers.sequence(1, 5)}"
-=======
-																		th:text="${shop.shopName} + 'のレビューを削除してもよろしいですか？'}">
-																	</h5>
-																	<button type="button" class="btn-close"
-																		data-bs-dismiss="modal"
-																		aria-label="閉じる"></button>
-																</div>
-																<div class="modal-footer">
-																	<form method="post"
-																		th:action="@{/shop/${shop_id}/reviews/${review.id}/delete}">
-																		<button type="submit"
-																			class="btn tabelog-btn-danger text-white shadow-sm">削除</button>
-																	</form>
-																</div>
-															</div>
-														</div>
-													</div>
-												</span>
-											</div>
-
-											<p class="card-text mb-1">
-												<span class="tabelog-star"
-													th:each="star : ${#numbers.sequence(1, 5)}"
->>>>>>> branch 'main' of https://github.com/mick309/springboot-tabelog-kadai.git
 													th:text="${star <= review.evaluation} ? '&#9733;' : '&#9734;'"></span>
 											</p>
 											<p class="card-text"><small class="text-muted"

@@ -2,7 +2,6 @@
 <html xmlns:th="https://www.thymeleaf.org">
 
 <head>
-<<<<<<< HEAD
 	<th:block th:replace="~{fragment :: meta}"></th:block>
 	<th:block th:replace="~{fragment :: styles}"></th:block>
 	<title>店舗登録</title>
@@ -66,73 +65,6 @@
 										accept="image/*">
 								</div>
 							</div>
-=======
-	<div th:replace="~{fragment :: meta}"></div>
-
-	<div th:replace="~{fragment :: styles}"></div>
-
-	<title>店舗登録</title>
-</head>
-
-<body>
-	<div class="tabelog-wrapper">
-		<!-- ヘッダー -->
-		<div th:replace="~{fragment :: header}"></div>
-
-		<main>
-			<div class="container pt-4 pb-5 tabelog-container">
-				<div class="row justify-content-center">
-					<div class="col-xl-5 col-lg-6 col-md-8">
-						<nav class="mb-4" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
-							<ol class="breadcrumb mb-0">
-								<li class="breadcrumb-item"><a th:href="@{/admin/shops}">店舗一覧</a></li>
-								<li class="breadcrumb-item active" aria-current="page">店舗登録</li>
-							</ol>
-						</nav>
-
-						<h1 class="mb-4 text-center">店舗登録</h1>
-
-						<form method="post" th:action="@{/admin/shops/create}" th:object="${shopRegisterForm}"
-							enctype="multipart/form-data">
-							<div class="form-group row mb-3">
-								<div class="col-md-4">
-									<label for="shopName" class="col-form-label text-md-left fw-bold">店舗名</label>
-								</div>
-								<div class="col-md-8">
-									<div th:if="${#fields.hasErrors('shopName')}" class="text-danger small mb-2"
-										th:errors="*{shopName}"></div>
-									<input type="text" class="form-control" th:field="*{shopName}" autofocus>
-								</div>
-							</div>
-							<div class="form-group row mb-3">
-								<div class="col-md-4">
-									<label for="category" class="col-form-label text-md-left fw-bold">カテゴリー</label>
-								</div>
-								<div class="col-md-8">
-									<div th:if="${#fields.hasErrors('category')}" class="text-danger small mb-2"
-										th:errors="*{category}"></div>
-
-									<select class="form-control" th:field="*{category}">
-										<option value="" disabled selected>カテゴリーを選択してください</option>
-										<option th:each="category : ${categories}" th:value="${category.id}"
-											th:text="${category.id} + ' - ' + ${category.name}">
-										</option>
-									</select>
-								</div>
-							</div>
-
-							<div class="form-group row mb-3">
-								<div class="col-md-4">
-									<label for="imageFile" class="col-form-label text-md-left fw-bold">店舗画像</label>
-								</div>
-								<div class="col-md-8">
-									<div th:if="${#fields.hasErrors('imageFile')}" class="text-danger small mb-2"
-										th:errors="*{imageFile}"></div>
-									<input type="file" class="form-control" th:field="*{imageFile}">
-								</div>
-							</div>
-
->>>>>>> branch 'main' of https://github.com/mick309/springboot-tabelog-kadai.git
 							<!-- 選択された画像の表示場所 -->
 							<div class="row" id="imagePreview"></div>
 

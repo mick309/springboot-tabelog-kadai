@@ -1,7 +1,6 @@
 package com.example.tabelog.service;
 
 import java.util.List;
-<<<<<<< HEAD
 import java.util.Optional; // Optional をインポート
 
 import org.springframework.stereotype.Service;
@@ -43,25 +42,4 @@ public class CategoryService {
 		return categoryRepository.findById(id).orElse(null);
 	}
 
-	public List<Category> getAllCategories() {
-        return categoryRepository.findAll(); // JpaRepository または独自の実装
-    }
-
-=======
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.example.tabelog.entity.Category; // ここを確認
-import com.example.tabelog.repository.CategoryRepository;
-
-@Service
-public class CategoryService {
-	@Autowired
-	private CategoryRepository categoryRepository;
-
-	public List<Category> getAllCategories() {
-		return categoryRepository.findAll();
-	}
->>>>>>> branch 'main' of https://github.com/mick309/springboot-tabelog-kadai.git
 }

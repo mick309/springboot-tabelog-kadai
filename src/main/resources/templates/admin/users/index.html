@@ -20,7 +20,6 @@
 					<div class="col-xxl-9 col-xl-10 col-lg-11">
 
 						<h1 class="mb-4 text-center">会員一覧</h1>
-<<<<<<< HEAD
 						<!-- 会員新規登録ボタン -->
 						<div class="d-flex justify-content-end mb-3">
 							<a href="/admin/users/new" class="btn btn-primary">新規登録</a>
@@ -94,40 +93,6 @@
 											</div>
 										</div>
 									</td>
-=======
-
-						<div class="d-flex justify-content-between align-items-end">
-							<form method="get" th:action="@{/admin/users}" class="mb-3">
-								<div class="input-group">
-									<input type="text" class="form-control" name="keyword" th:value="${keyword}"
-										placeholder="氏名・フリガナ">
-									<button type="submit" class="btn text-white shadow-sm tabelog-btn">検索</button>
-								</div>
-							</form>
-						</div>
-
-						<div th:if="${successMessage}" class="alert alert-info">
-							<span th:text="${successMessage}"></span>
-						</div>
-
-						<table class="table">
-							<thead>
-								<tr>
-									<th scope="col">ID</th>
-									<th scope="col">氏名</th>
-									<th scope="col">フリガナ</th>
-									<th scope="col">メールアドレス</th>
-									<th scope="col"></th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr th:each="user : ${userPage}">
-									<td th:text="${user.getId()}"></td>
-									<td th:text="${user.getName()}"></td>
-									<td th:text="${user.getFurigana()}"></td>
-									<td th:text="${user.getEmail()}"></td>
-									<td><a th:href="@{/admin/users/__${user.getId()}__}">詳細</a></td>
->>>>>>> branch 'main' of https://github.com/mick309/springboot-tabelog-kadai.git
 								</tr>
 							</tbody>
 						</table>

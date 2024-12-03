@@ -41,7 +41,6 @@ public class AuthController {
 	@GetMapping("/signup")
 	public String signup(Model model) {
 		model.addAttribute("signupForm", new SignupForm());
-<<<<<<< HEAD
 		return "auth/signupE";
 	}
 
@@ -86,46 +85,6 @@ public class AuthController {
 		if (verificationToken != null) {
 			User user = verificationToken.getUser();
 			userService.enableUser(user); // ユーザーを有効にする
-=======
-		return "auth/signup";
-	}
-
-	@PostMapping("/signup")
-	public String signup(@ModelAttribute @Validated SignupForm signupForm, BindingResult bindingResult,
-			RedirectAttributes redirectAttributes, HttpServletRequest httpServletRequest) {
-		// メールアドレスが登録済みであれば、BindingResultオブジェクトにエラー内容を追加する
-		if (userService.isEmailRegistered(signupForm.getEmail())) {
-			FieldError fieldError = new FieldError(bindingResult.getObjectName(), "email", "すでに登録済みのメールアドレスです。");
-			bindingResult.addError(fieldError);
-		}
-
-		// パスワードとパスワード（確認用）の入力値が一致しなければ、BindingResultオブジェクトにエラー内容を追加する
-		if (!userService.isSamePassword(signupForm.getPassword(), signupForm.getPasswordConfirmation())) {
-			FieldError fieldError = new FieldError(bindingResult.getObjectName(), "password", "パスワードが一致しません。");
-			bindingResult.addError(fieldError);
-		}
-
-		if (bindingResult.hasErrors()) {
-			return "auth/signup";
-		}
-
-		User createdUser = userService.create(signupForm);
-		String requestUrl = new String(httpServletRequest.getRequestURL());
-		signupEventPublisher.publishSignupEvent(createdUser, requestUrl);
-		redirectAttributes.addFlashAttribute("successMessage",
-				"ご入力いただいたメールアドレスに認証メールを送信しました。メールに記載されているリンクをクリックし、会員登録を完了してください。");
-
-		return "redirect:/";
-	}
-
-	@GetMapping("/signup/verify")
-	public String verify(@RequestParam(name = "token") String token, Model model) {
-		VerificationToken verificationToken = verificationTokenService.getVerificationToken(token);
-
-		if (verificationToken != null) {
-			User user = verificationToken.getUser();
-			userService.enableUser(user);
->>>>>>> branch 'main' of https://github.com/mick309/springboot-tabelog-kadai.git
 			String successMessage = "会員登録が完了しました。";
 			model.addAttribute("successMessage", successMessage);
 		} else {
