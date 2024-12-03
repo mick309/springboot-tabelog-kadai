@@ -126,6 +126,7 @@ footer {
     max-width: 300px;
 }
 
+<<<<<<< HEAD
 .table-wrapper {
     display: flex;
     justify-content: center;
@@ -141,6 +142,8 @@ footer {
     text-align: center;
 }
 
+=======
+>>>>>>> branch 'main' of https://github.com/mick309/springboot-tabelog-kadai.git
 @media screen and (min-width: 1400px) {
   .tabelog-container {
     max-width: 1200px;

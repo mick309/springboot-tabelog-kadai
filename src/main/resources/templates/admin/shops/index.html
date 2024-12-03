@@ -55,6 +55,7 @@
 							<tbody>
 								<tr th:each="shop : ${shopPage}">
 									<td th:text="${shop.id}"></td>
+<<<<<<< HEAD
 									<!-- 修正: categoryId → category（例） -->
 									<td th:text="${shop.category.id}"></td> <!-- もしcategoryが存在する場合 -->
 									<td th:text="${shop.shopName}"></td>
@@ -127,6 +128,79 @@
 
 		<!-- フッター -->
 		<div th:replace="~{fragment :: footer}"></div>
+=======
+									<td th:text="${shop.categoryId}"></td>
+									<td th:text="${shop.shopName}"></td>
+									<td th:text="${shop.priceUpper}"></td>
+									<td th:text="${shop.priceLower}"></td>
+									<td th:text="${shop.hoursOpen}"></td>
+									<td th:text="${shop.hoursClose}"></td>
+									<td th:text="${shop.closedDay}"></td>
+									<td th:text="${shop.postalCode}"></td>
+									<td th:text="${shop.address}"></td>
+									<td th:text="${shop.phoneNumber}"></td>
+									<td><a th:href="@{/admin/shops/__${shop.id}__}">詳細</a></td>
+									<td><a href="#" class="samuraitravel-link-danger" data-bs-toggle="modal"
+											th:data-bs-target="${'#deleteShopModal' + shop.id}">削除</a></td>
+									<div class="modal fade" th:id="${'deleteShopModal' + shop.id}" tabindex="-1"
+										th:aria-labelledby="${'deleteShopModalLabel' + shop.id}">
+										<div class="modal-dialog">
+											<div class="modal-content">
+												<div class="modal-header">
+													<h5 class="modal-title" th:id="${'deleteShopModalLabel' + shop.id}"
+														th:text="${shop.shopName + 'を削除してもよろしいですか？'}"></h5>
+													<button type="button" class="btn-close" data-bs-dismiss="modal"
+														aria-label="閉じる"></button>
+												</div>
+												<div sec:authorize="isAuthenticated()" class="modal-footer">
+													<form method="post"
+														th:action="@{/admin/shops/__${shop.id}__/delete}">
+														<button type="submit"
+															class="btn tabelog-btn-danger text-white shadow-sm">削除</button>
+													</form>
+												</div>
+											</div>
+										</div>
+									</div>
+					</div>
+					</tr>
+					</tbody>
+					</table>
+
+					<!-- ページネーション -->
+					<div th:if="${shopPage.totalPages > 1}" class="d-flex justify-content-center">
+						<nav aria-label="店舗一覧ページ">
+							<ul class="pagination">
+								<li class="page-item">
+									<span th:if="${shopPage.isFirst()}" class="page-link disabled">前</span>
+									<a th:unless="${shopPage.isFirst()}"
+										th:href="@{/admin/shops(page=${shopPage.number - 1}, keyword=${keyword})}"
+										class="page-link tabelog-page-link">前</a>
+								</li>
+								<li th:each="i : ${#numbers.sequence(0, shopPage.totalPages - 1)}" class="page-item">
+									<span th:if="${i == shopPage.number}" class="page-link active tabelog-active"
+										th:text="${i + 1}"></span>
+									<a th:unless="${i == shopPage.number}"
+										th:href="@{/admin/shops(page=${i}, keyword=${keyword})}"
+										class="page-link tabelog-page-link" th:text="${i + 1}"></a>
+								</li>
+								<li class="page-item">
+									<span th:if="${shopPage.isLast()}" class="page-link disabled">次</span>
+									<a th:unless="${shopPage.isLast()}"
+										th:href="@{/admin/shops(page=${shopPage.number + 1}, keyword=${keyword})}"
+										class="page-link tabelog-page-link">次</a>
+								</li>
+							</ul>
+						</nav>
+					</div>
+				</div>
+			</div>
+	</div>
+	</main>
+
+	<!-- フッター -->
+	<div th:replace="~{fragment :: footer}"></div>
+>>>>>>> branch 'main' of https://github.com/mick309/springboot-tabelog-kadai.git
 	</div>
 
 	<div th:replace="~{fragment :: scripts}"></div>

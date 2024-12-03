@@ -42,5 +42,9 @@ public interface ShopRepository extends JpaRepository<Shop, Integer> {
 
 	Page<Shop> findByAddressLikeOrderByCreatedAtAsc(String address, Pageable pageable);
 	
+<<<<<<< HEAD
 	Page<Shop> findByShopNameContainingOrAddressContaining(String shopNameKeyword, String addressKeyword, Pageable pageable);
+=======
+	
+>>>>>>> branch 'main' of https://github.com/mick309/springboot-tabelog-kadai.git
 }

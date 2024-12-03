@@ -1,4 +1,5 @@
 const imageInput = document.getElementById('imageFile');
+<<<<<<< HEAD
 const imagePreview = document.getElementById('imagePreview');
 
 imageInput.addEventListener('change', () => {
@@ -34,3 +35,18 @@ document.getElementById('imageFile').addEventListener('change', function(event) 
 		reader.readAsDataURL(file); // 画像ファイルをBase64形式で読み込む
 	}
 });
+=======
+ const imagePreview = document.getElementById('imagePreview');
+ 
+ imageInput.addEventListener('change', () => {
+   if (imageInput.files[0]) {
+     let fileReader = new FileReader();
+     fileReader.onload = () => {
+       imagePreview.innerHTML = `<img src="${fileReader.result}" class="mb-3">`;
+     }
+     fileReader.readAsDataURL(imageInput.files[0]);
+   } else {
+     imagePreview.innerHTML = '';
+   }
+ })
+>>>>>>> branch 'main' of https://github.com/mick309/springboot-tabelog-kadai.git

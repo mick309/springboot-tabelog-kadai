@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+
+<head>
+	<div th:replace="~{fragment :: meta}"></div>
+	<div th:replace="~{fragment :: styles}"></div>
+	<title>カテゴリー登録</title>
+</head>
+
+<body>
+	<div class="tabelog-wrapper">
+		<!-- ヘッダー -->
+		<div th:replace="~{fragment :: header}"></div>
+
+		<main>
+			<div class="container pt-4 pb-5 tabelog-container">
+				<div class="row justify-content-center">
+					<div class="col-xxl-9 col-xl-10 col-lg-11">
+						<nav class="mb-4" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+							<ol class="breadcrumb mb-0">
+								<li class="breadcrumb-item"><a th:href="@{/admin/categories}">カテゴリー一覧</a></li>
+								<li class="breadcrumb-item active" aria-current="page">カテゴリー登録</li>
+							</ol>
+						</nav>
+
+						<h1 class="mb-3 text-center">カテゴリー登録</h1>
+
+						<div class="row justify-content-center">
+							<div class="col-md-8">
+								<form th:action="@{/admin/categories}" th:object="${category}" method="post"
+									class="shadow p-4 bg-light rounded">
+									<div class="mb-3">
+										<label for="name" class="form-label">カテゴリー名</label>
+										<input type="text" id="name" name="name" th:field="*{name}"
+											class="form-control" />
+									</div>
+									<div th:if="${#fields.hasErrors('name')}" class="text-danger mb-3">
+										<p th:errors="*{name}">Invalid category name</p>
+									</div>
+									<div class="text-center">
+										<button type="submit" class="btn text-white shadow-sm tabelog-btn">登録</button>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</main>
+
+		<!-- フッター -->
+		<div th:replace="~{fragment :: footer}"></div>
+	</div>
+	<div th:replace="~{fragment :: scripts}"></div>
+</body>
+
+</html>

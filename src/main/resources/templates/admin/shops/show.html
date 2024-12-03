@@ -3,6 +3,7 @@
 
 <head>
 	<div th:replace="~{fragment :: meta}"></div>
+<<<<<<< HEAD
 	<div th:replace="~{fragment :: styles}"></div>
 
 	<title>店舗詳細</title>
@@ -153,6 +154,155 @@
 					</div>
 				</div>
 			</div>
+=======
+
+	<div th:replace="~{fragment :: styles}"></div>
+
+	<title>店舗詳細</title>
+</head>
+
+<body>
+	<div class="tabelog-wrapper">
+		<!-- ヘッダー -->
+		<div th:replace="~{fragment :: header}"></div>
+
+		<main>
+			<div class="container pt-4 pb-5 tabelog-container">
+				<div class="row justify-content-center">
+					<div class="col-xl-5 col-lg-6 col-md-8">
+						<nav class="mb-4" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+							<ol class="breadcrumb mb-0">
+								<li class="breadcrumb-item"><a th:href="@{/admin/shops}">店舗一覧</a></li>
+								<li class="breadcrumb-item active" aria-current="page">店舗詳細</li>
+							</ol>
+						</nav>
+
+						<h1 class="mb-4 text-center" th:text="${shop.getShopName()}"></h1>
+
+						<div class="d-flex justify-content-end align-items-end mb-3">
+							<div>
+								<a th:href="@{/admin/shops/__${shop.getId()}__/edit}">編集</a>
+							</div>
+						</div>
+
+						<div class="mb-3">
+							<img th:if="${shop.getImageName()}" th:src="@{/storage/__${shop.getImageName()}__}"
+								class="w-100" alt="民宿画像">
+							<img th:unless="${shop.getImageName()}" th:src="@{/images/noImage.png}" class="w-100"
+								alt="NO IMAGE">
+						</div>
+
+						<div class="container mb-4">
+							<div class="row pb-2 mb-2 border-bottom">
+								<div class="col-4">
+									<span class="fw-bold">ID</span>
+								</div>
+
+								<div class="col">
+									<span th:text="${shop.getId()}"></span>
+								</div>
+							</div>
+
+							<div class="row pb-2 mb-2 border-bottom">
+								<div class="col-4">
+									<span class="fw-bold">店舗名</span>
+								</div>
+
+								<div class="col">
+									<span th:text="${shop.getShopName()}"></span>
+								</div>
+							</div>
+
+							<div class="row pb-2 mb-2 border-bottom">
+								<div class="col-4">
+									<span class="fw-bold">説明</span>
+								</div>
+
+								<div class="col">
+									<span class="tabelog-pre-wrap" th:text="${shop.getDescription()}"></span>
+								</div>
+							</div>
+							<div class="row pb-2 mb-2 border-bottom">
+								<div class="col-4">
+									<span class="fw-bold">価格帯(上限)</span>
+								</div>
+
+								<div class="col">
+									<span
+										th:text="${#numbers.formatInteger(shop.getPriceUpper(), 1, 'COMMA') + '円'}"></span>
+								</div>
+							</div>
+							<div class="row pb-2 mb-2 border-bottom">
+								<div class="col-4">
+									<span class="fw-bold">価格帯(下限)</span>
+								</div>
+
+								<div class="col">
+									<span
+										th:text="${#numbers.formatInteger(shop.getPriceLower(), 1, 'COMMA') + '円'}"></span>
+								</div>
+							</div>
+
+							<div class="row pb-2 mb-2 border-bottom">
+								<div class="col-4">
+									<span class="fw-bold">営業時間(開店)</span>
+								</div>
+
+								<div class="col">
+									<span class="tabelog-pre-wrap" th:text="${shop.getHoursOpen()}"></span>
+								</div>
+								<div class="row pb-2 mb-2 border-bottom">
+									<div class="col-4">
+										<span class="fw-bold">営業時間(閉店)</span>
+									</div>
+
+									<div class="col">
+										<span class="tabelog-pre-wrap" th:text="${shop.getHoursClose()}"></span>
+									</div>
+									<div class="col-4">
+										<span class="fw-bold">定休日</span>
+									</div>
+
+									<div class="col">
+										<span class="tabelog-pre-wrap" th:text="${shop.getClosedDay()}"></span>
+									</div>
+
+
+									<div class="row pb-2 mb-2 border-bottom">
+										<div class="col-4">
+											<span class="fw-bold">郵便番号</span>
+										</div>
+
+										<div class="col">
+											<span th:text="${shop.getPostalCode()}"></span>
+										</div>
+									</div>
+
+									<div class="row pb-2 mb-2 border-bottom">
+										<div class="col-4">
+											<span class="fw-bold">住所</span>
+										</div>
+
+										<div class="col">
+											<span th:text="${shop.getAddress()}"></span>
+										</div>
+									</div>
+
+									<div class="row pb-2 mb-2 border-bottom">
+										<div class="col-4">
+											<span class="fw-bold">電話番号</span>
+										</div>
+
+										<div class="col">
+											<span th:text="${shop.getPhoneNumber()}"></span>
+										</div>
+									</div>
+								</div>
+
+							</div>
+						</div>
+					</div>
+>>>>>>> branch 'main' of https://github.com/mick309/springboot-tabelog-kadai.git
 		</main>
 
 		<!-- フッター -->

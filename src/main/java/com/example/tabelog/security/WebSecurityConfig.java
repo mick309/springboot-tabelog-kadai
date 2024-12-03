@@ -18,6 +18,7 @@ public class WebSecurityConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http
 				.authorizeHttpRequests((requests) -> requests
+<<<<<<< HEAD
 						// 静的リソースや一般ユーザーに公開するURLは許可
 						.requestMatchers("/css/**", "/images/**", "/js/**", "/storage/**", "/", "/signup/**",
 								"/shops", "/shops/{id}", "/shops/{id}/reviews", "/stripe/webhook")
@@ -52,3 +53,29 @@ public class WebSecurityConfig {
 		return new BCryptPasswordEncoder();
 	}
 }
+=======
+						.requestMatchers("/css/**", "/images/**", "/js/**", "/storage/**", "/", "/signup/**","/shops","/shops/{id}", "/stripe/webhook", "/shops/{id}/reviews")
+						.permitAll()  // すべてのユーザーにアクセスを許可するURL 
+						.requestMatchers("/admin/**").hasRole("ADMIN") // 管理者にのみアクセスを許可するURL
+						.anyRequest().authenticated() // 上記以外のURLはログインが必要（会員または管理者のどちらでもOK）
+				)
+				.formLogin((form) -> form
+						.loginPage("/login") // ログインページのURL
+						.loginProcessingUrl("/login") // ログインフォームの送信先URL
+						.defaultSuccessUrl("/?loggedIn") // ログイン成功時のリダイレクト先URL
+						.failureUrl("/login?error") // ログイン失敗時のリダイレクト先URL
+						.permitAll())
+				.logout((logout) -> logout
+						.logoutSuccessUrl("/?loggedOut") // ログアウト時のリダイレクト先URL
+						.permitAll())
+				.csrf().ignoringRequestMatchers("/stripe/webhook");
+
+		return http.build();
+	}
+
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
+}
+>>>>>>> branch 'main' of https://github.com/mick309/springboot-tabelog-kadai.git
