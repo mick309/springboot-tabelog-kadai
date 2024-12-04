@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.example.tabelog.entity.Shop;
 
@@ -41,6 +43,9 @@ public interface ShopRepository extends JpaRepository<Shop, Integer> {
 	Page<Shop> findByAddressLikeOrderByCreatedAtDesc(String address, Pageable pageable);
 
 	Page<Shop> findByAddressLikeOrderByCreatedAtAsc(String address, Pageable pageable);
-	
-	
+
+	// 店舗名または住所で部分一致検索
+	@Query("SELECT s FROM Shop s WHERE s.shopName LIKE CONCAT('%', :keyword, '%') OR s.address LIKE CONCAT('%', :keyword, '%')")
+	Page<Shop> searchByKeyword(@Param("keyword") String keyword, Pageable pageable);
+
 }
