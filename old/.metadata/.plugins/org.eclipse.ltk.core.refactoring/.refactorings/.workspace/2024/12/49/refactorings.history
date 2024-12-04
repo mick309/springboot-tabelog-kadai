@@ -1,3 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">&#x0A;<refactoring comment="リソース &apos;tabelog_kadai&apos; を削除" deleteContents="false" description="リソース &apos;tabelog_kadai&apos; を削除" element1="/tabelog_kadai" flags="7" id="org.eclipse.ltk.core.refactoring.delete.resources" resources="1" stamp="1733127600400"/>&#x0A;<refactoring comment="リソース &apos;tabelog_kadai&apos; を削除" deleteContents="false" description="リソース &apos;tabelog_kadai&apos; を削除" element1="/tabelog_kadai" flags="7" id="org.eclipse.ltk.core.refactoring.delete.resources" resources="1" stamp="1733127922793"/>
-</session>
