@@ -58,9 +58,15 @@ public class AdminUserController {
 			return "redirect:/admin/users";
 		}
 		UserEditForm userEditForm = new UserEditForm(
-				user.getId(), user.getName(), user.getFurigana(),
-				user.getPostalCode(), user.getAddress(),
-				user.getPhoneNumber(), user.getEmail());
+		        user.getId(),
+		        user.getName(),
+		        user.getFurigana(),
+		        user.getPostalCode(),
+		        user.getAddress(),
+		        user.getPhoneNumber(),
+		        user.getEmail(),
+		        user.getRole().getId() // ロールIDを取得
+				);
 		model.addAttribute("userEditForm", userEditForm);
 		return "admin/users/edit";
 	}

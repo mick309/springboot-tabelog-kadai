@@ -8,7 +8,7 @@
 	<!-- 共通のスタイル -->
 	<div th:replace="~{fragment :: styles}"></div>
 
-	<title>会員情報編集</title>
+	<title>会社情報編集</title>
 </head>
 
 <body>
@@ -23,64 +23,40 @@
 						<!-- パンくずリスト -->
 						<nav class="mb-4" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
 							<ol class="breadcrumb mb-0">
-								<li class="breadcrumb-item"><a th:href="@{/admin/users}">会員一覧</a></li>
-								<li class="breadcrumb-item"><a th:href="@{/admin/users/__${user.id}__}">会員詳細</a></li>
-								<li class="breadcrumb-item active" aria-current="page">会員情報編集</li>
+								<li class="breadcrumb-item"><a th:href="@{/admin/company}">会社情報</a></li>
+								<li class="breadcrumb-item active" aria-current="page">会社情報編集</li>
 							</ol>
 						</nav>
 
 						<!-- タイトル -->
-						<h1 class="mb-4 text-center">会員情報編集</h1>
+						<h1 class="mb-4 text-center">会社情報編集</h1>
 
 						<!-- フォーム -->
-						<form method="post" th:action="@{/admin/users/{id}/edit(id=${user.id})}" th:object="${user}">
+						<form method="post" th:action="@{/admin/company/edit}" th:object="${adminCompanyForm}">
 							<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 
 							<div class="form-group row mb-3">
 								<div class="col-md-4">
-									<label for="name" class="col-form-label text-md-left fw-bold">氏名</label>
+									<label for="companyName" class="col-form-label text-md-left fw-bold">会社名</label>
 								</div>
 								<div class="col-md-8">
-									<div th:if="${#fields.hasErrors('name')}" class="text-danger small mb-2"
-										th:errors="*{name}"></div>
-									<input type="text" class="form-control" id="name" th:field="*{name}"
-										placeholder="氏名を入力">
+									<div th:if="${#fields.hasErrors('companyName')}" class="text-danger small mb-2"
+										th:errors="*{companyName}"></div>
+									<input type="text" class="form-control" id="companyName" th:field="*{companyName}"
+										placeholder="会社名を入力">
 								</div>
 							</div>
 
 							<div class="form-group row mb-3">
 								<div class="col-md-4">
-									<label for="furigana" class="col-form-label text-md-left fw-bold">フリガナ</label>
+									<label for="contactEmail"
+										class="col-form-label text-md-left fw-bold">連絡先メールアドレス</label>
 								</div>
 								<div class="col-md-8">
-									<div th:if="${#fields.hasErrors('furigana')}" class="text-danger small mb-2"
-										th:errors="*{furigana}"></div>
-									<input type="text" class="form-control" id="furigana" th:field="*{furigana}"
-										placeholder="フリガナを入力">
-								</div>
-							</div>
-
-							<div class="form-group row mb-3">
-								<div class="col-md-4">
-									<label for="postalCode" class="col-form-label text-md-left fw-bold">郵便番号</label>
-								</div>
-								<div class="col-md-8">
-									<div th:if="${#fields.hasErrors('postalCode')}" class="text-danger small mb-2"
-										th:errors="*{postalCode}"></div>
-									<input type="text" class="form-control" id="postalCode" th:field="*{postalCode}"
-										placeholder="郵便番号を入力">
-								</div>
-							</div>
-
-							<div class="form-group row mb-3">
-								<div class="col-md-4">
-									<label for="address" class="col-form-label text-md-left fw-bold">住所</label>
-								</div>
-								<div class="col-md-8">
-									<div th:if="${#fields.hasErrors('address')}" class="text-danger small mb-2"
-										th:errors="*{address}"></div>
-									<input type="text" class="form-control" id="address" th:field="*{address}"
-										placeholder="住所を入力">
+									<div th:if="${#fields.hasErrors('contactEmail')}" class="text-danger small mb-2"
+										th:errors="*{contactEmail}"></div>
+									<input type="email" class="form-control" id="contactEmail"
+										th:field="*{contactEmail}" placeholder="連絡先メールアドレスを入力">
 								</div>
 							</div>
 
@@ -98,27 +74,38 @@
 
 							<div class="form-group row mb-3">
 								<div class="col-md-4">
-									<label for="email" class="col-form-label text-md-left fw-bold">メールアドレス</label>
+									<label for="address" class="col-form-label text-md-left fw-bold">住所</label>
 								</div>
 								<div class="col-md-8">
-									<div th:if="${#fields.hasErrors('email')}" class="text-danger small mb-2"
-										th:errors="*{email}"></div>
-									<input type="email" class="form-control" id="email" th:field="*{email}"
-										placeholder="メールアドレスを入力">
+									<div th:if="${#fields.hasErrors('address')}" class="text-danger small mb-2"
+										th:errors="*{address}"></div>
+									<input type="text" class="form-control" id="address" th:field="*{address}"
+										placeholder="住所を入力">
 								</div>
 							</div>
 
-
-							<!-- パスワード欄を追加 -->
 							<div class="form-group row mb-3">
 								<div class="col-md-4">
-									<label for="password" class="col-form-label text-md-left fw-bold">新しいパスワード</label>
+									<label for="services" class="col-form-label text-md-left fw-bold">提供サービス</label>
 								</div>
 								<div class="col-md-8">
-									<div th:if="${#fields.hasErrors('password')}" class="text-danger small mb-2"
-										th:errors="*{password}"></div>
-									<input type="password" class="form-control" id="password" th:field="*{password}"
-										placeholder="新しいパスワードを入力">
+									<div th:if="${#fields.hasErrors('services')}" class="text-danger small mb-2"
+										th:errors="*{services}"></div>
+									<input type="text" class="form-control" id="services" th:field="*{services}"
+										placeholder="提供サービス（カンマ区切り）">
+								</div>
+							</div>
+
+							<div class="form-group row mb-3">
+								<div class="col-md-4">
+									<label for="technologyStack"
+										class="col-form-label text-md-left fw-bold">使用技術</label>
+								</div>
+								<div class="col-md-8">
+									<div th:if="${#fields.hasErrors('technologyStack')}" class="text-danger small mb-2"
+										th:errors="*{technologyStack}"></div>
+									<input type="text" class="form-control" id="technologyStack"
+										th:field="*{technologyStack}" placeholder="使用技術（カンマ区切り）">
 								</div>
 							</div>
 

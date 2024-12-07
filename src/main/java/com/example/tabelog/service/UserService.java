@@ -1,6 +1,7 @@
 package com.example.tabelog.service;
 
-import org.springframework.security.core.context.SecurityContextHolder;
+import java.util.List;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -32,92 +33,15 @@ public class UserService {
 		return userRepository.findByEmailIgnoreCase(email).isPresent();
 	}
 
-	// デフォルトロールを取得または作成
-	private Role getOrCreateDefaultRole(String roleName) {
-		return roleRepository.findByName(roleName)
-				.orElseGet(() -> {
-					Role newRole = new Role();
-					newRole.setName(roleName);
-					return roleRepository.save(newRole);
-				});
-	}
-
 	// ユーザーIDで検索
 	public User findById(Integer id) {
 		return userRepository.findById(id)
 				.orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + id));
 	}
 
-	// 認証されたユーザーを取得
-	public User getAuthenticatedUser(Integer userId) {
-		return findById(userId);
-	}
-
-	// 現在認証されているユーザーを取得
-	public User getAuthenticatedUser() {
-		return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-	}
-
-	// ユーザー作成（一般ユーザー）
-	public User create(SignupForm form) {
-		return createUserWithRole(form, "ROLE_GENERAL");
-	}
-
-	// 課金ユーザー作成
-	public User createPremiumUser(SignupForm form) {
-		return createUserWithRole(form, "ROLE_PREMIUM_USER");
-	}
-
-	// 管理者作成
-	public User createAdminUser(UserCreateForm form) {
-		return createUserWithRole(form, "ROLE_ADMIN");
-	}
-
-	// 共通のユーザー作成ロジック
-	private User createUserWithRole(Object form, String roleName) {
-		String name, furigana, postalCode, address, phoneNumber, email, password;
-
-		if (form instanceof SignupForm signupForm) {
-			name = signupForm.getName();
-			furigana = signupForm.getFurigana();
-			postalCode = signupForm.getPostalCode();
-			address = signupForm.getAddress();
-			phoneNumber = signupForm.getPhoneNumber();
-			email = signupForm.getEmail();
-			password = signupForm.getPassword();
-		} else if (form instanceof UserCreateForm userCreateForm) {
-			name = userCreateForm.getName();
-			furigana = userCreateForm.getFurigana();
-			postalCode = userCreateForm.getPostalCode();
-			address = userCreateForm.getAddress();
-			phoneNumber = userCreateForm.getPhoneNumber();
-			email = userCreateForm.getEmail();
-			password = userCreateForm.getPassword();
-		} else {
-			throw new IllegalArgumentException("Unsupported form type");
-		}
-
-		// メールアドレスの重複チェック
-		if (isEmailRegistered(email)) {
-			throw new EmailAlreadyExistsException("このメールアドレスはすでに登録されています。");
-		}
-
-		// 新規ユーザーを作成
-		User user = new User();
-		user.setName(name);
-		user.setFurigana(furigana);
-		user.setPostalCode(postalCode);
-		user.setAddress(address);
-		user.setPhoneNumber(phoneNumber);
-		user.setEmail(email);
-		user.setPassword(passwordEncoder.encode(password)); // パスワードをハッシュ化
-		user.setEnabled(false); // 初期状態では無効
-
-		// ロールを取得または作成
-		Role role = getOrCreateDefaultRole(roleName);
-		user.setRole(role);
-
-		return userRepository.save(user);
+	// ロールの全取得
+	public List<Role> findAllRoles() {
+		return roleRepository.findAll();
 	}
 
 	// ユーザー情報更新
@@ -129,8 +53,75 @@ public class UserService {
 		user.setAddress(userEditForm.getAddress());
 		user.setPhoneNumber(userEditForm.getPhoneNumber());
 		user.setEmail(userEditForm.getEmail());
-		user.setPassword(passwordEncoder.encode(userEditForm.getPassword()));
+
+		if (userEditForm.getPassword() != null && !userEditForm.getPassword().isEmpty()) {
+			user.setPassword(passwordEncoder.encode(userEditForm.getPassword()));
+		}
+
+		Role role = roleRepository.findById(userEditForm.getRoleId())
+				.orElseThrow(() -> new EntityNotFoundException("Role not found with ID: " + userEditForm.getRoleId()));
+		user.setRole(role);
+
 		userRepository.save(user);
+	}
+
+	// メールアドレスが変更されたか確認
+	public boolean isEmailChanged(UserEditForm userEditForm) {
+		User currentUser = findById(userEditForm.getId());
+		return !userEditForm.getEmail().equalsIgnoreCase(currentUser.getEmail());
+	}
+
+	// サインアップ用ユーザー作成
+	public User create(SignupForm signupForm) {
+		if (isEmailRegistered(signupForm.getEmail())) {
+			throw new IllegalArgumentException("このメールアドレスは既に登録されています。");
+		}
+
+		User user = new User();
+		user.setName(signupForm.getName());
+		user.setFurigana(signupForm.getFurigana());
+		user.setPostalCode(signupForm.getPostalCode());
+		user.setAddress(signupForm.getAddress());
+		user.setPhoneNumber(signupForm.getPhoneNumber());
+		user.setEmail(signupForm.getEmail());
+		user.setPassword(passwordEncoder.encode(signupForm.getPassword()));
+		user.setEnabled(false); // 初期状態では無効
+
+		// デフォルトロールを設定
+		Role defaultRole = roleRepository.findByName("ROLE_USER")
+				.orElseThrow(() -> new EntityNotFoundException("Default role 'ROLE_USER' not found."));
+		user.setRole(defaultRole);
+
+		return userRepository.save(user);
+	}
+
+	// 新規ユーザー作成
+	public User createUser(UserCreateForm userCreateForm) {
+		if (isEmailRegistered(userCreateForm.getEmail())) {
+			throw new IllegalArgumentException("このメールアドレスは既に登録されています。");
+		}
+
+		User user = new User();
+		user.setName(userCreateForm.getName());
+		user.setFurigana(userCreateForm.getFurigana());
+		user.setPostalCode(userCreateForm.getPostalCode());
+		user.setAddress(userCreateForm.getAddress());
+		user.setPhoneNumber(userCreateForm.getPhoneNumber());
+		user.setEmail(userCreateForm.getEmail());
+		user.setPassword(passwordEncoder.encode(userCreateForm.getPassword()));
+		user.setEnabled(true);
+
+		Role role = roleRepository.findById(userCreateForm.getRoleId())
+				.orElseThrow(
+						() -> new EntityNotFoundException("Role not found with ID: " + userCreateForm.getRoleId()));
+		user.setRole(role);
+
+		return userRepository.save(user);
+	}
+
+	// 新規ユーザー登録
+	public User registerUser(UserCreateForm userCreateForm) {
+		return createUser(userCreateForm); // createUser メソッドを利用
 	}
 
 	// ユーザー削除
@@ -138,55 +129,19 @@ public class UserService {
 		userRepository.deleteById(userId);
 	}
 
-	// メールアドレスが変更されたか確認
-	public boolean isEmailChanged(UserEditForm userEditForm) {
-		User currentUser = userRepository.findById(userEditForm.getId())
-				.orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + userEditForm.getId()));
-		return !userEditForm.getEmail().equalsIgnoreCase(currentUser.getEmail());
+	// 認証済みのユーザーを取得
+	public User getAuthenticatedUser(Integer userId) {
+		return findById(userId);
 	}
 
-	// カスタム例外
-	public static class EmailAlreadyExistsException extends RuntimeException {
-		public EmailAlreadyExistsException(String message) {
-			super(message);
-		}
-	}
-
-	// ユーザー作成（管理者用）
-	public User createUser(UserCreateForm form) {
-		if (isEmailRegistered(form.getEmail())) {
-			throw new IllegalArgumentException("このメールアドレスは既に登録されています。");
-		}
-
-		User user = new User();
-		user.setName(form.getName());
-		user.setFurigana(form.getFurigana());
-		user.setPostalCode(form.getPostalCode());
-		user.setAddress(form.getAddress());
-		user.setPhoneNumber(form.getPhoneNumber());
-		user.setEmail(form.getEmail());
-		user.setPassword(passwordEncoder.encode(form.getPassword())); // パスワードをハッシュ化
-		user.setEnabled(true); // 管理者作成の場合は有効状態で登録
-
-		// デフォルトロールを設定（フォームでロール指定がない場合、一般ユーザーをデフォルトとする）
-		String roleName = (form.getRoleName() != null) ? form.getRoleName() : "ROLE_GENERAL";
-		Role role = getOrCreateDefaultRole(roleName);
-		user.setRole(role);
-
-		return userRepository.save(user);
-	}
-
-	// パスワードが一致しているか確認するメソッド
+	// パスワードと確認用パスワードが一致しているかを検証
 	public boolean isSamePassword(String password, String passwordConfirmation) {
-		if (password == null || passwordConfirmation == null) {
-			return false;
-		}
-		return password.equals(passwordConfirmation);
+		return password != null && password.equals(passwordConfirmation);
 	}
 
-	// ユーザーを有効化するメソッド
+	// ユーザーを有効化
 	public void enableUser(User user) {
-		user.setEnabled(true); // ユーザーを有効化
-		userRepository.save(user); // 変更をデータベースに保存
+		user.setEnabled(true);
+		userRepository.save(user);
 	}
 }

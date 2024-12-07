@@ -43,8 +43,12 @@ public class User {
 	private String password;
 
 	@ManyToOne
-	@JoinColumn(name = "role_id")
+	@JoinColumn(name = "role_id", nullable = false)
 	private Role role;
+
+	public Role getRole() {
+		return role;
+	}
 
 	@Column(name = "enabled")
 	private Boolean enabled;
@@ -55,5 +59,4 @@ public class User {
 	@Column(name = "updated_at", insertable = false, updatable = false)
 	private Timestamp updatedAt;
 
-	
 }

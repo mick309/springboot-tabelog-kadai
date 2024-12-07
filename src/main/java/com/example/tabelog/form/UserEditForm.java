@@ -28,16 +28,18 @@ public class UserEditForm {
 	@NotBlank(message = "メールアドレスを入力してください。")
 	private String email;
 
-	// パスワードは空でも許容する場合、ここでは@NotBlankを削除可能
+	// パスワード
 	private String password;
 
-	// 引数なしコンストラクター（デフォルトで必要）
+	// ロールID
+	@NotNull(message = "ロールは必須です。")
+	private Integer roleId;
+
 	public UserEditForm() {
 	}
 
-	// 必要なフィールドを初期化するコンストラクター
 	public UserEditForm(Integer id, String name, String furigana, String postalCode,
-			String address, String phoneNumber, String email) {
+			String address, String phoneNumber, String email, Integer roleId) {
 		this.id = id;
 		this.name = name;
 		this.furigana = furigana;
@@ -45,6 +47,6 @@ public class UserEditForm {
 		this.address = address;
 		this.phoneNumber = phoneNumber;
 		this.email = email;
-		this.password = ""; // パスワードは空文字で初期化
+		this.roleId = roleId;
 	}
 }

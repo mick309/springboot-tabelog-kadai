@@ -35,15 +35,28 @@ public class UserController {
 	}
 
 	// ユーザー情報の編集画面
-	@GetMapping("/edit")
-	public String edit(@AuthenticationPrincipal UserDetailsImpl userDetails, Model model) {
-		User user = userService.getAuthenticatedUser(userDetails.getUser().getId());
+	@GetMapping("/admin/users/edit")
+	public String editUser(@AuthenticationPrincipal UserDetailsImpl userDetails, Model model) {
+		// 認証されたユーザーの情報を取得
+		User authenticatedUser = userService.getAuthenticatedUser(userDetails.getUser().getId());
+
+		// ユーザー編集フォームを初期化
 		UserEditForm userEditForm = new UserEditForm(
-				user.getId(), user.getName(), user.getFurigana(),
-				user.getPostalCode(), user.getAddress(),
-				user.getPhoneNumber(), user.getEmail());
+				authenticatedUser.getId(),
+				authenticatedUser.getName(),
+				authenticatedUser.getFurigana(),
+				authenticatedUser.getPostalCode(),
+				authenticatedUser.getAddress(),
+				authenticatedUser.getPhoneNumber(),
+				authenticatedUser.getEmail(),
+				authenticatedUser.getRole().getId() // ロールIDを取得
+		);
+
+		// ロール情報を追加
+		model.addAttribute("roles", userService.findAllRoles());
 		model.addAttribute("userEditForm", userEditForm);
-		return "user/edit";
+
+		return "admin/user/edit";
 	}
 
 	// ユーザー情報の更新

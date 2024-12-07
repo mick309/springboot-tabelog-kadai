@@ -25,124 +25,105 @@
 
 						<h1 class="mb-4 text-center">新規会員登録</h1>
 
-						<!-- ユーザ作成フォーム -->
+						<!-- ユーザー作成フォーム -->
 						<form th:action="@{/admin/users/new}" th:object="${userCreateForm}" method="post">
 							<input type="hidden" name="_csrf" th:value="${_csrf.token}" />
 
-							<!-- 全体エラーメッセージ表示（フォーム全体のエラー） -->
+							<!-- 全体エラーメッセージ表示 -->
 							<div th:if="${#fields.hasErrors()}" class="alert alert-danger">
 								<ul>
 									<li th:each="err : ${#fields.errors()}" th:text="${err}"></li>
 								</ul>
 							</div>
 
-							<div class="form-group row mb-3">
-								<div class="col-md-4">
-									<label for="name" class="col-form-label text-md-left fw-bold">氏名</label>
-								</div>
-								<div class="col-md-8">
-									<input type="text" class="form-control" th:field="*{name}" placeholder="氏名"
-										required />
-									<!-- nameフィールドのエラーメッセージ表示 -->
-									<div th:if="${#fields.hasErrors('name')}" class="text-danger small">
-										<span th:each="err : ${#fields.errors('name')}" th:text="${err}"></span>
-									</div>
+							<!-- 各フィールド -->
+							<div class="form-group mb-3">
+								<label for="name" class="fw-bold">氏名</label>
+								<input type="text" id="name" class="form-control" th:field="*{name}" placeholder="氏名"
+									required />
+								<div th:if="${#fields.hasErrors('name')}" class="text-danger small">
+									<span th:errors="*{name}"></span>
 								</div>
 							</div>
 
-							<div class="form-group row mb-3">
-								<div class="col-md-4">
-									<label for="furigana" class="col-form-label text-md-left fw-bold">フリガナ</label>
-								</div>
-								<div class="col-md-8">
-									<input type="text" class="form-control" th:field="*{furigana}" placeholder="フリガナ"
-										required />
-									<!-- furiganaフィールドのエラーメッセージ表示 -->
-									<div th:if="${#fields.hasErrors('furigana')}" class="text-danger small">
-										<span th:each="err : ${#fields.errors('furigana')}" th:text="${err}"></span>
-									</div>
+							<div class="form-group mb-3">
+								<label for="furigana" class="fw-bold">フリガナ</label>
+								<input type="text" id="furigana" class="form-control" th:field="*{furigana}"
+									placeholder="フリガナ" required />
+								<div th:if="${#fields.hasErrors('furigana')}" class="text-danger small">
+									<span th:errors="*{furigana}"></span>
 								</div>
 							</div>
 
-							<div class="form-group row mb-3">
-								<div class="col-md-4">
-									<label for="postalCode" class="col-form-label text-md-left fw-bold">郵便番号</label>
-								</div>
-								<div class="col-md-8">
-									<input type="text" class="form-control" th:field="*{postalCode}" placeholder="郵便番号"
-										required />
-									<!-- postalCodeフィールドのエラーメッセージ表示 -->
-									<div th:if="${#fields.hasErrors('postalCode')}" class="text-danger small">
-										<span th:each="err : ${#fields.errors('postalCode')}" th:text="${err}"></span>
-									</div>
+							<div class="form-group mb-3">
+								<label for="postalCode" class="fw-bold">郵便番号</label>
+								<input type="text" id="postalCode" class="form-control" th:field="*{postalCode}"
+									placeholder="郵便番号" required />
+								<div th:if="${#fields.hasErrors('postalCode')}" class="text-danger small">
+									<span th:errors="*{postalCode}"></span>
 								</div>
 							</div>
 
-							<div class="form-group row mb-3">
-								<div class="col-md-4">
-									<label for="address" class="col-form-label text-md-left fw-bold">住所</label>
-								</div>
-								<div class="col-md-8">
-									<input type="text" class="form-control" th:field="*{address}" placeholder="住所"
-										required />
-									<!-- addressフィールドのエラーメッセージ表示 -->
-									<div th:if="${#fields.hasErrors('address')}" class="text-danger small">
-										<span th:each="err : ${#fields.errors('address')}" th:text="${err}"></span>
-									</div>
+							<div class="form-group mb-3">
+								<label for="address" class="fw-bold">住所</label>
+								<input type="text" id="address" class="form-control" th:field="*{address}"
+									placeholder="住所" required />
+								<div th:if="${#fields.hasErrors('address')}" class="text-danger small">
+									<span th:errors="*{address}"></span>
 								</div>
 							</div>
 
-							<div class="form-group row mb-3">
-								<div class="col-md-4">
-									<label for="phoneNumber" class="col-form-label text-md-left fw-bold">電話番号</label>
-								</div>
-								<div class="col-md-8">
-									<input type="text" class="form-control" th:field="*{phoneNumber}" placeholder="電話番号"
-										required />
-									<!-- phoneNumberフィールドのエラーメッセージ表示 -->
-									<div th:if="${#fields.hasErrors('phoneNumber')}" class="text-danger small">
-										<span th:each="err : ${#fields.errors('phoneNumber')}" th:text="${err}"></span>
-									</div>
+							<div class="form-group mb-3">
+								<label for="phoneNumber" class="fw-bold">電話番号</label>
+								<input type="text" id="phoneNumber" class="form-control" th:field="*{phoneNumber}"
+									placeholder="電話番号" required />
+								<div th:if="${#fields.hasErrors('phoneNumber')}" class="text-danger small">
+									<span th:errors="*{phoneNumber}"></span>
 								</div>
 							</div>
 
-							<div class="form-group row mb-3">
-								<div class="col-md-4">
-									<label for="email" class="col-form-label text-md-left fw-bold">メールアドレス</label>
-								</div>
-								<div class="col-md-8">
-									<input type="email" class="form-control" th:field="*{email}" placeholder="メールアドレス"
-										required />
-									<!-- emailフィールドのエラーメッセージ表示 -->
-									<div th:if="${#fields.hasErrors('email')}" class="text-danger small">
-										<span th:each="err : ${#fields.errors('email')}" th:text="${err}"></span>
-									</div>
+							<div class="form-group mb-3">
+								<label for="email" class="fw-bold">メールアドレス</label>
+								<input type="email" id="email" class="form-control" th:field="*{email}"
+									placeholder="メールアドレス" required />
+								<div th:if="${#fields.hasErrors('email')}" class="text-danger small">
+									<span th:errors="*{email}"></span>
 								</div>
 							</div>
 
-							<div class="form-group row mb-3">
-								<label for="password" class="col-md-4 col-form-label text-md-right">パスワード</label>
-								<div class="col-md-6">
-									<input type="password" class="form-control" id="password" th:field="*{password}" />
-									<div th:if="${#fields.hasErrors('password')}" class="text-danger">
-										<span th:each="err : ${#fields.errors('password')}" th:text="${err}"></span>
-									</div>
+							<div class="form-group mb-3">
+								<label for="password" class="fw-bold">パスワード</label>
+								<input type="password" id="password" class="form-control" th:field="*{password}"
+									placeholder="パスワード" required />
+								<div th:if="${#fields.hasErrors('password')}" class="text-danger small">
+									<span th:errors="*{password}"></span>
 								</div>
 							</div>
 
-							<div class="form-group row mb-3">
-								<label for="passwordConfirmation"
-									class="col-md-4 col-form-label text-md-right">パスワード確認</label>
-								<div class="col-md-6">
-									<input type="password" class="form-control" id="passwordConfirmation"
-										th:field="*{passwordConfirmation}" />
-									<div th:if="${#fields.hasErrors('passwordConfirmation')}" class="text-danger">
-										<span th:each="err : ${#fields.errors('passwordConfirmation')}"
-											th:text="${err}"></span>
-									</div>
+							<div class="form-group mb-3">
+								<label for="passwordConfirmation" class="fw-bold">パスワード確認</label>
+								<input type="password" id="passwordConfirmation" class="form-control"
+									th:field="*{passwordConfirmation}" placeholder="パスワード確認" required />
+								<div th:if="${#fields.hasErrors('passwordConfirmation')}" class="text-danger small">
+									<span th:errors="*{passwordConfirmation}"></span>
 								</div>
 							</div>
-							<div class="form-group d-flex justify-content-center my-4">
+
+							<!-- ロール選択 -->
+							<div class="form-group mb-3">
+								<label for="roleId" class="fw-bold">ロールを選択してください</label>
+								<select id="roleId" class="form-control" th:field="*{roleId}" required>
+									<option value="" disabled selected>選択してください</option>
+									<option th:each="role : ${roles}" th:value="${role.id}" th:text="${role.name}">
+									</option>
+								</select>
+								<div th:if="${#fields.hasErrors('roleId')}" class="text-danger small">
+									<span th:errors="*{roleId}"></span>
+								</div>
+							</div>
+
+							<!-- 登録ボタン -->
+							<div class="d-flex justify-content-center">
 								<button type="submit" class="btn text-white shadow-sm w-50 tabelog-btn">登録</button>
 							</div>
 						</form>

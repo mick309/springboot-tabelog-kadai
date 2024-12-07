@@ -2,44 +2,37 @@ package com.example.tabelog.form;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
 public class UserCreateForm {
 
-	@NotBlank(message = "名前は必須項目です。")
-	@Size(max = 50, message = "名前は50文字以内で入力してください。")
+	@NotBlank(message = "氏名は必須です。")
 	private String name;
 
-	@NotBlank(message = "ふりがなは必須項目です。")
-	@Size(max = 50, message = "ふりがなは50文字以内で入力してください。")
+	@NotBlank(message = "フリガナは必須です。")
 	private String furigana;
 
-	@NotBlank(message = "郵便番号は必須項目です。")
-	@Size(max = 10, message = "郵便番号は10文字以内で入力してください。")
+	@NotBlank(message = "郵便番号は必須です。")
 	private String postalCode;
 
-	@NotBlank(message = "住所は必須項目です。")
-	@Size(max = 255, message = "住所は255文字以内で入力してください。")
+	@NotBlank(message = "住所は必須です。")
 	private String address;
 
-	@NotBlank(message = "電話番号は必須項目です。")
-	@Size(max = 15, message = "電話番号は15文字以内で入力してください。")
+	@NotBlank(message = "電話番号は必須です。")
 	private String phoneNumber;
 
-	@NotBlank(message = "メールアドレスは必須項目です。")
-	@Email(message = "有効なメールアドレスを入力してください。")
+	@Email(message = "正しいメールアドレスを入力してください。")
+	@NotBlank(message = "メールアドレスは必須です。")
 	private String email;
 
-	@NotBlank(message = "パスワードは必須項目です。")
-	@Size(min = 6, message = "パスワードは6文字以上で入力してください。")
+	@NotBlank(message = "パスワードは必須です。")
 	private String password;
 
-	@NotBlank(message = "パスワード確認は必須項目です。")
-	private String passwordConfirmation;
+	@NotBlank(message = "パスワード確認を入力してください。")
+	private String passwordConfirmation; // パスワード確認用フィールド
 
-	// 新たにロールを追加
-	@NotBlank(message = "ロールは必須項目です。")
-	private String roleName;
+	@NotNull(message = "ロールは必須です。")
+	private Integer roleId; // ロールIDを追加
 }
