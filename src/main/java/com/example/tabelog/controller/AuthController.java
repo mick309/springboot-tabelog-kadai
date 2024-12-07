@@ -41,7 +41,7 @@ public class AuthController {
 	@GetMapping("/signup")
 	public String signup(Model model) {
 		model.addAttribute("signupForm", new SignupForm());
-		return "auth/signupE";
+		return "auth/signup";
 	}
 
 	@PostMapping("/signup")

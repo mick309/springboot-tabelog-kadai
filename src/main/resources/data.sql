@@ -87,25 +87,51 @@ SELECT 20, 2, 'SAMURAI軒', 'house20.jpg', '最寄り駅から徒歩10分。コ�
 WHERE NOT EXISTS (SELECT 1 FROM shop WHERE id = 20);
 
 -- rolesテーブル
-INSERT IGNORE INTO roles (id, name) VALUES (1, 'ROLE_GENERAL');
-INSERT IGNORE INTO roles (id, name) VALUES (2, 'ROLE_ADMIN');
-
+INSERT IGNORE INTO roles (id, name) VALUES (1, 'ROLE_GENERAL');       -- 一般ユーザー
+INSERT IGNORE INTO roles (id, name) VALUES (2, 'ROLE_ADMIN');         -- 管理者
+INSERT IGNORE INTO roles (id, name) VALUES (3, 'ROLE_PREMIUM_USER');  -- 課金ユーザー
 
 -- usersテーブル
-INSERT IGNORE INTO users (id, name, furigana, postal_code, address, phone_number, email, password, role_id, enabled) VALUES (1, '侍 太郎', 'サムライ タロウ', '101-0022', '東京都千代田区神田練塀町300番地', '090-1234-5678', 'taro.samurai@example.com', '$2a$10$2JNjTwZBwo7fprL2X4sv.OEKqxnVtsVQvuXDkI8xVGix.U3W5B7CO', 1, true);
-INSERT IGNORE INTO users (id, name, furigana, postal_code, address, phone_number, email, password, role_id, enabled) VALUES (2, '侍 花子', 'サムライ ハナコ', '101-0022', '東京都千代田区神田練塀町300番地', '090-1234-5678', 'hanako.samurai@example.com', '$2a$10$2JNjTwZBwo7fprL2X4sv.OEKqxnVtsVQvuXDkI8xVGix.U3W5B7CO', 2, true);
-INSERT IGNORE INTO users (id, name, furigana, postal_code, address, phone_number, email, password, role_id, enabled) VALUES (3, '侍 義勝', 'サムライ ヨシカツ', '638-0644', '奈良県五條市西吉野町湯川X-XX-XX', '090-1234-5678', 'yoshikatsu.samurai@example.com', 'password', 1, false);
-INSERT IGNORE INTO users (id, name, furigana, postal_code, address, phone_number, email, password, role_id, enabled) VALUES (4, '侍 幸美', 'サムライ サチミ', '342-0006', '埼玉県吉川市南広島X-XX-XX', '090-1234-5678', 'sachimi.samurai@example.com', 'password', 1, false);
-INSERT IGNORE INTO users (id, name, furigana, postal_code, address, phone_number, email, password, role_id, enabled) VALUES (5, '侍 雅', 'サムライ ミヤビ', '527-0209', '滋賀県東近江市佐目町X-XX-XX', '090-1234-5678', 'miyabi.samurai@example.com', 'password', 1, false);
-INSERT IGNORE INTO users (id, name, furigana, postal_code, address, phone_number, email, password, role_id, enabled) VALUES (6, '侍 正保', 'サムライ マサヤス', '989-1203', '宮城県柴田郡大河原町旭町X-XX-XX', '090-1234-5678', 'masayasu.samurai@example.com', 'password', 1, false);
-INSERT IGNORE INTO users (id, name, furigana, postal_code, address, phone_number, email, password, role_id, enabled) VALUES (7, '侍 真由美', 'サムライ マユミ', '951-8015', '新潟県新潟市松岡町X-XX-XX', '090-1234-5678', 'mayumi.samurai@example.com', 'password', 1, false);
-INSERT IGNORE INTO users (id, name, furigana, postal_code, address, phone_number, email, password, role_id, enabled) VALUES (8, '侍 安民', 'サムライ ヤスタミ', '241-0033', '神奈川県横浜市旭区今川町X-XX-XX', '090-1234-5678', 'yasutami.samurai@example.com', 'password', 1, false);
-INSERT IGNORE INTO users (id, name, furigana, postal_code, address, phone_number, email, password, role_id, enabled) VALUES (9, '侍 章緒', 'サムライ アキオ', '739-2103', '広島県東広島市高屋町宮領X-XX-XX', '090-1234-5678', 'akio.samurai@example.com', 'password', 1, false);
-INSERT IGNORE INTO users (id, name, furigana, postal_code, address, phone_number, email, password, role_id, enabled) VALUES (10, '侍 祐子', 'サムライ ユウコ', '601-0761', '京都府南丹市美山町高野X-XX-XX', '090-1234-5678', 'yuko.samurai@example.com', 'password', 1, false);
-INSERT IGNORE INTO users (id, name, furigana, postal_code, address, phone_number, email, password, role_id, enabled) VALUES (11, '侍 秋美', 'サムライ アキミ', '606-8235', '京都府京都市左京区田中西春菜町X-XX-XX', '090-1234-5678', 'akimi.samurai@example.com', 'password', 1, false);
-INSERT IGNORE INTO users (id, name, furigana, postal_code, address, phone_number, email, password, role_id, enabled) VALUES (12, '侍 信平', 'サムライ シンペイ', '673-1324', '兵庫県加東市新定X-XX-XX', '090-1234-5678', 'shinpei.samurai@example.com', 'password', 1, false);
+-- 管理者ユーザー
+INSERT IGNORE INTO users (id, name, furigana, postal_code, address, phone_number, email, password, role_id, enabled) VALUES 
+(1, 'admin', 'アドミン', '000-0000', '東京都千代田区丸の内1-1', '090-0000-0000', 'admin@example.com', '$2a$10$2JNjTwZBwo7fprL2X4sv.OEKqxnVtsVQvuXDkI8xVGix.U3W5B7CO', 2, true);
+
+-- 一般ユーザー
+INSERT IGNORE INTO users (id, name, furigana, postal_code, address, phone_number, email, password, role_id, enabled) VALUES 
+(2, '侍 太郎', 'サムライ タロウ', '101-0022', '東京都千代田区神田練塀町300番地', '090-1234-5678', 'taro.samurai@example.com', '$2a$10$hashedpasswordfortaro', 1, true),
+(3, '侍 花子', 'サムライ ハナコ', '101-0022', '東京都千代田区神田練塀町300番地', '090-1234-5678', 'hanako.samurai@example.com', '$2a$10$hashedpasswordforhanako', 1, true),
+(4, '侍 義勝', 'サムライ ヨシカツ', '638-0644', '奈良県五條市西吉野町湯川X-XX-XX', '090-1234-5678', 'yoshikatsu.samurai@example.com', '$2a$10$hashedpasswordforyoshikatsu', 1, false),
+(5, '侍 幸美', 'サムライ サチミ', '342-0006', '埼玉県吉川市南広島X-XX-XX', '090-1234-5678', 'sachimi.samurai@example.com', '$2a$10$hashedpasswordforsachimi', 1, false),
+(6, '侍 雅', 'サムライ ミヤビ', '527-0209', '滋賀県東近江市佐目町X-XX-XX', '090-1234-5678', 'miyabi.samurai@example.com', '$2a$10$hashedpasswordformiyabi', 1, false),
+(7, '侍 正保', 'サムライ マサヤス', '989-1203', '宮城県柴田郡大河原町旭町X-XX-XX', '090-1234-5678', 'masayasu.samurai@example.com', '$2a$10$hashedpasswordformasayasu', 1, false),
+(8, '侍 真由美', 'サムライ マユミ', '951-8015', '新潟県新潟市松岡町X-XX-XX', '090-1234-5678', 'mayumi.samurai@example.com', '$2a$10$hashedpasswordformayumi', 1, false),
+(9, '侍 安民', 'サムライ ヤスタミ', '241-0033', '神奈川県横浜市旭区今川町X-XX-XX', '090-1234-5678', 'yasutami.samurai@example.com', '$2a$10$hashedpasswordforyasutami', 1, false),
+(10, '侍 章緒', 'サムライ アキオ', '739-2103', '広島県東広島市高屋町宮領X-XX-XX', '090-1234-5678', 'akio.samurai@example.com', '$2a$10$hashedpasswordforakio', 1, false),
+(11, '侍 祐子', 'サムライ ユウコ', '601-0761', '京都府南丹市美山町高野X-XX-XX', '090-1234-5678', 'yuko.samurai@example.com', '$2a$10$hashedpasswordforyuko', 1, false),
+(12, '侍 秋美', 'サムライ アキミ', '606-8235', '京都府京都市左京区田中西春菜町X-XX-XX', '090-1234-5678', 'akimi.samurai@example.com', '$2a$10$hashedpasswordforakimi', 1, false),
+(13, '侍 信平', 'サムライ シンペイ', '673-1324', '兵庫県加東市新定X-XX-XX', '090-1234-5678', 'shinpei.samurai@example.com', '$2a$10$hashedpasswordforshinpei', 1, false);
 
 
+-- 課金ユーザー
+INSERT IGNORE INTO users (id, name, furigana, postal_code, address, phone_number, email, password, role_id, enabled) VALUES 
+(14, '侍 プレミアム', 'サムライ プレミアム', '102-0071', '東京都港区北青山2丁目X-XX', '080-1234-5678', 'premium.samurai@example.com', '$2a$10$hashedpasswordforpremium', 3, true),
+(15, '侍 裕美', 'サムライ ヒロミ', '150-0001', '東京都渋谷区神宮前X-XX', '080-2345-6789', 'hiromi.samurai@example.com', '$2a$10$hashedpasswordforhiromi', 3, true);
+
+-- ユーザーとロールの関連付け (user_roles 中間テーブル)
+INSERT IGNORE INTO user_roles (user_id, role_id) VALUES 
+(1, 2), -- 管理者ユーザーに ROLE_ADMIN を割り当て
+(2, 1), -- 一般ユーザー (侍 太郎) に ROLE_GENERAL を割り当て
+(3, 1), -- 一般ユーザー (侍 花子) に ROLE_GENERAL を割り当て
+(4, 1), -- 一般ユーザー (侍 義勝) に ROLE_GENERAL を割り当て
+(5, 1), -- 一般ユーザー (侍 幸美) に ROLE_GENERAL を割り当て
+(6, 1), -- 一般ユーザー (侍 雅) に ROLE_GENERAL を割り当て
+(7, 1), -- 一般ユーザー (侍 正保) に ROLE_GENERAL を割り当て
+(8, 1), -- 一般ユーザー (侍 真由美) に ROLE_GENERAL を割り当て
+(9, 1), -- 一般ユーザー (侍 安民) に ROLE_GENERAL を割り当て
+(10, 1), -- 一般ユーザー (侍 章緒) に ROLE_GENERAL を割り当て
+(11, 1), -- 一般ユーザー (侍 祐子) に ROLE_GENERAL を割り当て
+(12, 1), -- 一般ユーザー (侍 秋美) に ROLE_GENERAL を割り当て
+(13, 1); -- 一般ユーザー (侍 信平) に ROLE_GENERAL を割り当て
 -- reservationsテーブル
 INSERT IGNORE INTO reservations (id, shop_id, user_id, reservations_date, reservation_time, number_of_people) VALUES  (1, 1, 1, '2023-04-01', '18:00:00', 2);
 INSERT IGNORE INTO reservations (id, shop_id, user_id, reservations_date, reservation_time, number_of_people) VALUES  (2, 2, 1, '2023-04-01', '19:00:00', 3);
@@ -133,3 +159,11 @@ INSERT IGNORE INTO reviews (id, user_id, shop_id, evaluation, review_comment, cr
 INSERT IGNORE INTO reviews (id, user_id, shop_id, evaluation, review_comment, created_at,  updated_at) VALUES (9, 9, 1, 3, 'Wi-Fiが快適で助かりました。', '2023-04-01', '2023-04-02');
 INSERT IGNORE INTO reviews (id, user_id, shop_id, evaluation, review_comment, created_at,  updated_at) VALUES (10, 10, 1, 4, '清潔感があり気持ちよく滞在できました。', '2023-04-01', '2023-04-02');
 INSERT IGNORE INTO reviews (id, user_id, shop_id, evaluation, review_comment, created_at,  updated_at) VALUES (11, 11, 1, 3, '', '2023-04-01', '2023-04-02');
+
+
+-- companysテーブル
+REPLACE INTO company (
+    id, company_name, website_url, contact_email, phone_number, address, services, portfolio_url, established_year, technology_stack, description, created_at, updated_at
+) VALUES
+(1, 'Awesome App Studio', 'https://awesomeappstudio.com', 'info@awesomeappstudio.com', '123-456-7890', '123 Main Street, Tokyo',
+'Webアプリ開発, モバイルアプリ開発', 'https://portfolio.awesomeappstudio.com', 2010, 'Java, Spring Boot, React, Node.js', '私たちは高品質なアプリ開発を提供します。', '2023-04-01 10:00:00', '2023-04-01 10:00:00');

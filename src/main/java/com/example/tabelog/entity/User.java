@@ -1,58 +1,55 @@
 package com.example.tabelog.entity;
 
-import java.sql.Timestamp;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "users")
 @Data
+@NoArgsConstructor
 public class User {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
-	private Integer id; // User ID（主キー）
+	private Integer id; // 主キー
 
-	@Column(name = "name")
-	private String name; // ユーザー名
+	private String name;
+	private String furigana;
+	private String postalCode;
+	private String address;
+	private String phoneNumber;
+	private String email;
+	private String password;
+	private Boolean enabled;
 
-	@Column(name = "furigana")
-	private String furigana; // フリガナ
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "user_roles", // 中間テーブル名
+			joinColumns = @JoinColumn(name = "user_id"), // Userの外部キー
+			inverseJoinColumns = @JoinColumn(name = "role_id") // Roleの外部キー
+	)
+	private Set<Role> roles = new HashSet<>();
 
-	@Column(name = "postal_code")
-	private String postalCode; // 郵便番号
+	// カスタムメソッド
+	public Set<String> getRoleNames() {
+		return roles.stream()
+				.map(Role::getName)
+				.collect(Collectors.toSet());
+	}
 
-	@Column(name = "address")
-	private String address; // 住所
-
-	@Column(name = "phone_number")
-	private String phoneNumber; // 電話番号
-
-	@Column(name = "email")
-	private String email; // メールアドレス
-
-	@Column(name = "password")
-	private String password; // パスワード
-
-	@ManyToOne
-	@JoinColumn(name = "role_id", nullable = false)
-	private Role role;
-
-	@Column(nullable = false)
-	private Boolean enabled = true; // ユーザーが有効かどうか（デフォルト: true）
-
-	@Column(name = "created_at", insertable = false, updatable = false)
-	private Timestamp createdAt; // 作成日時（データベースによって自動設定）
-
-	@Column(name = "updated_at", insertable = false, updatable = false)
-	private Timestamp updatedAt; // 更新日時（データベースによって自動設定）
+	public void addRole(Role role) {
+		this.roles.add(role);
+	}
 }

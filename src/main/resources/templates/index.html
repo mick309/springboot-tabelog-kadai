@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-
 <head>
+	<!-- metaとスタイルをフラグメントから読み込み -->
 	<div th:replace="~{fragment :: meta}"></div>
-
 	<div th:replace="~{fragment :: styles}"></div>
 
 	<title>Tabelog</title>
@@ -17,18 +16,18 @@
 
 		<main>
 			<div class="container pt-4 pb-5 tabelog-container">
+				<!-- アラートメッセージ -->
 				<div th:if="${param.loggedIn}" class="alert alert-info">
 					ログインしました。
 				</div>
-
 				<div th:if="${param.loggedOut}" class="alert alert-info">
 					ログアウトしました。
 				</div>
-
 				<div th:if="${successMessage}" class="alert alert-info">
 					<span th:text="${successMessage}"></span>
 				</div>
 
+				<!-- 検索フォーム -->
 				<div class="d-flex justify-content-center">
 					<form method="get" th:action="@{/shops}" class="mb-5 tabelog-search-form">
 						<div class="input-group">
@@ -38,7 +37,6 @@
 						</div>
 					</form>
 				</div>
-
 				<h2 class="text-center mb-3">新着</h2>
 				<div class="row row-cols-lg-5 row-cols-2 g-3 mb-5">
 					<div class="col" th:each="newShop : ${newShops}">
@@ -58,7 +56,7 @@
 									<p class="card-text">
 										<span
 											th:text="${#numbers.formatInteger(newShop.getPriceLower(), 1, 'COMMA') + '円 /上限'}"></span><br>
-											<span
+										<span
 											th:text="${#numbers.formatInteger(newShop.getPriceUpper(), 1, 'COMMA') + '円 /下限'}"></span>
 									</p>
 								</div>

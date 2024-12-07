@@ -57,7 +57,11 @@ public class AdminUserController {
 			redirectAttributes.addFlashAttribute("errorMessage", "ユーザーが見つかりませんでした。");
 			return "redirect:/admin/users";
 		}
-		model.addAttribute("user", user);
+		UserEditForm userEditForm = new UserEditForm(
+				user.getId(), user.getName(), user.getFurigana(),
+				user.getPostalCode(), user.getAddress(),
+				user.getPhoneNumber(), user.getEmail());
+		model.addAttribute("userEditForm", userEditForm);
 		return "admin/users/edit";
 	}
 
@@ -93,6 +97,7 @@ public class AdminUserController {
 		return "admin/users/register";
 	}
 
+	// ユーザー作成処理
 	@PostMapping("/new")
 	public String createUser(@ModelAttribute("userCreateForm") @Valid UserCreateForm form,
 			BindingResult bindingResult,
@@ -109,13 +114,17 @@ public class AdminUserController {
 		}
 
 		// ユーザー登録処理
-		userService.createUser(form);
-
-		redirectAttributes.addFlashAttribute("successMessage", "ユーザーが作成されました");
+		try {
+			userService.createUser(form);
+			redirectAttributes.addFlashAttribute("successMessage", "ユーザーが作成されました");
+		} catch (Exception e) {
+			bindingResult.rejectValue("email", "error.email", "メールアドレスが既に使用されています。");
+			return "admin/users/register";
+		}
 		return "redirect:/admin/users";
 	}
 
-	//ユーザ詳細画面
+	// ユーザー詳細画面
 	@GetMapping("/{id}")
 	public String showUserDetails(@PathVariable Integer id, Model model, RedirectAttributes redirectAttributes) {
 		User user = userService.findById(id);
@@ -126,5 +135,4 @@ public class AdminUserController {
 		model.addAttribute("user", user);
 		return "admin/users/show";
 	}
-
 }

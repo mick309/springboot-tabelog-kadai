@@ -1,6 +1,7 @@
 package com.example.tabelog.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +22,10 @@ public interface ReviewRepository extends JpaRepository<Review, Integer> {
 
 	public List<Review> findByShopOrderByCreatedAtDesc(Shop shop);
 
-	
+	List<Review> findByUser(User user);
+
+	Optional<Review> findByIdAndUser(Integer id, User user);
+
+	List<Review> findByShopId(Integer shopId);
 
 }

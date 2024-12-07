@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+
+<head>
+	<div th:replace="~{fragment :: meta}"></div>
+	<div th:replace="~{fragment :: styles}"></div>
+	<title>制作会社編集</title>
+</head>
+
+<body>
+	<div class="tabelog-wrapper">
+		<div th:replace="~{fragment :: header}"></div>
+
+		<main>
+			<div class="container pt-4 pb-5 tabelog-container">
+				<div class="row justify-content-center">
+					<div class="col-xxl-9 col-xl-10 col-lg-11">
+						<h1 class="mb-4 text-center">制作会社編集</h1>
+
+						<form th:action="@{/development-company/edit}" method="post" th:object="${company}">
+							<input type="hidden" th:field="*{id}">
+
+							<!-- 他の入力項目はregister.htmlと同じ -->
+							<div class="mb-3">
+								<label for="companyName" class="form-label">会社名</label>
+								<input type="text" class="form-control" id="companyName" th:field="*{companyName}"
+									required>
+							</div>
+
+							<div class="mb-3">
+								<label for="websiteUrl" class="form-label">ウェブサイトURL</label>
+								<input type="url" class="form-control" id="websiteUrl" th:field="*{websiteUrl}">
+							</div>
+
+							<!-- 以下、register.htmlと同じ構造 -->
+							<!-- ... -->
+
+							<button type="submit" class="btn btn-primary">更新</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</main>
+
+		<div th:replace="~{fragment :: footer}"></div>
+	</div>
+
+	<div th:replace="~{fragment :: scripts}"></div>
+</body>
+
+</html>

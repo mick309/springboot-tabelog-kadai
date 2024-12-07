@@ -28,16 +28,16 @@ public class UserController {
 
 	// ユーザー情報を表示
 	@GetMapping
-	public String index(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl, Model model) {
-		User user = userService.getAuthenticatedUser(userDetailsImpl.getUser().getId());
+	public String index(@AuthenticationPrincipal UserDetailsImpl userDetails, Model model) {
+		User user = userService.getAuthenticatedUser(userDetails.getUser().getId());
 		model.addAttribute("user", user);
 		return "user/index";
 	}
 
 	// ユーザー情報の編集画面
 	@GetMapping("/edit")
-	public String edit(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl, Model model) {
-		User user = userService.getAuthenticatedUser(userDetailsImpl.getUser().getId());
+	public String edit(@AuthenticationPrincipal UserDetailsImpl userDetails, Model model) {
+		User user = userService.getAuthenticatedUser(userDetails.getUser().getId());
 		UserEditForm userEditForm = new UserEditForm(
 				user.getId(), user.getName(), user.getFurigana(),
 				user.getPostalCode(), user.getAddress(),
@@ -51,6 +51,7 @@ public class UserController {
 	public String update(
 			@ModelAttribute @Validated UserEditForm userEditForm,
 			BindingResult bindingResult,
+			@AuthenticationPrincipal UserDetailsImpl userDetails,
 			RedirectAttributes redirectAttributes) {
 
 		// メールアドレスが変更された場合に、既に登録されている場合はエラーメッセージを表示
@@ -72,6 +73,21 @@ public class UserController {
 			// 更新処理に失敗した場合
 			redirectAttributes.addFlashAttribute("errorMessage", "ユーザー情報の更新に失敗しました。");
 			return "redirect:/user/edit";
+		}
+	}
+
+	// ユーザー削除
+	@PostMapping("/delete")
+	public String delete(
+			@AuthenticationPrincipal UserDetailsImpl userDetails,
+			RedirectAttributes redirectAttributes) {
+		try {
+			userService.delete(userDetails.getUser().getId());
+			redirectAttributes.addFlashAttribute("successMessage", "会員情報を削除しました。");
+			return "redirect:/logout";
+		} catch (Exception e) {
+			redirectAttributes.addFlashAttribute("errorMessage", "ユーザー情報の削除に失敗しました。");
+			return "redirect:/user";
 		}
 	}
 }

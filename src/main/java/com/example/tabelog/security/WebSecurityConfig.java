@@ -19,11 +19,22 @@ public class WebSecurityConfig {
 		http
 				.authorizeHttpRequests((requests) -> requests
 						// 静的リソースや一般ユーザーに公開するURLは許可
-						.requestMatchers("/css/**", "/images/**", "/js/**", "/storage/**", "/", "/signup/**",
-								"/shops", "/shops/{id}", "/shops/{id}/reviews", "/stripe/webhook")
+						.requestMatchers(
+								"/css/**",
+								"/images/**",
+								"/js/**",
+								"/storage/**",
+								"/",
+								"/signup/**",
+								"/shops",
+								"/shops/{id}",
+								"/shops/{id}/reviews",
+								"/stripe/webhook")
 						.permitAll()
-						// 管理者用ページはADMINロールを持つユーザーのみアクセス可能
+						// 管理者専用ページはADMINロールを持つユーザーのみアクセス可能
 						.requestMatchers("/admin/**").hasRole("ADMIN")
+						// 課金ユーザー専用ページはPREMIUM_USERロールを持つユーザーのみアクセス可能
+						.requestMatchers("/premium/**").hasRole("PREMIUM_USER")
 						// その他のリクエストは認証が必要
 						.anyRequest().authenticated())
 				.formLogin((form) -> form

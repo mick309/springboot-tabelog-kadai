@@ -1,25 +1,24 @@
 package com.example.tabelog.form;
 
-import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.Range;
-
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
-@AllArgsConstructor
 public class ReviewEditForm {
 
-	@NotNull
 	private Integer id;
 
-	@NotNull(message = "評価を入力してください。")
-	@Range(min = 1, max = 5, message = "評価は1～5までを選択してください。")
+	@NotNull(message = "評価を入力してください")
 	private Integer evaluation;
 
-	@NotNull(message = "コメントを入力してください。")
-	@Length(max = 500, message = "コメントは500字以内で入力してください。")
+	@NotBlank(message = "レビューコメントを入力してください")
 	private String review_comment;
 
+	// 引数なしのデフォルトコンストラクタは @Data によって自動生成されます
+	public ReviewEditForm(Integer id, Integer evaluation, String review_comment) {
+		this.id = id;
+		this.evaluation = evaluation;
+		this.review_comment = review_comment;
+	}
 }

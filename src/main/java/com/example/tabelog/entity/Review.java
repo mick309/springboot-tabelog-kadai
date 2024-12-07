@@ -13,35 +13,42 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Entity
 @Table(name = "reviews")
 @Data
 public class Review {
-    
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 
-    @ManyToOne
-    @JoinColumn(name = "shop_id")
-    private Shop shop;
+	@ManyToOne
+	@JoinColumn(name = "user_id", nullable = false)
+	private User user;
 
-    private Integer evaluation;
+	@ManyToOne
+	@JoinColumn(name = "shop_id", nullable = false)
+	private Shop shop;
 
-    private String review_comment;
+	@NotNull
+	@Min(1)
+	@Max(5)
+	private Integer evaluation;
 
-    @CreationTimestamp
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private Timestamp createdAt;
+	@NotNull
+	@Column(length = 500)
+	private String review_comment;
 
-    @UpdateTimestamp
-    @Column(name = "updated_at", nullable = false, updatable = false)
-    private Timestamp updatedAt;
+	@CreationTimestamp
+	@Column(name = "created_at", nullable = false, updatable = false)
+	private Timestamp createdAt;
+
+	@UpdateTimestamp
+	@Column(name = "updated_at", nullable = false, updatable = false)
+	private Timestamp updatedAt;
 }
-
