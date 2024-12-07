@@ -11,7 +11,7 @@ import com.example.tabelog.entity.User;
 public interface UserRepository extends JpaRepository<User, Integer> {
 	Optional<User> findById(Integer id);
 
-	Optional<User> findByEmail(String email); // Optional を返すように修正
+	User findByEmail(String email); // Optional を返すように修正
 
 	public Page<User> findByNameLikeOrFuriganaLike(String nameKeyword, String furiganaKeyword, Pageable pageable);
 	

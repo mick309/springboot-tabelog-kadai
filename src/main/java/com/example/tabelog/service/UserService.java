@@ -115,7 +115,7 @@ public class UserService {
 
 		// ロールを取得または作成
 		Role role = getOrCreateDefaultRole(roleName);
-		user.addRole(role);
+		user.setRole(role);
 
 		return userRepository.save(user);
 	}
@@ -145,12 +145,6 @@ public class UserService {
 		return !userEditForm.getEmail().equalsIgnoreCase(currentUser.getEmail());
 	}
 
-	// 特定のロールを持っているか確認
-	public boolean hasRole(User user, String roleName) {
-		return user.getRoles().stream()
-				.anyMatch(role -> role.getName().equals(roleName));
-	}
-
 	// カスタム例外
 	public static class EmailAlreadyExistsException extends RuntimeException {
 		public EmailAlreadyExistsException(String message) {
@@ -177,7 +171,7 @@ public class UserService {
 		// デフォルトロールを設定（フォームでロール指定がない場合、一般ユーザーをデフォルトとする）
 		String roleName = (form.getRoleName() != null) ? form.getRoleName() : "ROLE_GENERAL";
 		Role role = getOrCreateDefaultRole(roleName);
-		user.addRole(role);
+		user.setRole(role);
 
 		return userRepository.save(user);
 	}

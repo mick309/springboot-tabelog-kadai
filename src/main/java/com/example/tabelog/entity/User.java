@@ -1,55 +1,59 @@
 package com.example.tabelog.entity;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.sql.Timestamp;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "users")
 @Data
-@NoArgsConstructor
 public class User {
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id; // 主キー
+	@Column(name = "id")
+	private Integer id;
 
+	@Column(name = "name")
 	private String name;
+
+	@Column(name = "furigana")
 	private String furigana;
+
+	@Column(name = "postal_code")
 	private String postalCode;
+
+	@Column(name = "address")
 	private String address;
+
+	@Column(name = "phone_number")
 	private String phoneNumber;
+
+	@Column(name = "email")
 	private String email;
+
+	@Column(name = "password")
 	private String password;
+
+	@ManyToOne
+	@JoinColumn(name = "role_id")
+	private Role role;
+
+	@Column(name = "enabled")
 	private Boolean enabled;
 
-	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "user_roles", // 中間テーブル名
-			joinColumns = @JoinColumn(name = "user_id"), // Userの外部キー
-			inverseJoinColumns = @JoinColumn(name = "role_id") // Roleの外部キー
-	)
-	private Set<Role> roles = new HashSet<>();
+	@Column(name = "created_at", insertable = false, updatable = false)
+	private Timestamp createdAt;
 
-	// カスタムメソッド
-	public Set<String> getRoleNames() {
-		return roles.stream()
-				.map(Role::getName)
-				.collect(Collectors.toSet());
-	}
+	@Column(name = "updated_at", insertable = false, updatable = false)
+	private Timestamp updatedAt;
 
-	public void addRole(Role role) {
-		this.roles.add(role);
-	}
+	
 }
