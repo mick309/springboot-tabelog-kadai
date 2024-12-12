@@ -9,14 +9,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.example.tabelog.entity.User;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
-	Optional<User> findById(Integer id);
+	public User findByEmail(String email);
 
-	User findByEmail(String email); // Optional を返すように修正
+	Page<User> findByNameLikeOrFuriganaLike(String nameKeyword, String furiganaKeyword, Pageable pageable);
 
-	public Page<User> findByNameLikeOrFuriganaLike(String nameKeyword, String furiganaKeyword, Pageable pageable);
-	
 	boolean existsByEmail(String email);
 
 	Optional<User> findByEmailIgnoreCase(String email);
-
 }

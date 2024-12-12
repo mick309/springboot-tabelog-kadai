@@ -16,47 +16,42 @@ import lombok.Data;
 @Table(name = "users")
 @Data
 public class User {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
 	private Integer id;
 
-	@Column(name = "name")
+	@Column(nullable = false)
 	private String name;
 
-	@Column(name = "furigana")
+	@Column(nullable = false)
 	private String furigana;
 
-	@Column(name = "postal_code")
+	@Column(nullable = false)
 	private String postalCode;
 
-	@Column(name = "address")
+	@Column(nullable = false)
 	private String address;
 
-	@Column(name = "phone_number")
+	@Column(nullable = false)
 	private String phoneNumber;
 
-	@Column(name = "email")
+	@Column(nullable = false, unique = true)
 	private String email;
 
-	@Column(name = "password")
+	@Column(nullable = false)
 	private String password;
 
 	@ManyToOne
 	@JoinColumn(name = "role_id", nullable = false)
 	private Role role;
 
-	public Role getRole() {
-		return role;
-	}
-
-	@Column(name = "enabled")
+	@Column(nullable = false)
 	private Boolean enabled;
 
-	@Column(name = "created_at", insertable = false, updatable = false)
+	@Column(nullable = false, insertable = false, updatable = false)
 	private Timestamp createdAt;
 
-	@Column(name = "updated_at", insertable = false, updatable = false)
+	@Column(nullable = false, insertable = false, updatable = false)
 	private Timestamp updatedAt;
-
 }

@@ -33,6 +33,13 @@ public class UserService {
 		return userRepository.findByEmailIgnoreCase(email).isPresent();
 	}
 
+	// メールアドレスが変更されたか確認
+	public boolean isEmailChanged(UserEditForm userEditForm) {
+		User currentUser = userRepository.findById(userEditForm.getId())
+				.orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + userEditForm.getId()));
+		return !currentUser.getEmail().equalsIgnoreCase(userEditForm.getEmail());
+	}
+
 	// ユーザーIDで検索
 	public User findById(Integer id) {
 		return userRepository.findById(id)
@@ -65,13 +72,7 @@ public class UserService {
 		userRepository.save(user);
 	}
 
-	// メールアドレスが変更されたか確認
-	public boolean isEmailChanged(UserEditForm userEditForm) {
-		User currentUser = findById(userEditForm.getId());
-		return !userEditForm.getEmail().equalsIgnoreCase(currentUser.getEmail());
-	}
-
-	// サインアップ用ユーザー作成
+	// サインアップ用のユーザー作成
 	public User create(SignupForm signupForm) {
 		if (isEmailRegistered(signupForm.getEmail())) {
 			throw new IllegalArgumentException("このメールアドレスは既に登録されています。");
@@ -87,7 +88,6 @@ public class UserService {
 		user.setPassword(passwordEncoder.encode(signupForm.getPassword()));
 		user.setEnabled(false); // 初期状態では無効
 
-		// デフォルトロールを設定
 		Role defaultRole = roleRepository.findByName("ROLE_USER")
 				.orElseThrow(() -> new EntityNotFoundException("Default role 'ROLE_USER' not found."));
 		user.setRole(defaultRole);
@@ -95,7 +95,7 @@ public class UserService {
 		return userRepository.save(user);
 	}
 
-	// 新規ユーザー作成
+	// 管理者用のユーザー作成
 	public User createUser(UserCreateForm userCreateForm) {
 		if (isEmailRegistered(userCreateForm.getEmail())) {
 			throw new IllegalArgumentException("このメールアドレスは既に登録されています。");
@@ -109,7 +109,7 @@ public class UserService {
 		user.setPhoneNumber(userCreateForm.getPhoneNumber());
 		user.setEmail(userCreateForm.getEmail());
 		user.setPassword(passwordEncoder.encode(userCreateForm.getPassword()));
-		user.setEnabled(true);
+		user.setEnabled(true); // 管理者用ユーザーは即時有効化
 
 		Role role = roleRepository.findById(userCreateForm.getRoleId())
 				.orElseThrow(
@@ -119,14 +119,20 @@ public class UserService {
 		return userRepository.save(user);
 	}
 
-	// 新規ユーザー登録
-	public User registerUser(UserCreateForm userCreateForm) {
-		return createUser(userCreateForm); // createUser メソッドを利用
+	// ユーザーを有効化
+	public void enableUser(User user) {
+		user.setEnabled(true);
+		userRepository.save(user);
 	}
 
 	// ユーザー削除
 	public void delete(Integer userId) {
 		userRepository.deleteById(userId);
+	}
+
+	// 新規ユーザー登録
+	public User registerUser(UserCreateForm userCreateForm) {
+		return createUser(userCreateForm); // createUser メソッドを利用
 	}
 
 	// 認証済みのユーザーを取得
@@ -139,9 +145,16 @@ public class UserService {
 		return password != null && password.equals(passwordConfirmation);
 	}
 
-	// ユーザーを有効化
-	public void enableUser(User user) {
-		user.setEnabled(true);
+	public User register(SignupForm form) {
+		User user = new User();
+		user.setEmail(form.getEmail());
+		user.setPassword(passwordEncoder.encode(form.getPassword())); // パスワードをエンコード
+		// その他のフィールドをセット
+		return userRepository.save(user);
+	}
+
+	public void registerUser(User user) {
+		user.setPassword(passwordEncoder.encode(user.getPassword())); // パスワードをエンコード
 		userRepository.save(user);
 	}
 }

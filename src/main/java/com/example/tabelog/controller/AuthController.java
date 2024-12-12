@@ -22,87 +22,68 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 public class AuthController {
-
 	private final UserService userService;
 	private final SignupEventPublisher signupEventPublisher;
 	private final VerificationTokenService verificationTokenService;
 
-	public AuthController(
-			UserService userService,
-			SignupEventPublisher signupEventPublisher,
+	public AuthController(UserService userService, SignupEventPublisher signupEventPublisher,
 			VerificationTokenService verificationTokenService) {
 		this.userService = userService;
 		this.signupEventPublisher = signupEventPublisher;
 		this.verificationTokenService = verificationTokenService;
 	}
 
-	// ログインページ表示
 	@GetMapping("/login")
 	public String login() {
 		return "auth/login";
 	}
 
-	// サインアップページ表示
 	@GetMapping("/signup")
 	public String signup(Model model) {
 		model.addAttribute("signupForm", new SignupForm());
 		return "auth/signup";
 	}
 
-	// サインアップ処理
 	@PostMapping("/signup")
-	public String signup(
-			@ModelAttribute @Validated SignupForm signupForm,
-			BindingResult bindingResult,
-			RedirectAttributes redirectAttributes,
-			HttpServletRequest httpServletRequest) {
-
-		// メールアドレスが登録済みの場合のエラーチェック
+	public String signup(@ModelAttribute @Validated SignupForm signupForm, BindingResult bindingResult,
+			RedirectAttributes redirectAttributes, HttpServletRequest httpServletRequest) {
+		// メールアドレスが登録済みであれば、BindingResultオブジェクトにエラー内容を追加する
 		if (userService.isEmailRegistered(signupForm.getEmail())) {
-			bindingResult.addError(new FieldError(
-					bindingResult.getObjectName(),
-					"email",
-					"すでに登録済みのメールアドレスです。"));
+			FieldError fieldError = new FieldError(bindingResult.getObjectName(), "email", "すでに登録済みのメールアドレスです。");
+			bindingResult.addError(fieldError);
 		}
 
-		// パスワード確認用チェック
+		// パスワードとパスワード（確認用）の入力値が一致しなければ、BindingResultオブジェクトにエラー内容を追加する
 		if (!userService.isSamePassword(signupForm.getPassword(), signupForm.getPasswordConfirmation())) {
-			bindingResult.addError(new FieldError(
-					bindingResult.getObjectName(),
-					"passwordConfirmation",
-					"パスワードが一致しません。"));
+			FieldError fieldError = new FieldError(bindingResult.getObjectName(), "password", "パスワードが一致しません。");
+			bindingResult.addError(fieldError);
 		}
 
-		// 入力エラーがある場合はサインアップ画面へ戻る
 		if (bindingResult.hasErrors()) {
 			return "auth/signup";
 		}
 
-		// ユーザー作成処理
 		User createdUser = userService.create(signupForm);
-
-		// サインアップイベントを発行
-		String requestUrl = httpServletRequest.getRequestURL().toString();
+		String requestUrl = new String(httpServletRequest.getRequestURL());
 		signupEventPublisher.publishSignupEvent(createdUser, requestUrl);
-
-		// リダイレクト用の成功メッセージ設定
 		redirectAttributes.addFlashAttribute("successMessage",
 				"ご入力いただいたメールアドレスに認証メールを送信しました。メールに記載されているリンクをクリックし、会員登録を完了してください。");
 
 		return "redirect:/";
 	}
 
-	// サインアップ認証処理
 	@GetMapping("/signup/verify")
 	public String verify(@RequestParam(name = "token") String token, Model model) {
 		VerificationToken verificationToken = verificationTokenService.getVerificationToken(token);
 
 		if (verificationToken != null) {
 			User user = verificationToken.getUser();
-			userService.enableUser(user); // ユーザーを有効化
-			model.addAttribute("successMessage", "会員登録が完了しました。");
+			userService.enableUser(user);
+			String successMessage = "会員登録が完了しました。";
+			model.addAttribute("successMessage", successMessage);
 		} else {
-			model.addAttribute("errorMessage", "トークンが無効です。");
+			String errorMessage = "トークンが無効です。";
+			model.addAttribute("errorMessage", errorMessage);
 		}
 
 		return "auth/verify";

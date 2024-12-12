@@ -9,59 +9,57 @@ import com.example.tabelog.entity.User;
 
 public class UserDetailsImpl implements UserDetails {
 
-	private final User user; // アプリケーション独自のUserエンティティ
-	private final Collection<GrantedAuthority> authorities; // ユーザーのロール・権限
+	private final User user;
+	private final Collection<GrantedAuthority> authorities;
 
-	// コンストラクタ
 	public UserDetailsImpl(User user, Collection<GrantedAuthority> authorities) {
 		this.user = user;
 		this.authorities = authorities;
 	}
 
-	// カスタムメソッド: アプリケーションのUserオブジェクトを取得
 	public User getUser() {
 		return user;
 	}
 
-	// パスワードを取得（ハッシュ化済み）
+	// ハッシュ化済みのパスワードを返す
 	@Override
 	public String getPassword() {
 		return user.getPassword();
 	}
 
-	// ユーザー名（この場合はメールアドレス）を取得
+	// ログイン時に利用するユーザー名（メールアドレス）を返す
 	@Override
 	public String getUsername() {
 		return user.getEmail();
 	}
 
-	// ユーザーの権限を返す
+	// ロールのコレクションを返す
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return authorities;
 	}
 
-	// アカウントが有効期限切れでないか
+	// アカウントが期限切れでなければtrueを返す
 	@Override
 	public boolean isAccountNonExpired() {
 		return true;
 	}
 
-	// アカウントがロックされていないか
+	// ユーザーがロックされていなければtrueを返す
 	@Override
 	public boolean isAccountNonLocked() {
 		return true;
 	}
 
-	// 資格情報（パスワード）が有効期限切れでないか
+	// ユーザーのパスワードが期限切れでなければtrueを返す
 	@Override
 	public boolean isCredentialsNonExpired() {
 		return true;
 	}
 
-	// アカウントが有効か
+	// ユーザーが有効であればtrueを返す
 	@Override
 	public boolean isEnabled() {
-		return user.getEnabled() != null && user.getEnabled();
+		return user.getEnabled();
 	}
 }

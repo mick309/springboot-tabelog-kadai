@@ -14,6 +14,7 @@ import com.example.tabelog.entity.User;
 import com.example.tabelog.repository.UserRepository;
 
 @Service
+
 public class UserDetailsServiceImpl implements UserDetailsService {
 	private final UserRepository userRepository;
 

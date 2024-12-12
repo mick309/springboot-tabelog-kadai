@@ -67,27 +67,29 @@ public class UserController {
 			@AuthenticationPrincipal UserDetailsImpl userDetails,
 			RedirectAttributes redirectAttributes) {
 
-		// メールアドレスが変更された場合に、既に登録されている場合はエラーメッセージを表示
+		// メールアドレスが変更され、すでに登録済みの場合
 		if (userService.isEmailChanged(userEditForm) && userService.isEmailRegistered(userEditForm.getEmail())) {
-			bindingResult.rejectValue("email", null, "すでに登録済みのメールアドレスです。");
+			bindingResult.rejectValue("email", null, "このメールアドレスは既に登録されています。");
 		}
 
-		// 入力にエラーがある場合、編集画面に戻す
+		// 入力エラーがある場合
 		if (bindingResult.hasErrors()) {
 			return "user/edit";
 		}
 
-		// ユーザー情報の更新処理
 		try {
+			// 更新処理
 			userService.update(userEditForm);
-			redirectAttributes.addFlashAttribute("successMessage", "会員情報を編集しました。");
+			redirectAttributes.addFlashAttribute("successMessage", "会員情報を更新しました。");
 			return "redirect:/user";
 		} catch (Exception e) {
-			// 更新処理に失敗した場合
+			// 更新失敗時
 			redirectAttributes.addFlashAttribute("errorMessage", "ユーザー情報の更新に失敗しました。");
 			return "redirect:/user/edit";
 		}
 	}
+
+
 
 	// ユーザー削除
 	@PostMapping("/delete")

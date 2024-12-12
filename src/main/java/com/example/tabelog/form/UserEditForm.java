@@ -1,5 +1,6 @@
 package com.example.tabelog.form;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -26,17 +27,13 @@ public class UserEditForm {
 	private String phoneNumber;
 
 	@NotBlank(message = "メールアドレスを入力してください。")
+	@Email(message = "有効なメールアドレスを入力してください。")
 	private String email;
 
-	// パスワード
-	private String password;
+	private String password; // パスワードは空でも許容する場合、@NotBlank を削除
 
-	// ロールID
-	@NotNull(message = "ロールは必須です。")
+	@NotNull(message = "ロールIDは必須です。")
 	private Integer roleId;
-
-	public UserEditForm() {
-	}
 
 	public UserEditForm(Integer id, String name, String furigana, String postalCode,
 			String address, String phoneNumber, String email, Integer roleId) {

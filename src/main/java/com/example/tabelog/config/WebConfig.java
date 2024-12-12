@@ -23,26 +23,27 @@ public class WebConfig implements WebMvcConfigurer {
 		registry.addConverter(stringToWeekDayConverter);
 	}
 
-	// Spring Securityの設定
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http
 				.authorizeHttpRequests(auth -> auth
-						.requestMatchers("/admin/**").hasRole("ADMIN") // 管理者専用
-						.requestMatchers("/premium/**").hasRole("PREMIUM_USER") // 課金ユーザー専用
-						.requestMatchers("/user/**").hasRole("GENERAL") // 一般ユーザー専用
-						.requestMatchers("/**").permitAll() // それ以外は全員アクセス可
-				)
+						.requestMatchers("/favicon.ico").permitAll() // 追加: favicon.ico 許可
+						.requestMatchers("/css/**", "/js/**", "/images/**").permitAll() // 追加: 静的リソース許可
+						.requestMatchers("/error").permitAll()
+						.requestMatchers("/admin/**").hasRole("ADMIN")
+						.requestMatchers("/premium/**").hasRole("PREMIUM_USER")
+						.requestMatchers("/user/**").hasRole("GENERAL")
+						.anyRequest().authenticated())
 				.formLogin(form -> form
 						.loginPage("/login")
-						.defaultSuccessUrl("/") // ログイン成功時のリダイレクト先
+						.defaultSuccessUrl("/")
 						.permitAll())
 				.logout(logout -> logout
 						.logoutUrl("/logout")
-						.logoutSuccessUrl("/")
-						.permitAll())
-				.csrf().disable(); // 必要に応じて有効化（開発時のみ無効化推奨）
-
+						.logoutSuccessUrl("/"))
+				.csrf(csrf -> csrf
+						.ignoringRequestMatchers("/api/**"));
 		return http.build();
 	}
+
 }

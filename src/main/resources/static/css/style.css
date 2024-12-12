@@ -47,7 +47,9 @@ footer {
 }
 
 .tabelog-logo {
-  height: 30px;  
+	height: 50px; /* ロゴの高さを固定 */
+    max-width: 100%; /* 幅を親要素に合わせる */
+	object-fit: contain;  
 }
 
 .tabelog-btn {

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+	<title>会社情報</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+</head>
+
+<body>
+	<header class="bg-light p-3">
+		<h1 class="text-center">会社情報</h1>
+	</header>
+
+	<main class="container mt-5">
+		<!-- 共通情報 -->
+		<section>
+			<h2>基本情報</h2>
+			<div class="card p-3">
+				<p><strong>会社名:</strong> <span th:text="${company.company_name}"></span></p>
+				<p><strong>所在地:</strong> <span th:text="${company.address}"></span></p>
+				<p><strong>電話番号:</strong> <span th:text="${company.phone_number}"></span></p>
+				<p><strong>メールアドレス:</strong> <span th:text="${company.contact_email}"></span></p>
+				<p><strong>設立年:</strong> <span th:text="${company.established_year}"></span></p>
+				<p><strong>公式ウェブサイト:</strong> <a th:href="${company.website_url}" target="_blank"
+						th:text="${company.website_url}"></a></p>
+			</div>
+		</section>
+
+		<!-- 一般ユーザー向け情報 -->
+		<section sec:authorize="hasRole('ROLE_GENERAL')" class="mt-4">
+			<h2>一般会員向け情報</h2>
+			<div class="card p-3">
+				<p><strong>業務内容:</strong> <span th:text="${company.services}"></span></p>
+				<p><strong>概要:</strong> <span th:text="${company.description}"></span></p>
+			</div>
+		</section>
+
+		<!-- プレミアムユーザー向け情報 -->
+		<section sec:authorize="hasRole('ROLE_PREMIUM_USER')" class="mt-4">
+			<h2>プレミアム会員限定情報</h2>
+			<div class="card p-3">
+				<p><strong>ポートフォリオURL:</strong> <a th:href="${company.portfolio_url}" target="_blank"
+						th:text="${company.portfolio_url}"></a></p>
+				<p><strong>技術スタック:</strong> <span th:text="${company.technology_stack}"></span></p>
+				<p><strong>特別な詳細:</strong> <span th:text="${company.premium_info}"></span></p>
+			</div>
+		</section>
+
+		<!-- 管理者向け情報 -->
+		<section sec:authorize="hasRole('ROLE_ADMIN')" class="mt-4">
+			<h2>管理者限定情報</h2>
+			<div class="card p-3">
+				<p><strong>内部ID:</strong> <span th:text="${company.id}"></span></p>
+				<p><strong>作成日時:</strong> <span th:text="${company.created_at}"></span></p>
+				<p><strong>更新日時:</strong> <span th:text="${company.updated_at}"></span></p>
+			</div>
+		</section>
+	</main>
+
+	<footer class="bg-light text-center p-3 mt-5">
+		<p>&copy; tabelog. All rights reserved.</p>
+	</footer>
+
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+		crossorigin="anonymous"></script>
+</body>
+
+</html>
