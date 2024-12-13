@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -16,7 +17,8 @@ public class WebSecurityConfig {
 		http
 				.authorizeHttpRequests((requests) -> requests
 						// 許可されたリソース
-						.requestMatchers("/css/**", "/images/**", "/js/**", "/storage/**", "/", "/signup/**", "/shops",
+						.requestMatchers(
+								"/css/**", "/images/**", "/js/**", "/storage/**", "/", "/signup/**", "/shops",
 								"/shops/{id}", "/stripe/webhook", "/shops/{id}/reviews")
 						.permitAll()
 						.requestMatchers("/admin/**").hasRole("ADMIN")
@@ -24,12 +26,16 @@ public class WebSecurityConfig {
 				.formLogin((form) -> form
 						.loginPage("/login") // ログインページのURL
 						.loginProcessingUrl("/login") // ログインフォームの送信先URL
-						.defaultSuccessUrl("/?loggedIn") // ログイン成功時のリダイレクト先URL
+						.defaultSuccessUrl("/?loggedIn", true) // ログイン成功時のリダイレクト先URL
 						.failureUrl("/login?error") // ログイン失敗時のリダイレクト先URL
 						.permitAll())
 				.logout((logout) -> logout
-						.logoutSuccessUrl("/?loggedOut") // ログアウト時のリダイレクト先URL
-						.permitAll());
+						.logoutUrl("/logout") // ログアウト用のURL
+						.logoutSuccessUrl("/?loggedOut") // ログアウト成功時のリダイレクト先URL
+						.invalidateHttpSession(true) // セッションを無効化
+						.deleteCookies("JSESSIONID") // クッキーを削除
+						.permitAll())
+				.csrf().disable(); // 必要に応じてCSRFを無効化（本番環境では再検討が必要）
 
 		return http.build();
 	}
@@ -47,6 +53,11 @@ public class WebSecurityConfig {
 				return rawPassword.toString().equals(encodedPassword); // 平文比較
 			}
 		};
+	}
+
+	@Bean
+	public WebSecurityCustomizer webSecurityCustomizer() {
+		return (web) -> web.ignoring().requestMatchers("/favicon.ico"); // 無視リストに追加
 	}
 
 }
