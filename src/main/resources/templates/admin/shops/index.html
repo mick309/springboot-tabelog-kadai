@@ -1,5 +1,5 @@
 <!DOCTYPE html>
- <html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
 	<div th:replace="~{fragment :: meta}"></div>
@@ -55,8 +55,7 @@
 							<tbody>
 								<tr th:each="shop : ${shopPage}">
 									<td th:text="${shop.id}"></td>
-									<!-- 修正: categoryId → category（例） -->
-									<td th:text="${shop.category.id}"></td> <!-- もしcategoryが存在する場合 -->
+									<td th:text="${shop.category.id}"></td>
 									<td th:text="${shop.shopName}"></td>
 									<td th:text="${shop.priceUpper}"></td>
 									<td th:text="${shop.priceLower}"></td>
@@ -82,6 +81,8 @@
 												<div sec:authorize="isAuthenticated()" class="modal-footer">
 													<form method="post"
 														th:action="@{/admin/shops/__${shop.id}__/delete}">
+														<!-- CSRFトークンを設定 -->
+														<input type="hidden" name="_csrf" th:value="${_csrf.token}" />
 														<button type="submit"
 															class="btn tabelog-btn-danger text-white shadow-sm">削除</button>
 													</form>

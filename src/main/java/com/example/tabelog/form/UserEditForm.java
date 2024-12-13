@@ -31,6 +31,7 @@ public class UserEditForm {
 	private String email;
 
 	private String password; // パスワードは空でも許容する場合、@NotBlank を削除
+	private String passwordConfirmation; // 確認用パスワードを追加
 
 	@NotNull(message = "ロールIDは必須です。")
 	private Integer roleId;

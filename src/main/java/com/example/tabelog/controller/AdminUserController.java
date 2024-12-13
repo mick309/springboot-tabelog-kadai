@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,6 +22,7 @@ import com.example.tabelog.form.UserEditForm;
 import com.example.tabelog.repository.UserRepository;
 import com.example.tabelog.service.UserService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 @Controller
@@ -37,15 +39,25 @@ public class AdminUserController {
 
 	// ユーザー一覧表示
 	@GetMapping
-	public String index(@RequestParam(name = "keyword", required = false) String keyword,
+	public String index(
+			@RequestParam(name = "keyword", required = false) String keyword,
 			@PageableDefault(page = 0, size = 10, sort = "id", direction = Direction.ASC) Pageable pageable,
-			Model model) {
+			Model model,
+			HttpServletRequest request) {
+
+		// CSRFトークンを取得
+		CsrfToken csrfToken = (CsrfToken) request.getAttribute("_csrf");
+
+		// ユーザー一覧の取得
 		Page<User> userPage = (keyword != null && !keyword.isEmpty())
 				? userRepository.findByNameLikeOrFuriganaLike("%" + keyword + "%", "%" + keyword + "%", pageable)
 				: userRepository.findAll(pageable);
 
+		// データをモデルに追加
 		model.addAttribute("userPage", userPage);
 		model.addAttribute("keyword", keyword);
+		model.addAttribute("token", csrfToken != null ? csrfToken.getToken() : null);
+
 		return "admin/users/index";
 	}
 
@@ -58,16 +70,16 @@ public class AdminUserController {
 			return "redirect:/admin/users";
 		}
 		UserEditForm userEditForm = new UserEditForm(
-		        user.getId(),
-		        user.getName(),
-		        user.getFurigana(),
-		        user.getPostalCode(),
-		        user.getAddress(),
-		        user.getPhoneNumber(),
-		        user.getEmail(),
-		        user.getRole().getId() // ロールIDを取得
-				);
-		model.addAttribute("userEditForm", userEditForm);
+				user.getId(),
+				user.getName(),
+				user.getFurigana(),
+				user.getPostalCode(),
+				user.getAddress(),
+				user.getPhoneNumber(),
+				user.getEmail(),
+				user.getRole().getId() // ロールIDを取得
+		);
+		model.addAttribute("userEditForm", userEditForm); // ここで userEditForm を渡す
 		return "admin/users/edit";
 	}
 
@@ -141,4 +153,5 @@ public class AdminUserController {
 		model.addAttribute("user", user);
 		return "admin/users/show";
 	}
+
 }

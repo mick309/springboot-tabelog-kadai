@@ -16,7 +16,6 @@ public class WebSecurityConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http
 				.authorizeHttpRequests((requests) -> requests
-						// 許可されたリソース
 						.requestMatchers(
 								"/css/**", "/images/**", "/js/**", "/storage/**", "/", "/signup/**", "/shops",
 								"/shops/{id}", "/stripe/webhook", "/shops/{id}/reviews")
@@ -24,18 +23,18 @@ public class WebSecurityConfig {
 						.requestMatchers("/admin/**").hasRole("ADMIN")
 						.anyRequest().authenticated())
 				.formLogin((form) -> form
-						.loginPage("/login") // ログインページのURL
-						.loginProcessingUrl("/login") // ログインフォームの送信先URL
-						.defaultSuccessUrl("/?loggedIn", true) // ログイン成功時のリダイレクト先URL
-						.failureUrl("/login?error") // ログイン失敗時のリダイレクト先URL
+						.loginPage("/login")
+						.loginProcessingUrl("/login")
+						.defaultSuccessUrl("/?loggedIn", true)
+						.failureUrl("/login?error")
 						.permitAll())
 				.logout((logout) -> logout
-						.logoutUrl("/logout") // ログアウト用のURL
-						.logoutSuccessUrl("/?loggedOut") // ログアウト成功時のリダイレクト先URL
-						.invalidateHttpSession(true) // セッションを無効化
-						.deleteCookies("JSESSIONID") // クッキーを削除
+						.logoutUrl("/logout")
+						.logoutSuccessUrl("/?loggedOut")
+						.invalidateHttpSession(true)
+						.deleteCookies("JSESSIONID")
 						.permitAll())
-				.csrf().disable(); // 必要に応じてCSRFを無効化（本番環境では再検討が必要）
+				.csrf().and(); // CSRF保護を有効化
 
 		return http.build();
 	}

@@ -60,13 +60,14 @@
 							</div>
 						</li>
 
-						<!-- 管理者であれば表示する -->
+						<!-- 管理者メニュー -->
 						<li class="nav-item dropdown" sec:authorize="hasRole('ROLE_ADMIN')">
 							<a id="navbarDropdownAdmin" class="nav-link dropdown-toggle" href="#" role="button"
 								data-bs-toggle="dropdown" aria-expanded="false">管理者メニュー</a>
 							<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownAdmin">
 								<li><a class="dropdown-item" th:href="@{/company/view}">会社情報</a></li>
 								<li><a class="dropdown-item" th:href="@{/admin/shops}">店舗一覧</a></li>
+								<li><a class="dropdown-item" th:href="@{/admin/users}">会員一覧</a></li> <!-- 追加部分 -->
 								<li>
 									<hr class="dropdown-divider">
 								</li>
