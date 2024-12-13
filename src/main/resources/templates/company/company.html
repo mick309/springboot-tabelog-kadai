@@ -2,69 +2,120 @@
 <html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
+	<div th:replace="~{fragment :: meta}"></div>
+	<div th:replace="~{fragment :: styles}"></div>
 	<title>会社情報</title>
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
-		integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
 </head>
 
 <body>
-	<header class="bg-light p-3">
-		<h1 class="text-center">会社情報</h1>
-	</header>
+	<div class="tabelog-wrapper">
+		<!-- ヘッダー -->
+		<div th:replace="~{fragment :: header}"></div>
 
-	<main class="container mt-5">
-		<!-- 共通情報 -->
-		<section>
-			<h2>基本情報</h2>
-			<div class="card p-3">
-				<p><strong>会社名:</strong> <span th:text="${company.company_name}"></span></p>
-				<p><strong>所在地:</strong> <span th:text="${company.address}"></span></p>
-				<p><strong>電話番号:</strong> <span th:text="${company.phone_number}"></span></p>
-				<p><strong>メールアドレス:</strong> <span th:text="${company.contact_email}"></span></p>
-				<p><strong>設立年:</strong> <span th:text="${company.established_year}"></span></p>
-				<p><strong>公式ウェブサイト:</strong> <a th:href="${company.website_url}" target="_blank"
-						th:text="${company.website_url}"></a></p>
+		<main>
+			<div class="container pt-4 pb-5 tabelog-container">
+				<div class="row justify-content-center">
+					<div class="col-xl-8 col-lg-10 col-md-12">
+
+						<h1 class="mb-4 text-center">会社情報</h1>
+
+						<!-- 共通情報 -->
+						<div class="card shadow-sm p-4 mb-4">
+							<h2 class="h5">基本情報</h2>
+							<div class="row py-2 border-bottom">
+								<div class="col-4 fw-bold">会社名</div>
+								<div class="col" th:text="${company.companyName}"></div>
+							</div>
+							<div class="row py-2 border-bottom">
+								<div class="col-4 fw-bold">所在地</div>
+								<div class="col" th:text="${company.address}"></div>
+							</div>
+							<div class="row py-2 border-bottom">
+								<div class="col-4 fw-bold">電話番号</div>
+								<div class="col" th:text="${company.phoneNumber}"></div>
+							</div>
+							<div class="row py-2 border-bottom">
+								<div class="col-4 fw-bold">メールアドレス</div>
+								<div class="col" th:text="${company.contactEmail}"></div>
+							</div>
+							<div class="row py-2 border-bottom">
+								<div class="col-4 fw-bold">設立年</div>
+								<div class="col" th:text="${company.establishedYear}"></div>
+							</div>
+							<div class="row py-2 border-bottom">
+								<div class="col-4 fw-bold">公式ウェブサイト</div>
+								<div class="col">
+									<a th:href="${company.websiteUrl}" target="_blank"
+										th:text="${company.websiteUrl}"></a>
+								</div>
+							</div>
+						</div>
+
+						<!-- 一般ユーザー向け情報 -->
+						<section sec:authorize="hasRole('ROLE_GENERAL')" class="card shadow-sm p-4 mb-4">
+							<h2 class="h5">一般会員向け情報</h2>
+							<div class="row py-2 border-bottom">
+								<div class="col-4 fw-bold">業務内容</div>
+								<div class="col" th:text="${company.services}"></div>
+							</div>
+							<div class="row py-2">
+								<div class="col-4 fw-bold">概要</div>
+								<div class="col" th:text="${company.description}"></div>
+							</div>
+						</section>
+
+						<!-- プレミアムユーザー向け情報 -->
+						<section sec:authorize="hasRole('ROLE_PREMIUM_USER')" class="card shadow-sm p-4 mb-4">
+							<h2 class="h5">プレミアム会員限定情報</h2>
+							<div class="row py-2 border-bottom">
+								<div class="col-4 fw-bold">ポートフォリオURL</div>
+								<div class="col">
+									<a th:href="${company.portfolioUrl}" target="_blank"
+										th:text="${company.portfolioUrl}"></a>
+								</div>
+							</div>
+							<div class="row py-2 border-bottom">
+								<div class="col-4 fw-bold">技術スタック</div>
+								<div class="col" th:text="${company.technologyStack}"></div>
+							</div>
+							<div class="row py-2">
+								<div class="col-4 fw-bold">特別な詳細</div>
+								<div class="col" th:text="${company.premiumInfo}"></div>
+							</div>
+						</section>
+
+						<!-- 管理者向け情報 -->
+						<section sec:authorize="hasRole('ROLE_ADMIN')" class="card shadow-sm p-4 mb-4">
+							<h2 class="h5">管理者限定情報</h2>
+							<div class="row py-2 border-bottom">
+								<div class="col-4 fw-bold">内部ID</div>
+								<div class="col" th:text="${company.id}"></div>
+							</div>
+							<div class="row py-2 border-bottom">
+								<div class="col-4 fw-bold">作成日時</div>
+								<div class="col" th:text="${company.createdAt}"></div>
+							</div>
+							<div class="row py-2">
+								<div class="col-4 fw-bold">更新日時</div>
+								<div class="col" th:text="${company.updatedAt}"></div>
+							</div>
+						</section>
+
+						<!-- 戻るボタン -->
+						<div class="d-flex justify-content-end mt-4">
+							<button class="btn btn-secondary" onclick="history.back()">戻る</button>
+						</div>
+
+					</div>
+				</div>
 			</div>
-		</section>
+		</main>
 
-		<!-- 一般ユーザー向け情報 -->
-		<section sec:authorize="hasRole('ROLE_GENERAL')" class="mt-4">
-			<h2>一般会員向け情報</h2>
-			<div class="card p-3">
-				<p><strong>業務内容:</strong> <span th:text="${company.services}"></span></p>
-				<p><strong>概要:</strong> <span th:text="${company.description}"></span></p>
-			</div>
-		</section>
+		<!-- フッター -->
+		<div th:replace="~{fragment :: footer}"></div>
+	</div>
 
-		<!-- プレミアムユーザー向け情報 -->
-		<section sec:authorize="hasRole('ROLE_PREMIUM_USER')" class="mt-4">
-			<h2>プレミアム会員限定情報</h2>
-			<div class="card p-3">
-				<p><strong>ポートフォリオURL:</strong> <a th:href="${company.portfolio_url}" target="_blank"
-						th:text="${company.portfolio_url}"></a></p>
-				<p><strong>技術スタック:</strong> <span th:text="${company.technology_stack}"></span></p>
-				<p><strong>特別な詳細:</strong> <span th:text="${company.premium_info}"></span></p>
-			</div>
-		</section>
-
-		<!-- 管理者向け情報 -->
-		<section sec:authorize="hasRole('ROLE_ADMIN')" class="mt-4">
-			<h2>管理者限定情報</h2>
-			<div class="card p-3">
-				<p><strong>内部ID:</strong> <span th:text="${company.id}"></span></p>
-				<p><strong>作成日時:</strong> <span th:text="${company.created_at}"></span></p>
-				<p><strong>更新日時:</strong> <span th:text="${company.updated_at}"></span></p>
-			</div>
-		</section>
-	</main>
-
-	<footer class="bg-light text-center p-3 mt-5">
-		<p>&copy; tabelog. All rights reserved.</p>
-	</footer>
-
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
-		integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
-		crossorigin="anonymous"></script>
+	<div th:replace="~{fragment :: scripts}"></div>
 </body>
 
 </html>

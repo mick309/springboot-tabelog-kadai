@@ -44,14 +44,14 @@
 							<a class="nav-link" th:href="@{/login}">ログイン</a>
 						</li>
 
-						<!-- ログイン済みであれば表示する -->
+						<!-- 一般ユーザー向けメニュー -->
 						<li class="nav-item dropdown" sec:authorize="hasRole('ROLE_GENERAL')">
 							<a id="navbarDropdownGeneral" class="nav-link dropdown-toggle" href="#" role="button"
 								data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
 								<span sec:authentication="principal.user.name"></span>
 							</a>
-
 							<div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownGeneral">
+								<a class="dropdown-item tabelog-dropdown-item" th:href="@{/company/view}">会社情報</a>
 								<a class="dropdown-item tabelog-dropdown-item" th:href="@{/logout}"
 									onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
 									ログアウト
@@ -59,11 +59,13 @@
 								<form class="d-none" id="logout-form" th:action="@{/logout}" method="post"></form>
 							</div>
 						</li>
+
 						<!-- 管理者であれば表示する -->
 						<li class="nav-item dropdown" sec:authorize="hasRole('ROLE_ADMIN')">
 							<a id="navbarDropdownAdmin" class="nav-link dropdown-toggle" href="#" role="button"
 								data-bs-toggle="dropdown" aria-expanded="false">管理者メニュー</a>
 							<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownAdmin">
+								<li><a class="dropdown-item" th:href="@{/company/view}">会社情報</a></li>
 								<li><a class="dropdown-item" th:href="@{/admin/shops}">店舗一覧</a></li>
 								<li>
 									<hr class="dropdown-divider">
@@ -71,11 +73,14 @@
 								<li><a class="dropdown-item" th:href="@{/logout}">ログアウト</a></li>
 							</ul>
 						</li>
-						<!-- 課金ユーザーであれば表示する -->
-						<li class="nav-item dropdown" sec:authorize="hasRole('PREMIUM_PREMIUM')">
-							<a id="navbarDropdownAdmin" class="nav-link dropdown-toggle" href="#" role="button"
-								data-bs-toggle="dropdown" aria-expanded="false">管理者メニュー</a>
-							<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownAdmin">
+						<!-- PREMIUMユーザーであれば表示する -->
+						<li class="nav-item dropdown" sec:authorize="hasRole('ROLE_PREMIUM_USER')">
+							<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+								aria-expanded="false">
+								PREMIUMメニュー
+							</a>
+							<ul class="dropdown-menu">
+								<li><a class="dropdown-item" th:href="@{/company/view}">会社情報</a></li>
 								<li><a class="dropdown-item" th:href="@{/admin/shops}">店舗一覧</a></li>
 								<li>
 									<hr class="dropdown-divider">
@@ -83,7 +88,6 @@
 								<li><a class="dropdown-item" th:href="@{/logout}">ログアウト</a></li>
 							</ul>
 						</li>
-
 					</ul>
 				</div>
 			</div>
