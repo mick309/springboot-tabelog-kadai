@@ -9,19 +9,24 @@
 
 <body>
 	<div class="tabelog-wrapper">
+		<!-- ヘッダー -->
 		<div th:replace="~{fragment :: header}"></div>
+
 		<main>
-			<div class="container tabelog-container pb-5">
+			<div class="container pt-4 pb-5 tabelog-container">
 				<div class="row justify-content-center">
 					<div class="col-xxl-9 col-xl-10 col-lg-11">
-						<nav class="my-3" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
-							<ol class="breadcrumb mb-0">
-								<li class="breadcrumb-item"><a th:href="@{/}">ホーム</a></li>
-								<li class="breadcrumb-item active" aria-current="page">予約一覧</li>
-							</ol>
-						</nav>
+						<h1 class="mb-4 text-center">予約一覧</h1>
 
-						<h1 class="mb-3 text-center">予約一覧</h1>
+						<!-- 予約フォームボタン -->
+						<div class="d-flex justify-content-end mb-3">
+							<a href="/admin/reservations/form" class="btn text-white shadow-sm tabelog-btn mb-3">新規予約</a>
+						</div>
+
+						<!-- 成功メッセージ -->
+						<div th:if="${successMessage}" class="alert alert-info">
+							<span th:text="${successMessage}"></span>
+						</div>
 
 						<!-- 予約がない場合 -->
 						<div th:if="${reservationPage.empty}" class="alert alert-warning text-center">
@@ -32,49 +37,62 @@
 						<table class="table" th:if="${!reservationPage.empty}">
 							<thead>
 								<tr>
+									<th scope="col">ID</th>
 									<th scope="col">店舗名</th>
-									<th scope="col">予約日</th>
+									<th scope="col">予約者名</th>
 									<th scope="col">予約時間</th>
 									<th scope="col">予約人数</th>
+									<th scope="col">作成日時</th>
+									<th scope="col">操作</th>
 								</tr>
 							</thead>
 							<tbody>
 								<tr th:each="reservation : ${reservationPage.content}">
+									<td th:text="${reservation.id}"></td>
 									<td>
 										<a th:if="${reservation.shop != null}"
 											th:href="@{/shops/{id}(id=${reservation.shop.id})}"
 											th:text="${reservation.shop.shopName}"></a>
 										<span th:if="${reservation.shop == null}">店舗情報なし</span>
 									</td>
-									<td th:text="${reservation.reservationsDate}"></td>
+									<td th:text="${reservation.user.name}"></td>
 									<td th:text="${reservation.reservationTime}"></td>
 									<td th:text="${reservation.numberOfPeople + '名'}"></td>
+									<td th:text="${reservation.createdAt}"></td>
+									<td>
+										<!-- 詳細ボタン -->
+										<a th:href="@{/admin/reservations/{id}/show(id=${reservation.id})}"
+											class="btn btn-info">詳細</a>
+									</td>
 								</tr>
 							</tbody>
 						</table>
 
 						<!-- ページネーション -->
-						<div th:if="${reservationPage.totalPages > 1}" class="d-flex justify-content-center">
+						<div th:if="${reservationPage.totalPages > 1}" class="d-flex justify-content-center mt-4">
 							<nav aria-label="予約一覧ページ">
 								<ul class="pagination">
+									<!-- 前のページ -->
 									<li class="page-item">
 										<a th:if="${!reservationPage.first}"
 											th:href="@{/admin/reservations(page=${reservationPage.number - 1})}"
-											class="page-link">前</a>
+											class="page-link tabelog-page-link">前</a>
 										<span th:if="${reservationPage.first}" class="page-link disabled">前</span>
 									</li>
+									<!-- ページ番号 -->
 									<li th:each="i : ${#numbers.sequence(0, reservationPage.totalPages - 1)}"
 										class="page-item">
 										<a th:if="${i != reservationPage.number}"
-											th:href="@{/admin/reservations(page=${i})}" class="page-link"
-											th:text="${i + 1}" aria-label="ページ ${i + 1}"></a>
-										<span th:if="${i == reservationPage.number}" class="page-link active"
-											th:text="${i + 1}"></span>
+											th:href="@{/admin/reservations(page=${i})}"
+											class="page-link tabelog-page-link" th:text="${i + 1}"></a>
+										<span th:if="${i == reservationPage.number}"
+											class="page-link active tabelog-active" th:text="${i + 1}"></span>
 									</li>
+									<!-- 次のページ -->
 									<li class="page-item">
 										<a th:if="${!reservationPage.last}"
 											th:href="@{/admin/reservations(page=${reservationPage.number + 1})}"
-											class="page-link">次</a>
+											class="page-link tabelog-page-link">次</a>
 										<span th:if="${reservationPage.last}" class="page-link disabled">次</span>
 									</li>
 								</ul>
@@ -84,8 +102,12 @@
 				</div>
 			</div>
 		</main>
+
+		<!-- フッター -->
 		<div th:replace="~{fragment :: footer}"></div>
 	</div>
+
+	<!-- スクリプト -->
 	<div th:replace="~{fragment :: scripts}"></div>
 </body>
 

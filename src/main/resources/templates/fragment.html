@@ -19,8 +19,10 @@
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500&display=swap" rel="stylesheet">
 
+		<!-- カスタムスタイル -->
 		<link th:href="@{/css/style.css}" rel="stylesheet">
 	</div>
+</head>
 
 <body>
 	<!-- ヘッダーの部品化 -->
@@ -65,15 +67,18 @@
 							<a id="navbarDropdownAdmin" class="nav-link dropdown-toggle" href="#" role="button"
 								data-bs-toggle="dropdown" aria-expanded="false">管理者メニュー</a>
 							<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownAdmin">
-								<li><a class="dropdown-item" th:href="@{/company/view}">会社情報</a></li>
 								<li><a class="dropdown-item" th:href="@{/admin/shops}">店舗一覧</a></li>
-								<li><a class="dropdown-item" th:href="@{/admin/users}">会員一覧</a></li> <!-- 追加部分 -->
+								<li><a class="dropdown-item" th:href="@{/admin/users}">会員一覧</a></li>
+								<li><a class="dropdown-item" th:href="@{/admin/reservations}">予約一覧</a></li>
+								<li><a class="dropdown-item" th:href="@{/admin/review}">レビュー一覧</a></li>
+								<li><a class="dropdown-item" th:href="@{/company/view}">会社情報</a></li>
 								<li>
 									<hr class="dropdown-divider">
 								</li>
 								<li><a class="dropdown-item" th:href="@{/logout}">ログアウト</a></li>
 							</ul>
 						</li>
+
 						<!-- PREMIUMユーザーであれば表示する -->
 						<li class="nav-item dropdown" sec:authorize="hasRole('ROLE_PREMIUM_USER')">
 							<a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
@@ -81,8 +86,8 @@
 								PREMIUMメニュー
 							</a>
 							<ul class="dropdown-menu">
-								<li><a class="dropdown-item" th:href="@{/company/view}">会社情報</a></li>
 								<li><a class="dropdown-item" th:href="@{/admin/shops}">店舗一覧</a></li>
+								<li><a class="dropdown-item" th:href="@{/company/view}">会社情報</a></li>
 								<li>
 									<hr class="dropdown-divider">
 								</li>
@@ -99,7 +104,7 @@
 	<div th:fragment="footer" th:remove="tag">
 		<footer>
 			<div class="d-flex justify-content-center align-items-center h-100">
-				<p class="text-center text-muted small mb-0">&copy;TABELOGl All rights reserved.</p>
+				<p class="text-center text-muted small mb-0">&copy;TABELOG All rights reserved.</p>
 			</div>
 		</footer>
 	</div>

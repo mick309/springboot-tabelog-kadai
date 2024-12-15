@@ -96,19 +96,19 @@ public class ReviewController {
 		reviewService.create(reviewRegisterForm, shop, user);
 		redirectAttributes.addFlashAttribute("successMessage", "レビューを登録しました。");
 
-		return "redirect:/shops/{shopId}";  // 登録したら店舗詳細ページへ戻す
+		return "redirect:/shops/{shopId}"; // 登録したら店舗詳細ページへ戻す
 	}
-	
-	public void create(ReviewRegisterForm reviewRegisterForm, Shop shop, User user) {
-        Review review = new Review();
-        review.setShop(shop);
-        review.setUser(user);
-        review.setEvaluation(reviewRegisterForm.getEvaluation());
-        review.setReview_comment(reviewRegisterForm.getReview_comment());
-        // createdAtとupdatedAtは自動設定されるため、手動で設定する必要はありません
 
-        reviewRepository.save(review);
-    }
+	public void create(ReviewRegisterForm reviewRegisterForm, Shop shop, User user) {
+		Review review = new Review();
+		review.setShop(shop);
+		review.setUser(user);
+		review.setEvaluation(reviewRegisterForm.getEvaluation());
+		review.setReview_comment(reviewRegisterForm.getReview_comment());
+		// createdAtとupdatedAtは自動設定されるため、手動で設定する必要はありません
+
+		reviewRepository.save(review);
+	}
 
 	//編集機能
 	@GetMapping("/{reviewId}/edit")
@@ -162,6 +162,7 @@ public class ReviewController {
 
 		redirectAttributes.addFlashAttribute("successMessage", "レビューを削除しました。");
 
-		return "redirect:/shops/{shopId}"; 
+		return "redirect:/shops/{shopId}";
 	}
+
 }

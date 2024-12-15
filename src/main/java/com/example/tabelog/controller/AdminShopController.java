@@ -55,6 +55,10 @@ public class AdminShopController {
 	@GetMapping("/{id}")
 	public String show(@PathVariable(name = "id") Integer id, Model model) {
 		Shop shop = shopService.findById(id);
+		if (shop == null) {
+			model.addAttribute("errorMessage", "指定された店舗が見つかりません。");
+			return "redirect:/admin/shops";
+		}
 		model.addAttribute("shop", shop);
 		return "admin/shops/show";
 	}
@@ -91,7 +95,6 @@ public class AdminShopController {
 		shop.setPhoneNumber(shopRegisterForm.getPhoneNumber());
 		shop.setClosedDay(shopRegisterForm.getClosedDay());
 
-		// カテゴリーの設定
 		shop.setCategory(
 				categoryService.findById(shopRegisterForm.getCategoryId())
 						.orElseThrow(
@@ -106,6 +109,10 @@ public class AdminShopController {
 	@GetMapping("/{id}/edit")
 	public String edit(@PathVariable(name = "id") Integer id, Model model) {
 		Shop shop = shopService.findById(id);
+		if (shop == null) {
+			model.addAttribute("errorMessage", "指定された店舗が見つかりません。");
+			return "redirect:/admin/shops";
+		}
 		ShopEditForm shopEditForm = new ShopEditForm(
 				shop.getId(),
 				shop.getCategory() != null ? shop.getCategory().getId() : null,
@@ -140,8 +147,7 @@ public class AdminShopController {
 		}
 
 		shopService.update(shopEditForm);
-		redirectAttributes.addFlashAttribute("successMessage", "店舗情報を編集しました。");
-
+		redirectAttributes.addFlashAttribute("successMessage", "店舗情報を更新しました。");
 		return "redirect:/admin/shops";
 	}
 
