@@ -15,5 +15,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
 	boolean existsByEmail(String email);
 
-	Optional<User> findByEmailIgnoreCase(String email);
+	Optional<User> findByEmailIgnoreCase(String email); // Emailでユーザーを検索
+
+	Optional<User> findByCustomerId(String customerId); // StripeのCustomer IDで検索
 }

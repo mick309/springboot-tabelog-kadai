@@ -1,7 +1,5 @@
 package com.example.tabelog.entity;
 
-import java.sql.Timestamp;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -42,16 +40,19 @@ public class User {
 	@Column(nullable = false)
 	private String password;
 
-	@ManyToOne
-	@JoinColumn(name = "role_id", nullable = false)
-	private Role role;
-
-	@Column(nullable = false)
 	private Boolean enabled;
 
-	@Column(nullable = false, insertable = false, updatable = false)
-	private Timestamp createdAt;
+	@ManyToOne
+	@JoinColumn(name = "role_id")
+	private Role role;
 
-	@Column(nullable = false, insertable = false, updatable = false)
-	private Timestamp updatedAt;
+	@Column(unique = true)
+	private String customerId; // Stripe顧客IDを保存
+
+	private Boolean premium; // プレミアム会員フラグ
+
+	@Column(nullable = false)
+	private Boolean isPaid; // 課金済みステータス
+
+	// Lombokの@Dataアノテーションによりセッターとゲッターが自動生成される
 }

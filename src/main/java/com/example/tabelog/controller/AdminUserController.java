@@ -37,7 +37,6 @@ public class AdminUserController {
 		this.userService = userService;
 	}
 
-	// ユーザー一覧表示
 	@GetMapping
 	public String index(
 			@RequestParam(name = "keyword", required = false) String keyword,
@@ -45,15 +44,12 @@ public class AdminUserController {
 			Model model,
 			HttpServletRequest request) {
 
-		// CSRFトークンを取得
 		CsrfToken csrfToken = (CsrfToken) request.getAttribute("_csrf");
 
-		// ユーザー一覧の取得
 		Page<User> userPage = (keyword != null && !keyword.isEmpty())
 				? userRepository.findByNameLikeOrFuriganaLike("%" + keyword + "%", "%" + keyword + "%", pageable)
 				: userRepository.findAll(pageable);
 
-		// データをモデルに追加
 		model.addAttribute("userPage", userPage);
 		model.addAttribute("keyword", keyword);
 		model.addAttribute("token", csrfToken != null ? csrfToken.getToken() : null);
@@ -61,7 +57,6 @@ public class AdminUserController {
 		return "admin/users/index";
 	}
 
-	// ユーザー編集フォーム
 	@GetMapping("/{id}/edit")
 	public String editUser(@PathVariable Integer id, Model model, RedirectAttributes redirectAttributes) {
 		User user = userService.findById(id);
@@ -77,13 +72,11 @@ public class AdminUserController {
 				user.getAddress(),
 				user.getPhoneNumber(),
 				user.getEmail(),
-				user.getRole().getId() // ロールIDを取得
-		);
-		model.addAttribute("userEditForm", userEditForm); // ここで userEditForm を渡す
+				user.getRole().getId());
+		model.addAttribute("userEditForm", userEditForm);
 		return "admin/users/edit";
 	}
 
-	// ユーザー更新処理
 	@PostMapping("/{id}/edit")
 	public String updateUser(@PathVariable Integer id, @ModelAttribute @Valid UserEditForm userEditForm,
 			BindingResult bindingResult, RedirectAttributes redirectAttributes) {
@@ -96,7 +89,6 @@ public class AdminUserController {
 		return "redirect:/admin/users";
 	}
 
-	// ユーザー削除処理
 	@PostMapping("/{id}/delete")
 	public String delete(@PathVariable(name = "id") Integer id, RedirectAttributes redirectAttributes) {
 		try {
@@ -108,32 +100,27 @@ public class AdminUserController {
 		return "redirect:/admin/users";
 	}
 
-	// ユーザー作成フォーム表示
 	@GetMapping("/new")
 	public String showCreateForm(Model model) {
 		model.addAttribute("userCreateForm", new UserCreateForm());
 		return "admin/users/register";
 	}
 
-	// ユーザー作成処理
 	@PostMapping("/new")
 	public String createUser(@ModelAttribute("userCreateForm") @Valid UserCreateForm form,
 			BindingResult bindingResult,
 			RedirectAttributes redirectAttributes) {
-		// フォームのバリデーションエラーがある場合
 		if (bindingResult.hasErrors()) {
 			return "admin/users/register";
 		}
 
-		// パスワードとパスワード確認が一致しない場合
 		if (!form.getPassword().equals(form.getPasswordConfirmation())) {
 			bindingResult.rejectValue("passwordConfirmation", "error.passwordConfirmation", "パスワードが一致しません");
 			return "admin/users/register";
 		}
 
-		// ユーザー登録処理
 		try {
-			userService.createUser(form);
+			userService.registerUser(form); // UserServiceのregisterUserメソッドを使用
 			redirectAttributes.addFlashAttribute("successMessage", "ユーザーが作成されました");
 		} catch (Exception e) {
 			bindingResult.rejectValue("email", "error.email", "メールアドレスが既に使用されています。");
@@ -142,7 +129,6 @@ public class AdminUserController {
 		return "redirect:/admin/users";
 	}
 
-	// ユーザー詳細画面
 	@GetMapping("/{id}")
 	public String showUserDetails(@PathVariable Integer id, Model model, RedirectAttributes redirectAttributes) {
 		User user = userService.findById(id);
@@ -153,5 +139,4 @@ public class AdminUserController {
 		model.addAttribute("user", user);
 		return "admin/users/show";
 	}
-
 }

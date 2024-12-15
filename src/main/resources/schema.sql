@@ -36,12 +36,16 @@ CREATE TABLE IF NOT EXISTS users (
     phone_number VARCHAR(50) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
-    role_id INT, -- 修正: role_id を追加
+    role_id INT, -- role_id を追加
     enabled BOOLEAN NOT NULL DEFAULT TRUE,
+    is_premium BOOLEAN NOT NULL DEFAULT FALSE, -- プレミアム会員フラグを追加
+    customer_id VARCHAR(255) UNIQUE, -- Stripe 顧客IDを追加
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (role_id) REFERENCES roles (id) -- 修正: roles テーブルとの外部キー制約を追加
+    FOREIGN KEY (role_id) REFERENCES roles (id) -- roles テーブルとの外部キー制約を追加
 );
+
+
 
 CREATE TABLE IF NOT EXISTS user_roles (
     user_id INT NOT NULL,
