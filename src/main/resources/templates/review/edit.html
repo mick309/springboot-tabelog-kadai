@@ -1,5 +1,6 @@
 <!DOCTYPE html>
- <html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <head>
 	<title>レビュー編集</title>
 	<div th:replace="~{fragment :: meta}"></div>
@@ -32,27 +33,33 @@
 									<div class="mb-3">
 										<label for="evaluation" class="form-label">評価</label>
 										<select class="form-select" id="evaluation" th:field="*{evaluation}">
-											<option class="tabelog-star" value="5" selected>
-												&#9733;&#9733;&#9733;&#9733;&#9733;</option>
-											<option class="tabelog-star" value="4">
-												&#9733;&#9733;&#9733;&#9733;&#9734;</option>
-											<option class="tabelog-star" value="3">
-												&#9733;&#9733;&#9733;&#9734;&#9734;</option>
-											<option class="tabelog-star" value="2">
-												&#9733;&#9733;&#9734;&#9734;&#9734;</option>
-											<option class="tabelog-star" value="1">
-												&#9733;&#9734;&#9734;&#9734;&#9734;</option>
+											<option th:value="5" th:selected="${reviewEditForm.evaluation == 5}">
+												&#9733;&#9733;&#9733;&#9733;&#9733;
+											</option>
+											<option th:value="4" th:selected="${reviewEditForm.evaluation == 4}">
+												&#9733;&#9733;&#9733;&#9733;&#9734;
+											</option>
+											<option th:value="3" th:selected="${reviewEditForm.evaluation == 3}">
+												&#9733;&#9733;&#9733;&#9734;&#9734;
+											</option>
+											<option th:value="2" th:selected="${reviewEditForm.evaluation == 2}">
+												&#9733;&#9733;&#9734;&#9734;&#9734;
+											</option>
+											<option th:value="1" th:selected="${reviewEditForm.evaluation == 1}">
+												&#9733;&#9734;&#9734;&#9734;&#9734;
+											</option>
 										</select>
 									</div>
 									<div class="mb-3">
 										<label for="review_comment" class="form-label">コメント</label>
 										<textarea id="review_comment" name="review_comment" class="form-control"
-											rows="5" required th:field="*{review_comment}"></textarea>
+											rows="5" th:field="*{reviewComment}"></textarea>
 									</div>
 									<div class="submit-button text-center">
 										<button type="submit" class="btn btn-primary">更新する</button>
 									</div>
 								</form>
+
 							</div>
 						</div>
 					</div>

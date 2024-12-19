@@ -58,12 +58,12 @@ public class AdminCompanyForm {
 		company.setAddress(this.address);
 		company.setPhoneNumber(this.phoneNumber);
 		company.setContactEmail(this.contactEmail);
-		company.setWebsiteUrl(this.websiteUrl != null ? this.websiteUrl : "");
-		company.setServices(this.services != null ? this.services : "");
-		company.setPortfolioUrl(this.portfolioUrl != null ? this.portfolioUrl : "");
-		company.setDescription(this.description != null ? this.description : "");
-		company.setTechnologyStack(this.technologyStack != null ? this.technologyStack : "");
-		company.setEstablishedYear(this.establishedYear != null ? this.establishedYear : 0);
+		company.setWebsiteUrl(this.websiteUrl);
+		company.setServices(this.services);
+		company.setPortfolioUrl(this.portfolioUrl);
+		company.setDescription(this.description);
+		company.setTechnologyStack(this.technologyStack);
+		company.setEstablishedYear(this.establishedYear);
 		return company;
 	}
 }

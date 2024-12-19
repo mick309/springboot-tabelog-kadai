@@ -3,40 +3,37 @@ package com.example.tabelog.form;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
 public class ReservationInputForm {
-	@NotNull(message = "予約日を入力してください。")
-	private LocalDate reservationsDate;
 
-	@NotNull(message = "予約時間を入力してください。")
-	private LocalTime reservationTime;
+    @NotNull(message = "店舗IDは必須です。")
+    private Long shopId;
 
-	@Min(1)
-	@Max(100)
-	private Integer numberOfPeople;
+    @NotNull(message = "ユーザーIDは必須です。")
+    private Long userId;
 
-	private Integer userId;
-	private Integer shopId; // ここを追加
+    @NotNull(message = "予約日は必須です。")
+    @FutureOrPresent(message = "予約日は本日以降の日付を指定してください。")
+    private LocalDate reservationsDate;
 
-	private static final LocalTime OPEN_TIME = LocalTime.of(9, 0);
-	private static final LocalTime CLOSE_TIME = LocalTime.of(21, 0);
+    @NotNull(message = "予約時間は必須です。")
+    private LocalTime reservationTime;
 
-	public void validate() throws IllegalArgumentException {
-		if (reservationTime.isBefore(getOpenTime()) || reservationTime.isAfter(getCloseTime().minusHours(1))) {
-			throw new IllegalArgumentException("予約時間は営業開始から閉店1時間前の間に設定してください。");
-		}
-	}
+    @NotNull(message = "予約人数は必須です。")
+    @Min(value = 1, message = "予約人数は1人以上を指定してください。")
+    private Integer numberOfPeople;
 
-	public static LocalTime getOpenTime() {
-		return OPEN_TIME;
-	}
+    // 開店時間と閉店時間（バリデーション用）
+    public static LocalTime getOpenTime() {
+        return LocalTime.of(9, 0); // 例: 9時開店
+    }
 
-	public static LocalTime getCloseTime() {
-		return CLOSE_TIME;
-	}
+    public static LocalTime getCloseTime() {
+        return LocalTime.of(22, 0); // 例: 22時閉店
+    }
 }

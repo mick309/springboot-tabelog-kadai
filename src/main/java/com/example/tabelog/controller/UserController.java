@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.example.tabelog.entity.Role;
 import com.example.tabelog.entity.User;
 import com.example.tabelog.form.UserEditForm;
 import com.example.tabelog.security.UserDetailsImpl;
@@ -29,18 +30,22 @@ public class UserController {
 	// ユーザー情報を表示
 	@GetMapping
 	public String index(@AuthenticationPrincipal UserDetailsImpl userDetails, Model model) {
-		User user = userService.getAuthenticatedUser(userDetails.getUser().getId());
+		User user = userService.findById(userDetails.getUser().getId());
 		model.addAttribute("user", user);
 		return "user/index";
 	}
 
 	// ユーザー情報の編集画面
-	@GetMapping("/admin/users/edit")
+	@GetMapping("/edit")
 	public String editUser(@AuthenticationPrincipal UserDetailsImpl userDetails, Model model) {
-		// 認証されたユーザーの情報を取得
-		User authenticatedUser = userService.getAuthenticatedUser(userDetails.getUser().getId());
+		User authenticatedUser = userService.findById(userDetails.getUser().getId());
 
-		// ユーザー編集フォームを初期化
+		// 最初のロールを取得
+		Long roleId = authenticatedUser.getRoles().stream()
+				.findFirst()
+				.map(Role::getId)
+				.orElse(null);
+
 		UserEditForm userEditForm = new UserEditForm(
 				authenticatedUser.getId(),
 				authenticatedUser.getName(),
@@ -49,14 +54,12 @@ public class UserController {
 				authenticatedUser.getAddress(),
 				authenticatedUser.getPhoneNumber(),
 				authenticatedUser.getEmail(),
-				authenticatedUser.getRole().getId() // ロールIDを取得
-		);
+				roleId);
 
-		// ロール情報を追加
 		model.addAttribute("roles", userService.findAllRoles());
 		model.addAttribute("userEditForm", userEditForm);
 
-		return "admin/user/edit";
+		return "user/edit";
 	}
 
 	// ユーザー情報の更新
@@ -89,15 +92,14 @@ public class UserController {
 		}
 	}
 
-
-
 	// ユーザー削除
 	@PostMapping("/delete")
 	public String delete(
 			@AuthenticationPrincipal UserDetailsImpl userDetails,
 			RedirectAttributes redirectAttributes) {
 		try {
-			userService.delete(userDetails.getUser().getId());
+			Long userId = userDetails.getUser().getId();
+			userService.delete(userId);
 			redirectAttributes.addFlashAttribute("successMessage", "会員情報を削除しました。");
 			return "redirect:/logout";
 		} catch (Exception e) {

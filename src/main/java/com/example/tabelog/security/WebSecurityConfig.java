@@ -4,7 +4,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -15,26 +14,28 @@ public class WebSecurityConfig {
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http
-				.authorizeHttpRequests((requests) -> requests
+				.csrf(csrf -> csrf
+						.ignoringRequestMatchers("/api/**")) // CSRF無効化（APIエンドポイント用）
+				.authorizeHttpRequests(auth -> auth
 						.requestMatchers(
-								"/css/**", "/images/**", "/js/**", "/storage/**", "/", "/signup/**", "/shops",
-								"/shops/{id}", "/stripe/webhook", "/shops/{id}/reviews")
-						.permitAll()
-						.requestMatchers("/admin/**").hasRole("ADMIN")
-						.anyRequest().authenticated())
-				.formLogin((form) -> form
-						.loginPage("/login")
+								"/register", "/register-success", "/css/**", "/images/**", "/js/**", "/storage/**",
+								"/", "/signup/**", "/shops", "/shops/{id}", "/stripe/webhook", "/shops/{id}/reviews",
+								"/favicon.ico")
+						.permitAll() // 認証不要のリクエスト
+						.requestMatchers("/admin/**").hasRole("ADMIN") // 管理者のみアクセス可能
+						.anyRequest().authenticated()) // その他のリクエストは認証必須
+				.formLogin(form -> form
+						.loginPage("/login") // カスタムログインページ
 						.loginProcessingUrl("/login")
 						.defaultSuccessUrl("/?loggedIn", true)
 						.failureUrl("/login?error")
 						.permitAll())
-				.logout((logout) -> logout
+				.logout(logout -> logout
 						.logoutUrl("/logout")
 						.logoutSuccessUrl("/?loggedOut")
 						.invalidateHttpSession(true)
 						.deleteCookies("JSESSIONID")
-						.permitAll())
-				.csrf().and(); // CSRF保護を有効化
+						.permitAll());
 
 		return http.build();
 	}
@@ -44,7 +45,7 @@ public class WebSecurityConfig {
 		return new PasswordEncoder() {
 			@Override
 			public String encode(CharSequence rawPassword) {
-				return rawPassword.toString(); // パスワードをそのまま返す
+				return rawPassword.toString(); // パスワードをそのまま返す（平文比較）
 			}
 
 			@Override
@@ -53,10 +54,4 @@ public class WebSecurityConfig {
 			}
 		};
 	}
-
-	@Bean
-	public WebSecurityCustomizer webSecurityCustomizer() {
-		return (web) -> web.ignoring().requestMatchers("/favicon.ico"); // 無視リストに追加
-	}
-
 }

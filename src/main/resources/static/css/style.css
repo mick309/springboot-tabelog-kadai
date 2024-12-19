@@ -143,6 +143,8 @@ footer {
     text-align: center;
 }
 
+
+
 @media screen and (min-width: 1400px) {
   .tabelog-container {
     max-width: 1200px;

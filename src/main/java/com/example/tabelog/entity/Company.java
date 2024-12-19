@@ -10,16 +10,18 @@ import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-@Table(name = "companies")
-@Data
+@Table(name = "company")
+@Getter
+@Setter
 public class Company {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id; // 主キー
+	private Long id;
 
 	@Column(name = "company_name", nullable = false)
 	private String companyName;
@@ -52,7 +54,7 @@ public class Company {
 	private String description;
 
 	@Column(name = "premium_info")
-	private String premiumInfo; // プレミアム情報を保持するフィールド
+	private String premiumInfo;
 
 	@Column(name = "created_at", nullable = false, updatable = false)
 	private LocalDateTime createdAt;
@@ -60,12 +62,6 @@ public class Company {
 	@Column(name = "updated_at", nullable = false)
 	private LocalDateTime updatedAt;
 
-	// プレミアム情報を設定するメソッド
-	public void setPremiumInfo(String premiumInfo) {
-		this.premiumInfo = premiumInfo;
-	}
-
-	// 作成日時と更新日時を自動設定するためのメソッド
 	@PrePersist
 	protected void onCreate() {
 		this.createdAt = LocalDateTime.now();

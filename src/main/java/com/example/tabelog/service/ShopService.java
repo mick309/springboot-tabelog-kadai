@@ -49,19 +49,23 @@ public class ShopService {
 	}
 
 	// **店舗をIDで取得**
-	public Shop findById(Integer id) {
+	public Shop findById(Long id) {
 		return shopRepository.findById(id)
 				.orElseThrow(() -> new RuntimeException("Shop not found with ID: " + id));
-	}
-
-	// **店舗の検索 (キーワード対応)**
-	public Page<Shop> searchShopsByKeyword(String keyword, Pageable pageable) {
-		return shopRepository.searchByKeyword(keyword, pageable);
 	}
 
 	// **全店舗をページネーションで取得**
 	public Page<Shop> getAllShops(Pageable pageable) {
 		return shopRepository.findAll(pageable);
+	}
+
+	// **店舗の検索 (キーワード対応)**
+	public Page<Shop> searchShopsByKeyword(String keyword, Pageable pageable) {
+		if (keyword == null || keyword.isEmpty()) {
+			return shopRepository.findAll(pageable); // キーワードがない場合は全件を返す
+		}
+		return shopRepository.findByShopNameLikeOrAddressLikeOrderByCreatedAtDesc(
+				"%" + keyword + "%", "%" + keyword + "%", pageable);
 	}
 
 	// **店舗の新規登録**
@@ -97,8 +101,7 @@ public class ShopService {
 
 		shopRepository.save(shop);
 	}
-	
-	
+
 	// **店舗の更新**
 	@Transactional
 	public void update(ShopEditForm shopEditForm) {
@@ -136,18 +139,17 @@ public class ShopService {
 	}
 
 	// **店舗の削除**
-	@Transactional
-	public void delete(Integer id) {
-		Shop shop = shopRepository.findById(id)
-				.orElseThrow(() -> new RuntimeException("Shop not found with ID: " + id));
+    @Transactional
+    public void delete(Long id) {
+        Shop shop = shopRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Shop not found with ID: " + id));
 
-		// 画像の削除
-		if (shop.getImageName() != null) {
-			deleteOldImage(shop.getImageName());
-		}
+        if (shop.getImageName() != null) {
+            deleteOldImage(shop.getImageName());
+        }
 
-		shopRepository.delete(shop);
-	}
+        shopRepository.delete(shop);
+    }
 
 	// **画像ファイル名の生成**
 	public String generateNewFileName(String fileName) {
@@ -188,8 +190,8 @@ public class ShopService {
 	}
 
 	public void save(Shop shop) {
-		 shopRepository.save(shop);
-	
+		shopRepository.save(shop);
+
 	}
 
 }

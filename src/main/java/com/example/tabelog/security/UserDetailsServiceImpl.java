@@ -1,7 +1,7 @@
 package com.example.tabelog.security;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -14,7 +14,6 @@ import com.example.tabelog.entity.User;
 import com.example.tabelog.repository.UserRepository;
 
 @Service
-
 public class UserDetailsServiceImpl implements UserDetailsService {
 	private final UserRepository userRepository;
 
@@ -24,14 +23,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-		try {
-			User user = userRepository.findByEmail(email);
-			String userRoleName = user.getRole().getName();
-			Collection<GrantedAuthority> authorities = new ArrayList<>();
-			authorities.add(new SimpleGrantedAuthority(userRoleName));
-			return new UserDetailsImpl(user, authorities);
-		} catch (Exception e) {
-			throw new UsernameNotFoundException("ユーザーが見つかりませんでした。");
-		}
+		// Optional<User> から User を取り出す
+		User user = userRepository.findByEmail(email)
+				.orElseThrow(() -> new UsernameNotFoundException("ユーザーが見つかりませんでした。"));
+
+		// ユーザーのロールを取得し、GrantedAuthority を設定
+		Collection<GrantedAuthority> authorities = user.getRoles().stream()
+				.map(role -> new SimpleGrantedAuthority(role.getName()))
+				.collect(Collectors.toSet());
+
+		return new UserDetailsImpl(user, authorities);
 	}
 }

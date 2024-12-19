@@ -1,73 +1,79 @@
+-- categories テーブル
 CREATE TABLE IF NOT EXISTS categories (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    category_name VARCHAR(255) NOT NULL
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
 );
 
+-- roles テーブル作成
+CREATE TABLE IF NOT EXISTS roles (
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL UNIQUE
+) ENGINE=InnoDB;
+
+-- users テーブル
+CREATE TABLE IF NOT EXISTS users (
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    furigana VARCHAR(50) NOT NULL,
+    postal_code VARCHAR(10) NOT NULL,
+    address VARCHAR(255) NOT NULL,
+    phone_number VARCHAR(15) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    role_id BIGINT, 
+    enabled BOOLEAN NOT NULL DEFAULT TRUE,
+    is_premium BOOLEAN NOT NULL DEFAULT FALSE,
+    is_paid BOOLEAN NOT NULL DEFAULT FALSE,
+    customer_id VARCHAR(255) UNIQUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (role_id) REFERENCES roles (id)
+) ENGINE=InnoDB;
+
+-- user_roles テーブル
+CREATE TABLE IF NOT EXISTS user_roles (
+    user_id BIGINT NOT NULL,
+    role_id BIGINT NOT NULL,
+    PRIMARY KEY (user_id, role_id),
+    FOREIGN KEY (user_id) REFERENCES users (id),
+    FOREIGN KEY (role_id) REFERENCES roles (id)
+) ENGINE=InnoDB;
+
+-- shop テーブル
 CREATE TABLE IF NOT EXISTS shop (
-    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    category_id INT NOT NULL,
-    shop_name VARCHAR(50) NOT NULL,
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    category_id BIGINT NOT NULL, -- category_id を BIGINT に統一
+    shop_name VARCHAR(255) NOT NULL,
     image_name VARCHAR(255),
-    description VARCHAR(255) NOT NULL,
+    description VARCHAR(1000) NOT NULL,
     price_upper INT NOT NULL,
     price_lower INT NOT NULL,
     hours_open TIME NOT NULL,
     hours_close TIME NOT NULL,
     closed_day VARCHAR(255),
-    postal_code VARCHAR(50) NOT NULL,
-    address VARCHAR(255) NOT NULL,
-    phone_number VARCHAR(50) NOT NULL,
+    postal_code VARCHAR(10) NOT NULL,
+    address VARCHAR(500) NOT NULL,
+    phone_number VARCHAR(15) NOT NULL,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (category_id) REFERENCES categories (id)
-);
+) ENGINE=InnoDB;
 
-CREATE TABLE IF NOT EXISTS roles (
-    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(50) NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS users (
-    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(50) NOT NULL,
-    furigana VARCHAR(50) NOT NULL,
-    postal_code VARCHAR(50) NOT NULL,
-    address VARCHAR(255) NOT NULL,
-    phone_number VARCHAR(50) NOT NULL,
-    email VARCHAR(255) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,
-    role_id INT, -- role_id を追加
-    enabled BOOLEAN NOT NULL DEFAULT TRUE,
-    is_premium BOOLEAN NOT NULL DEFAULT FALSE, -- プレミアム会員フラグを追加
-    customer_id VARCHAR(255) UNIQUE, -- Stripe 顧客IDを追加
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (role_id) REFERENCES roles (id) -- roles テーブルとの外部キー制約を追加
-);
-
-
-
-CREATE TABLE IF NOT EXISTS user_roles (
-    user_id INT NOT NULL,
-    role_id INT NOT NULL,
-    PRIMARY KEY (user_id, role_id),
-    FOREIGN KEY (user_id) REFERENCES users (id),
-    FOREIGN KEY (role_id) REFERENCES roles (id)
-);
-
+-- verification_tokens テーブル
 CREATE TABLE IF NOT EXISTS verification_tokens (
-    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL UNIQUE,
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT NOT NULL UNIQUE,
     token VARCHAR(255) NOT NULL,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users (id)
-);
+) ENGINE=InnoDB;
 
+-- reservations テーブル
 CREATE TABLE IF NOT EXISTS reservations (
-    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    shop_id INT NOT NULL,
-    user_id INT NOT NULL,
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    shop_id BIGINT NOT NULL,
+    user_id BIGINT NOT NULL,
     reservations_date DATE NOT NULL,
     reservation_time TIME NOT NULL,
     number_of_people INT NOT NULL,
@@ -75,20 +81,21 @@ CREATE TABLE IF NOT EXISTS reservations (
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (shop_id) REFERENCES shop (id),
     FOREIGN KEY (user_id) REFERENCES users (id)
-);
-
+) ENGINE=InnoDB;
+-- reviews テーブル
 CREATE TABLE IF NOT EXISTS reviews (
-    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    shop_id INT NOT NULL,
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    shop_id BIGINT NOT NULL,
     evaluation INT NOT NULL,
     review_comment VARCHAR(500) NOT NULL,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users (id),
     FOREIGN KEY (shop_id) REFERENCES shop (id)
-);
+) ENGINE=InnoDB;
 
+-- company テーブル
 CREATE TABLE IF NOT EXISTS company (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     company_name VARCHAR(255) NOT NULL,
@@ -103,4 +110,4 @@ CREATE TABLE IF NOT EXISTS company (
     description TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
+) ENGINE=InnoDB;

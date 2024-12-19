@@ -10,42 +10,30 @@ import org.springframework.data.repository.query.Param;
 
 import com.example.tabelog.entity.Shop;
 
-public interface ShopRepository extends JpaRepository<Shop, Integer> {
+public interface ShopRepository extends JpaRepository<Shop, Long> {
 
-	// 下限価格で検索し、作成日時の降順で並べ替え
-	// Correction on the method name
-	Page<Shop> findByPriceLowerGreaterThanEqualOrderByCreatedAtDesc(Integer priceLower, Pageable pageable);
-
-	// 下限価格で検索し、上限価格の昇順で並べ替え
-	Page<Shop> findByPriceLowerGreaterThanEqualOrderByPriceUpperAsc(Integer priceUpper, Pageable pageable);
-
-	// 全てのデータを作成日時の降順で取得
-	Page<Shop> findAllByOrderByCreatedAtDesc(Pageable pageable);
-
-	// 全てのデータを上限価格の昇順で取得
-	Page<Shop> findAllByOrderByPriceUpperAsc(Pageable pageable);
-
-	// トップ10のデータを作成日時の降順で取得
+	// 新着ショップ（トップ10）
 	List<Shop> findTop10ByOrderByCreatedAtDesc();
 
-	Page<Shop> findByAddressLike(String area, Pageable pageable);
-
-	Page<Shop> findByPriceUpperGreaterThanEqualOrderByPriceUpperAsc(Integer priceUpper, Pageable pageable);
-
-	Page<Shop> findByPriceUpperGreaterThanEqualOrderByCreatedAtDesc(Integer priceUpper, Pageable pageable);
-
-	Page<Shop> findAllByOrderByPriceUpperAsc(Integer priceUpper, Pageable pageable);
-
-	Page<Shop> findByShopNameLikeOrAddressLikeOrderByPriceUpperAsc(String shopName, String address, Pageable pageable);
-
+	// キーワード検索（店舗名 or 住所）作成日時降順
 	Page<Shop> findByShopNameLikeOrAddressLikeOrderByCreatedAtDesc(String shopName, String address, Pageable pageable);
 
+	// 住所検索 作成日時降順
 	Page<Shop> findByAddressLikeOrderByCreatedAtDesc(String address, Pageable pageable);
 
-	Page<Shop> findByAddressLikeOrderByCreatedAtAsc(String address, Pageable pageable);
+	// 下限価格以上 作成日時降順
+	Page<Shop> findByPriceLowerGreaterThanEqualOrderByCreatedAtDesc(Integer priceLower, Pageable pageable);
 
-	// 店舗名または住所で部分一致検索
-	@Query("SELECT s FROM Shop s WHERE s.shopName LIKE CONCAT('%', :keyword, '%') OR s.address LIKE CONCAT('%', :keyword, '%')")
+	// 下限価格以上 上限価格昇順
+	Page<Shop> findByPriceLowerGreaterThanEqualOrderByPriceUpperAsc(Integer priceLower, Pageable pageable);
+
+	// 全件 作成日時降順
+	Page<Shop> findAllByOrderByCreatedAtDesc(Pageable pageable);
+
+	// 全件 上限価格昇順
+	Page<Shop> findAllByOrderByPriceUpperAsc(Pageable pageable);
+
+	// キーワード検索（店舗名または住所を部分一致検索）
+	@Query("SELECT s FROM Shop s WHERE s.shopName LIKE %:keyword% OR s.address LIKE %:keyword%")
 	Page<Shop> searchByKeyword(@Param("keyword") String keyword, Pageable pageable);
-
 }

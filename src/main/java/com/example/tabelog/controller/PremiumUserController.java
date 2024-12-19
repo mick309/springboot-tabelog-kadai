@@ -35,7 +35,7 @@ public class PremiumUserController {
 
 	// 店舗詳細画面 (課金ユーザーと管理者のみ閲覧可能)
 	@GetMapping("/shops/{id}")
-	public String shopDetail(@PathVariable Integer id, Model model) {
+	public String shopDetail(@PathVariable Long id, Model model) {
 		model.addAttribute("shop", shopService.findById(id));
 		return "premium/shops/detail";
 	}
@@ -57,9 +57,9 @@ public class PremiumUserController {
 
 		// ReviewEditForm を作成してモデルに追加
 		ReviewEditForm reviewEditForm = new ReviewEditForm(
-				review.getId(),
-				review.getEvaluation(),
-				review.getReview_comment());
+		        review.getId(),
+		        review.getEvaluation(),
+		        review.getReviewComment()); // フィールド名変更後のゲッター
 		model.addAttribute("reviewEditForm", reviewEditForm);
 		return "premium/reviews/edit";
 	}

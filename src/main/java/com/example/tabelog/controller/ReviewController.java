@@ -29,140 +29,113 @@ import com.example.tabelog.service.ReviewService;
 @RequestMapping("/shops/{shopId}/reviews")
 public class ReviewController {
 
-	private final ReviewService reviewService;
-	private final ReviewRepository reviewRepository;
-	private final ShopRepository shopRepository;
+    private final ReviewService reviewService;
+    private final ReviewRepository reviewRepository;
+    private final ShopRepository shopRepository;
 
-	public ReviewController(ReviewService reviewService, ReviewRepository reviewRepository,
-			ShopRepository shopRepository) {
-		this.reviewService = reviewService;
-		this.reviewRepository = reviewRepository;
-		this.shopRepository = shopRepository;
-	}
+    public ReviewController(ReviewService reviewService, ReviewRepository reviewRepository,
+                            ShopRepository shopRepository) {
+        this.reviewService = reviewService;
+        this.reviewRepository = reviewRepository;
+        this.shopRepository = shopRepository;
+    }
 
-	@GetMapping
-	public String index(@PathVariable(name = "shopId") Integer shopId,
-			@PageableDefault(page = 0, size = 10, sort = "id") Pageable pageable,
-			Model model) {
-		// 大文字小文字を修正
-		Shop shop = shopRepository.findById(shopId)
-				.orElseThrow(() -> new IllegalArgumentException("Invalid Shop Id: " + shopId));
+    // レビュー一覧表示
+    @GetMapping
+    public String index(@PathVariable(name = "shopId") Long shopId,
+                        @PageableDefault(page = 0, size = 10, sort = "id") Pageable pageable,
+                        Model model) {
+        Shop shop = shopRepository.findById(shopId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid Shop Id: " + shopId));
+        Page<Review> reviewPage = reviewRepository.findByShopOrderByCreatedAtDesc(shop, pageable);
 
-		Page<Review> reviewPage = reviewRepository.findByShopOrderByCreatedAtDesc(shop, pageable);
+        model.addAttribute("shop", shop);
+        model.addAttribute("reviewPage", reviewPage);
 
-		// 大文字小文字を修正
-		model.addAttribute("shop", shop);
-		model.addAttribute("reviewPage", reviewPage);
+        return "review/index";
+    }
 
-		return "review/index";
-	}
+    // レビュー登録画面表示
+    @GetMapping("/register")
+    public String register(@PathVariable(name = "shopId") Long shopId, Model model) {
+        Shop shop = shopRepository.findById(shopId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid Shop Id:" + shopId));
+        model.addAttribute("shop", shop);
+        model.addAttribute("reviewRegisterForm", new ReviewRegisterForm());
+        return "review/register";
+    }
 
-	@GetMapping("/register")
-	public String register(@PathVariable(name = "shopId") Integer shopId, Model model) {
-		Shop shop = shopRepository.findById(shopId)
-				.orElseThrow(() -> new IllegalArgumentException("Invalid Shop Id:" + shopId));
-		model.addAttribute("shop", shop);
-		model.addAttribute("reviewRegisterForm", new ReviewRegisterForm());
-		return "review/register";
-	}
+    // レビュー新規作成
+    @PostMapping("/create")
+    public String create(@PathVariable(name = "shopId") Long shopId,
+                         @ModelAttribute @Validated ReviewRegisterForm reviewRegisterForm,
+                         BindingResult bindingResult,
+                         @AuthenticationPrincipal UserDetailsImpl userDetailsImpl,
+                         Model model, RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            Shop shop = shopRepository.findById(shopId)
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid Shop Id:" + shopId));
+            model.addAttribute("shop", shop);
+            return "review/register";
+        }
 
-	//新規登録機能
+        Shop shop = shopRepository.findById(shopId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid Shop Id:" + shopId));
+        User user = userDetailsImpl.getUser();
 
-	@GetMapping("/create")
-	public String showCreateForm(@PathVariable(name = "shopId") Integer shopId, Model model) {
-		Shop shop = shopRepository.findById(shopId)
-				.orElseThrow(() -> new IllegalArgumentException("Invalid Shop Id:" + shopId));
-		model.addAttribute("shop", shop);
-		model.addAttribute("reviewRegisterForm", new ReviewRegisterForm());
-		return "review/register";
-	}
+        reviewService.create(reviewRegisterForm, shop, user);
+        redirectAttributes.addFlashAttribute("successMessage", "レビューを登録しました。");
 
-	@PostMapping("/create")
-	public String create(@PathVariable(name = "shopId") Integer shopId,
-			@ModelAttribute @Validated ReviewRegisterForm reviewRegisterForm, BindingResult bindingResult,
-			@AuthenticationPrincipal UserDetailsImpl userDetailsImpl,
-			Model model, RedirectAttributes redirectAttributes) {
-		if (bindingResult.hasErrors()) {
-			Shop shop = shopRepository.findById(shopId)
-					.orElseThrow(() -> new IllegalArgumentException("Invalid Shop Id:" + shopId));
-			model.addAttribute("shop", shop);
-			return "review/register";
-		}
+        return "redirect:/shops/{shopId}";
+    }
 
-		Shop shop = shopRepository.findById(shopId)
-				.orElseThrow(() -> new IllegalArgumentException("Invalid Shop Id:" + shopId));
-		User user = userDetailsImpl.getUser();
+   
+ // レビュー編集画面表示
+    @GetMapping("/{reviewId}/edit")
+    public String edit(@PathVariable(name = "shopId") Long shopId,
+                       @PathVariable(name = "reviewId") Long reviewId, Model model) {
+        Shop shop = shopRepository.findById(shopId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid Shop Id: " + shopId));
+        
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid Review Id: " + reviewId));
 
-		reviewService.create(reviewRegisterForm, shop, user);
-		redirectAttributes.addFlashAttribute("successMessage", "レビューを登録しました。");
+        ReviewEditForm reviewEditForm = new ReviewEditForm(
+                review.getId(), 
+                review.getEvaluation(), 
+                review.getReviewComment());
 
-		return "redirect:/shops/{shopId}"; // 登録したら店舗詳細ページへ戻す
-	}
+        model.addAttribute("shop", shop);
+        model.addAttribute("review", review);
+        model.addAttribute("reviewEditForm", reviewEditForm);
 
-	public void create(ReviewRegisterForm reviewRegisterForm, Shop shop, User user) {
-		Review review = new Review();
-		review.setShop(shop);
-		review.setUser(user);
-		review.setEvaluation(reviewRegisterForm.getEvaluation());
-		review.setReview_comment(reviewRegisterForm.getReview_comment());
-		// createdAtとupdatedAtは自動設定されるため、手動で設定する必要はありません
+        return "review/edit";
+    }
 
-		reviewRepository.save(review);
-	}
 
-	//編集機能
-	@GetMapping("/{reviewId}/edit")
-	public String edit(@PathVariable(name = "shopId") Integer shopId,
-			@PathVariable(name = "reviewId") Integer reviewId, Model model) {
-		Shop shop = shopRepository.findById(shopId)
-				.orElseThrow(() -> new IllegalArgumentException("Invalid Shop Id: " + shopId));
-		Review review = reviewRepository.findById(reviewId)
-				.orElseThrow(() -> new IllegalArgumentException("Invalid review Id: " + reviewId));
+    // レビュー更新処理
+    @PostMapping("/{reviewId}/update")
+    public String update(@PathVariable(name = "shopId") Long shopId,
+                         @PathVariable(name = "reviewId") Long reviewId,
+                         @ModelAttribute @Validated ReviewEditForm reviewEditForm,
+                         BindingResult bindingResult,
+                         Model model,
+                         RedirectAttributes redirectAttributes) {
 
-		ReviewEditForm reviewEditForm = new ReviewEditForm(review.getId(), review.getEvaluation(),
-				review.getReview_comment());
+        if (bindingResult.hasErrors()) {
+            Shop shop = shopRepository.findById(shopId)
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid Shop Id: " + shopId));
+            Review review = reviewRepository.findById(reviewId)
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid Review Id: " + reviewId));
 
-		model.addAttribute("review", review);
-		model.addAttribute("shop", shop);
-		model.addAttribute("reviewEditForm", reviewEditForm);
+            model.addAttribute("shop", shop);
+            model.addAttribute("review", review);
+            return "review/edit";
+        }
 
-		return "review/edit";
-	}
+        reviewService.update(reviewEditForm);
+        redirectAttributes.addFlashAttribute("successMessage", "レビューを編集しました。");
 
-	//update機能
-	@PostMapping("/{reviewId}/update")
-	public String update(
-			@PathVariable(name = "shopId") Integer shopId,
-			@PathVariable(name = "reviewId") Integer reviewId,
-			@ModelAttribute @Validated ReviewEditForm reviewEditForm,
-			BindingResult bindingResult,
-			Model model,
-			RedirectAttributes redirectAttributes) {
-
-		if (bindingResult.hasErrors()) {
-			Shop shop = shopRepository.getReferenceById(shopId);
-			Review review = reviewRepository.getReferenceById(reviewId);
-			model.addAttribute("review", review);
-			model.addAttribute("shop", shop);
-			return "review/edit";
-		}
-
-		reviewService.update(reviewEditForm);
-		redirectAttributes.addFlashAttribute("successMessage", "レビューを編集しました。");
-
-		return "redirect:/shops/{shopId}"; // 編集したら店舗詳細ページへ戻す
-	}
-
-	//削除機能
-	@PostMapping("/{reviewId}/delete")
-	public String delete(@PathVariable(name = "shopId") Integer shopId,
-			@PathVariable(name = "reviewId") Integer reviewId,
-			RedirectAttributes redirectAttributes) {
-		reviewRepository.deleteById(reviewId);
-
-		redirectAttributes.addFlashAttribute("successMessage", "レビューを削除しました。");
-
-		return "redirect:/shops/{shopId}";
-	}
-
+        return "redirect:/shops/" + shopId;
+    }
 }

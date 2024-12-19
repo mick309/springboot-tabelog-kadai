@@ -23,32 +23,33 @@ import lombok.Data;
 @Data
 public class Review {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	@ManyToOne
-	@JoinColumn(name = "user_id", nullable = false)
-	private User user;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-	@ManyToOne
-	@JoinColumn(name = "shop_id", nullable = false)
-	private Shop shop;
+    @ManyToOne
+    @JoinColumn(name = "shop_id", nullable = false)
+    private Shop shop;
 
-	@NotNull
-	@Min(1)
-	@Max(5)
-	private Integer evaluation;
+    @NotNull
+    @Min(1)
+    @Max(5)
+    private Integer evaluation;
 
-	@NotNull
-	@Column(length = 500)
-	private String review_comment;
+    @NotNull
+    @Column(length = 500, name = "review_comment") // DBカラム名はそのまま
+    private String reviewComment; // フィールド名をキャメルケースに変更
 
-	@CreationTimestamp
-	@Column(name = "created_at", nullable = false, updatable = false)
-	private Timestamp createdAt;
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Timestamp createdAt;
 
-	@UpdateTimestamp
-	@Column(name = "updated_at", nullable = false, updatable = false)
-	private Timestamp updatedAt;
+    @UpdateTimestamp
+    @Column(name = "updated_at", nullable = false)
+    private Timestamp updatedAt;
 }
+

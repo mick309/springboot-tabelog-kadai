@@ -1,5 +1,7 @@
 package com.example.tabelog.controller;
 
+import java.util.stream.Collectors;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.example.tabelog.entity.Role;
 import com.example.tabelog.entity.User;
 import com.example.tabelog.form.UserCreateForm;
 import com.example.tabelog.form.UserEditForm;
@@ -58,12 +61,17 @@ public class AdminUserController {
 	}
 
 	@GetMapping("/{id}/edit")
-	public String editUser(@PathVariable Integer id, Model model, RedirectAttributes redirectAttributes) {
+	public String editUser(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
 		User user = userService.findById(id);
 		if (user == null) {
 			redirectAttributes.addFlashAttribute("errorMessage", "ユーザーが見つかりませんでした。");
 			return "redirect:/admin/users";
 		}
+
+		Long roleId = user.getRoles().stream().findFirst()
+				.map(Role::getId)
+				.orElse(null);
+
 		UserEditForm userEditForm = new UserEditForm(
 				user.getId(),
 				user.getName(),
@@ -72,13 +80,13 @@ public class AdminUserController {
 				user.getAddress(),
 				user.getPhoneNumber(),
 				user.getEmail(),
-				user.getRole().getId());
+				roleId);
 		model.addAttribute("userEditForm", userEditForm);
 		return "admin/users/edit";
 	}
 
 	@PostMapping("/{id}/edit")
-	public String updateUser(@PathVariable Integer id, @ModelAttribute @Valid UserEditForm userEditForm,
+	public String updateUser(@PathVariable Long id, @ModelAttribute @Valid UserEditForm userEditForm,
 			BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 		if (bindingResult.hasErrors()) {
 			return "admin/users/edit";
@@ -90,7 +98,7 @@ public class AdminUserController {
 	}
 
 	@PostMapping("/{id}/delete")
-	public String delete(@PathVariable(name = "id") Integer id, RedirectAttributes redirectAttributes) {
+	public String delete(@PathVariable(name = "id") Long id, RedirectAttributes redirectAttributes) {
 		try {
 			userRepository.deleteById(id);
 			redirectAttributes.addFlashAttribute("successMessage", "会員が削除されました。");
@@ -120,7 +128,7 @@ public class AdminUserController {
 		}
 
 		try {
-			userService.registerUser(form); // UserServiceのregisterUserメソッドを使用
+			userService.registerUser(form);
 			redirectAttributes.addFlashAttribute("successMessage", "ユーザーが作成されました");
 		} catch (Exception e) {
 			bindingResult.rejectValue("email", "error.email", "メールアドレスが既に使用されています。");
@@ -130,13 +138,16 @@ public class AdminUserController {
 	}
 
 	@GetMapping("/{id}")
-	public String showUserDetails(@PathVariable Integer id, Model model, RedirectAttributes redirectAttributes) {
+	public String showUserDetails(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
 		User user = userService.findById(id);
 		if (user == null) {
 			redirectAttributes.addFlashAttribute("errorMessage", "ユーザーが見つかりませんでした。");
 			return "redirect:/admin/users";
 		}
 		model.addAttribute("user", user);
+		model.addAttribute("roles", user.getRoles().stream()
+				.map(Role::getName)
+				.collect(Collectors.joining(", ")));
 		return "admin/users/show";
 	}
 }

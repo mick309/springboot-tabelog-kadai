@@ -7,18 +7,18 @@ import lombok.Data;
 @Data
 public class ReviewEditForm {
 
-	private Integer id;
+    private Long id; // IDはLong型
 
-	@NotNull(message = "評価を入力してください")
-	private Integer evaluation;
+    @NotNull(message = "評価を入力してください")
+    private Integer evaluation;
 
-	@NotBlank(message = "レビューコメントを入力してください")
-	private String review_comment;
+    @NotBlank(message = "レビューコメントを入力してください")
+    private String reviewComment;
 
-	// 引数なしのデフォルトコンストラクタは @Data によって自動生成されます
-	public ReviewEditForm(Integer id, Integer evaluation, String review_comment) {
-		this.id = id;
-		this.evaluation = evaluation;
-		this.review_comment = review_comment;
-	}
+    // コンストラクタ（Long型のidを受け入れる）
+    public ReviewEditForm(Long id, Integer evaluation, String reviewComment) {
+        this.id = id;
+        this.evaluation = evaluation;
+        this.reviewComment = reviewComment;
+    }
 }

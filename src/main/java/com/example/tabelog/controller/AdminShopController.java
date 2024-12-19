@@ -53,7 +53,7 @@ public class AdminShopController {
 
 	// 店舗詳細ページ
 	@GetMapping("/{id}")
-	public String show(@PathVariable(name = "id") Integer id, Model model) {
+	public String show(@PathVariable(name = "id") Long id, Model model) {
 		Shop shop = shopService.findById(id);
 		if (shop == null) {
 			model.addAttribute("errorMessage", "指定された店舗が見つかりません。");
@@ -107,7 +107,7 @@ public class AdminShopController {
 
 	// 店舗編集ページ
 	@GetMapping("/{id}/edit")
-	public String edit(@PathVariable(name = "id") Integer id, Model model) {
+	public String edit(@PathVariable(name = "id") Long id, Model model) {
 		Shop shop = shopService.findById(id);
 		if (shop == null) {
 			model.addAttribute("errorMessage", "指定された店舗が見つかりません。");
@@ -153,7 +153,7 @@ public class AdminShopController {
 
 	// 店舗削除処理
 	@PostMapping("/{id}/delete")
-	public String delete(@PathVariable(name = "id") Integer id, RedirectAttributes redirectAttributes) {
+	public String delete(@PathVariable(name = "id") Long id, RedirectAttributes redirectAttributes) {
 		shopService.delete(id);
 		redirectAttributes.addFlashAttribute("successMessage", "店舗を削除しました。");
 		return "redirect:/admin/shops";

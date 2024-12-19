@@ -1,7 +1,7 @@
 package com.example.tabelog.entity;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime; // 修正
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 import jakarta.persistence.Column;
@@ -18,16 +18,17 @@ import lombok.Data;
 @Table(name = "reservations")
 @Data
 public class Reservation {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
+	private Long id; // Integer から Long に変更
 
 	@ManyToOne
 	@JoinColumn(name = "shop_id")
 	private Shop shop;
 
 	@ManyToOne
-	@JoinColumn(name = "user_id")
+	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
 
 	@Column(name = "reservations_date")

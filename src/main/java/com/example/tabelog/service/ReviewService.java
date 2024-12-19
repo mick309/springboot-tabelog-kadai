@@ -28,7 +28,7 @@ public class ReviewService {
 	public void create(ReviewRegisterForm form, Shop shop, User user) {
 		Review review = new Review();
 		review.setEvaluation(form.getEvaluation());
-		review.setReview_comment(form.getReview_comment());
+		review.setReviewComment(form.getReviewComment()); // 修正済みのgetterを使用
 		review.setShop(shop);
 		review.setUser(user);
 		reviewRepository.save(review);
@@ -43,10 +43,11 @@ public class ReviewService {
 	@Transactional
 	public void update(ReviewEditForm reviewEditForm) {
 		Review review = reviewRepository.findById(reviewEditForm.getId())
-				.orElseThrow(() -> new EntityNotFoundException("レビューが見つかりません: ID " + reviewEditForm.getId()));
+				.orElseThrow(() -> new IllegalArgumentException("Review not found with ID: " + reviewEditForm.getId()));
 
 		review.setEvaluation(reviewEditForm.getEvaluation());
-		review.setReview_comment(reviewEditForm.getReview_comment());
+		review.setReviewComment(reviewEditForm.getReviewComment()); // 正しいメソッド名を使用
+
 		reviewRepository.save(review);
 	}
 
@@ -76,10 +77,10 @@ public class ReviewService {
 
 	@Transactional
 	public void updateReview(Integer id, User user, ReviewEditForm reviewEditForm) {
-		Review review = findByIdAndCurrentUser(id, user);
-		review.setEvaluation(reviewEditForm.getEvaluation());
-		review.setReview_comment(reviewEditForm.getReview_comment());
-		reviewRepository.save(review);
+	    Review review = findByIdAndCurrentUser(id, user);
+	    review.setEvaluation(reviewEditForm.getEvaluation());
+	    review.setReviewComment(reviewEditForm.getReviewComment());
+	    reviewRepository.save(review);
 	}
 
 }

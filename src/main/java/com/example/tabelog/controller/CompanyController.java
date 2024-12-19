@@ -1,45 +1,35 @@
 package com.example.tabelog.controller;
 
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import java.util.stream.Collectors;
+
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import com.example.tabelog.entity.Company;
 import com.example.tabelog.entity.User;
-import com.example.tabelog.security.UserDetailsImpl;
-import com.example.tabelog.service.CompanyService;
+import com.example.tabelog.repository.UserRepository;
 
-@Controller
-@RequestMapping("/company")
+@RestController
 public class CompanyController {
 
-	private final CompanyService companyService;
+	private final UserRepository userRepository;
 
-	public CompanyController(CompanyService companyService) {
-		this.companyService = companyService;
+	public CompanyController(UserRepository userRepository) {
+		this.userRepository = userRepository;
 	}
 
-	@GetMapping("/view")
-	public String viewCompanyInfo(@AuthenticationPrincipal UserDetailsImpl userDetails, Model model) {
-	    User user = userDetails.getUser();
-	    Company company = companyService.getCompanyInfo();
+	// ユーザー情報とロールを取得する例
+	@GetMapping("/user-roles")
+	public String getUserRoles(@RequestParam Long userId) {
+		// ユーザーを取得
+		User user = userRepository.findById(userId)
+				.orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + userId));
 
-	    model.addAttribute("company", company);
-	    model.addAttribute("user", user);
+		// ユーザーのロールを取得
+		String roles = user.getRoles().stream()
+				.map(role -> role.getName()) // Role エンティティの名前を取得
+				.collect(Collectors.joining(", ")); // カンマ区切りにする
 
-	    // ユーザーのロールに基づいて適切なテンプレートを選択
-	    switch (user.getRole().getName()) {
-	        case "ROLE_PREMIUM_USER":
-	        case "ROLE_GENERAL":
-	            return "company/company"; // 一般・課金ユーザー共通
-	        case "ROLE_ADMIN":
-	            return "admin/company/view"; // 管理者専用
-	        default:
-	            throw new IllegalStateException("予期しないロールです");
-	    }
+		return "User roles: " + roles;
 	}
-
-	}
-
+}

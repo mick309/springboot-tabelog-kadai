@@ -11,7 +11,7 @@ import com.example.tabelog.entity.Review;
 import com.example.tabelog.entity.Shop;
 import com.example.tabelog.entity.User;
 
-public interface ReviewRepository extends JpaRepository<Review, Integer> {
+public interface ReviewRepository extends JpaRepository<Review, Long> {
 	public Review findByShopAndUser(Shop Shop, User user);
 
 	public Page<Review> findByShopOrderByCreatedAtDesc(Shop Shop, Pageable pageable);

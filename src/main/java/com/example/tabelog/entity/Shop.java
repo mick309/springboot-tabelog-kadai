@@ -25,7 +25,7 @@ public class Shop {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
-	private Integer id;
+	private Long  id;
 	
 
 	// Categoryの情報（カテゴリID）を外部キーで関連付け

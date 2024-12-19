@@ -19,6 +19,7 @@ public class AdminCompanyController {
 
 	public AdminCompanyController(AdminCompanyService adminCompanyService) {
 		this.adminCompanyService = adminCompanyService;
+
 	}
 
 	// 会社情報の表示

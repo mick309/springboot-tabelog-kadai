@@ -21,6 +21,7 @@ import com.example.tabelog.form.ReservationInputForm;
 import com.example.tabelog.repository.ReservationRepository;
 import com.example.tabelog.repository.ShopRepository;
 import com.example.tabelog.repository.UserRepository;
+import com.example.tabelog.service.ReservationService;
 
 import jakarta.validation.Valid;
 
@@ -31,14 +32,17 @@ public class ReservationController {
 	private final ReservationRepository reservationRepository;
 	private final ShopRepository shopRepository;
 	private final UserRepository userRepository;
+	private final ReservationService reservationService;
 
 	public ReservationController(
 			ReservationRepository reservationRepository,
 			ShopRepository shopRepository,
-			UserRepository userRepository) {
+			UserRepository userRepository,
+			ReservationService reservationService) {
 		this.reservationRepository = reservationRepository;
 		this.shopRepository = shopRepository;
 		this.userRepository = userRepository;
+		this.reservationService = reservationService;
 	}
 
 	// 管理者用予約一覧ページ
@@ -107,7 +111,7 @@ public class ReservationController {
 	}
 
 	@GetMapping("/{id}/show")
-	public String showReservationDetails(@PathVariable(name = "id") Integer id, Model model) {
+	public String showReservationDetails(@PathVariable(name = "id") Long id, Model model) {
 		Reservation reservation = reservationRepository.findById(id).orElse(null);
 		if (reservation == null) {
 			model.addAttribute("errorMessage", "指定された予約が見つかりません。");
@@ -115,5 +119,25 @@ public class ReservationController {
 		}
 		model.addAttribute("reservation", reservation);
 		return "admin/reservations/show"; // 適切なテンプレート名
+	}
+
+	@GetMapping("/reservations/{id}")
+	public String getReservation(@PathVariable Long id, Model model) {
+		Reservation reservation = reservationService.findById(id);
+		model.addAttribute("reservation", reservation);
+		return "reservation/detail";
+	}
+
+	@PostMapping("/{id}/delete")
+	public String deleteReservation(
+			@PathVariable Long id,
+			RedirectAttributes redirectAttributes) {
+		try {
+			reservationService.deleteById(id); // サービス層で削除処理を実行
+			redirectAttributes.addFlashAttribute("successMessage", "予約が正常に削除されました。");
+		} catch (Exception e) {
+			redirectAttributes.addFlashAttribute("errorMessage", "予約の削除中にエラーが発生しました。");
+		}
+		return "redirect:/admin/reservations"; // 削除後に一覧ページへリダイレクト
 	}
 }

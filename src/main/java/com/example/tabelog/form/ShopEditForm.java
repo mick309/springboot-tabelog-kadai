@@ -16,7 +16,7 @@ import lombok.Data;
 public class ShopEditForm {
 
 	@NotNull
-	private Integer id;
+	private Long id;
 
 	@NotNull(message = "カテゴリIDを入力してください。")
 	private Integer categoryId;

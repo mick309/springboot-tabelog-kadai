@@ -8,14 +8,20 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.example.tabelog.entity.User;
 
-public interface UserRepository extends JpaRepository<User, Integer> {
-	public User findByEmail(String email);
+public interface UserRepository extends JpaRepository<User, Long> {
+    // メールアドレスでユーザーを検索
+    Optional<User> findByEmailIgnoreCase(String email);
 
-	Page<User> findByNameLikeOrFuriganaLike(String nameKeyword, String furiganaKeyword, Pageable pageable);
+    // 名前またはフリガナで検索
+    Page<User> findByNameLikeOrFuriganaLike(String nameKeyword, String furiganaKeyword, Pageable pageable);
 
-	boolean existsByEmail(String email);
+    // メールアドレスの存在確認
+    boolean existsByEmail(String email);
 
-	Optional<User> findByEmailIgnoreCase(String email); // Emailでユーザーを検索
-
-	Optional<User> findByCustomerId(String customerId); // StripeのCustomer IDで検索
+    // customerId でユーザーを検索 (課金済みユーザー用)
+    Optional<User> findByCustomerId(String customerId);
+    
+    Optional<User> findByEmail(String email);
+    
+   
 }
