@@ -155,4 +155,13 @@ public class UserService {
 	public boolean isSamePassword(String password, String passwordConfirmation) {
 		return password != null && password.equals(passwordConfirmation);
 	}
+	
+	public boolean isAdmin(User user) {
+	    return user.getRole().getName().equals("ROLE_ADMIN");
+	}
+
+	public boolean isPremiumUser(User user) {
+	    return user.getRole().getName().equals("ROLE_PREMIUM_USER");
+	}
+
 }

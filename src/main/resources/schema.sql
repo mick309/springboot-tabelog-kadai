@@ -1,10 +1,10 @@
 -- categories テーブル
 CREATE TABLE IF NOT EXISTS categories (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL
-);
+    name VARCHAR(255) NOT NULL UNIQUE
+) ENGINE=InnoDB;
 
--- roles テーブル作成
+-- roles テーブル
 CREATE TABLE IF NOT EXISTS roles (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL UNIQUE
@@ -20,29 +20,32 @@ CREATE TABLE IF NOT EXISTS users (
     phone_number VARCHAR(15) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
-    role_id BIGINT, 
+    role_id BIGINT,
     enabled BOOLEAN NOT NULL DEFAULT TRUE,
     is_premium BOOLEAN NOT NULL DEFAULT FALSE,
     is_paid BOOLEAN NOT NULL DEFAULT FALSE,
     customer_id VARCHAR(255) UNIQUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (role_id) REFERENCES roles (id)
+    FOREIGN KEY (role_id) REFERENCES roles (id) ON DELETE SET NULL
 ) ENGINE=InnoDB;
+
+
 
 -- user_roles テーブル
 CREATE TABLE IF NOT EXISTS user_roles (
     user_id BIGINT NOT NULL,
     role_id BIGINT NOT NULL,
     PRIMARY KEY (user_id, role_id),
-    FOREIGN KEY (user_id) REFERENCES users (id),
-    FOREIGN KEY (role_id) REFERENCES roles (id)
+    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+    FOREIGN KEY (role_id) REFERENCES roles (id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
+
 
 -- shop テーブル
 CREATE TABLE IF NOT EXISTS shop (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    category_id BIGINT NOT NULL, -- category_id を BIGINT に統一
+    category_id BIGINT NOT NULL, 
     shop_name VARCHAR(255) NOT NULL,
     image_name VARCHAR(255),
     description VARCHAR(1000) NOT NULL,
@@ -56,8 +59,9 @@ CREATE TABLE IF NOT EXISTS shop (
     phone_number VARCHAR(15) NOT NULL,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (category_id) REFERENCES categories (id)
+    FOREIGN KEY (category_id) REFERENCES categories (id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
+
 
 -- verification_tokens テーブル
 CREATE TABLE IF NOT EXISTS verification_tokens (
@@ -66,7 +70,7 @@ CREATE TABLE IF NOT EXISTS verification_tokens (
     token VARCHAR(255) NOT NULL,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users (id)
+    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
 -- reservations テーブル
@@ -79,9 +83,11 @@ CREATE TABLE IF NOT EXISTS reservations (
     number_of_people INT NOT NULL,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (shop_id) REFERENCES shop (id),
-    FOREIGN KEY (user_id) REFERENCES users (id)
+    FOREIGN KEY (shop_id) REFERENCES shop (id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+    CONSTRAINT unique_reservation UNIQUE (user_id, shop_id, reservations_date, reservation_time)
 ) ENGINE=InnoDB;
+
 -- reviews テーブル
 CREATE TABLE IF NOT EXISTS reviews (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -91,16 +97,17 @@ CREATE TABLE IF NOT EXISTS reviews (
     review_comment VARCHAR(500) NOT NULL,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users (id),
-    FOREIGN KEY (shop_id) REFERENCES shop (id)
+    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+    FOREIGN KEY (shop_id) REFERENCES shop (id) ON DELETE CASCADE,
+    CONSTRAINT unique_user_shop_review UNIQUE (user_id, shop_id)
 ) ENGINE=InnoDB;
 
 -- company テーブル
 CREATE TABLE IF NOT EXISTS company (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    company_name VARCHAR(255) NOT NULL,
+    company_name VARCHAR(255) NOT NULL UNIQUE,
     website_url VARCHAR(255),
-    contact_email VARCHAR(255) NOT NULL,
+    contact_email VARCHAR(255) NOT NULL UNIQUE,
     phone_number VARCHAR(50),
     address VARCHAR(255),
     services TEXT,

@@ -36,4 +36,9 @@ public interface ShopRepository extends JpaRepository<Shop, Long> {
 	// キーワード検索（店舗名または住所を部分一致検索）
 	@Query("SELECT s FROM Shop s WHERE s.shopName LIKE %:keyword% OR s.address LIKE %:keyword%")
 	Page<Shop> searchByKeyword(@Param("keyword") String keyword, Pageable pageable);
+
+	// 店舗名で部分一致検索（ページネーション対応）
+	Page<Shop> findByShopNameContaining(String shopName, Pageable pageable);
+
+	// 
 }

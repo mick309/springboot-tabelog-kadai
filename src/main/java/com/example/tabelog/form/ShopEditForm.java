@@ -19,7 +19,7 @@ public class ShopEditForm {
 	private Long id;
 
 	@NotNull(message = "カテゴリIDを入力してください。")
-	private Integer categoryId;
+	private Long categoryId;
 
 	@NotBlank(message = "店舗名を入力してください。")
 	private String shopName;

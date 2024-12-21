@@ -1,7 +1,7 @@
 package com.example.tabelog.service;
 
 import java.util.List;
-import java.util.Optional; // Optional をインポート
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -17,29 +17,28 @@ public class CategoryService {
 		this.categoryRepository = categoryRepository;
 	}
 
-	// IDでカテゴリを取得（Optionalを返す）
-	public Optional<Category> findById(Integer id) {
-		return categoryRepository.findById(id); // Optionalを返す
+	// 📌 IDでカテゴリを取得（Optionalを返す）
+	public Optional<Category> findById(Long id) {
+		return categoryRepository.findById(id);
 	}
 
-	// すべてのカテゴリを取得
+	// 📌 すべてのカテゴリを取得
 	public List<Category> findAll() {
 		return categoryRepository.findAll();
 	}
 
-	// カテゴリを保存（新規登録・更新）
+	// 📌 カテゴリを保存（新規登録・更新）
 	public void save(Category category) {
-		categoryRepository.save(category); // CategoryRepositoryのsaveメソッドを呼び出して保存
+		categoryRepository.save(category);
 	}
 
-	// IDでカテゴリを削除（Integer型の引数を受け取る）
-	public void deleteById(Integer id) {
-		categoryRepository.deleteById(id); // CategoryRepositoryのdeleteByIdメソッドを呼び出して削除
+	// 📌 IDでカテゴリを削除（Long型の引数を受け取る）
+	public void deleteById(Long id) {
+		categoryRepository.deleteById(id);
 	}
 
-	// getCategoryById メソッドの追加
-	public Category getCategoryById(Integer id) {
+	// 📌 IDでカテゴリを取得（存在しない場合はnullを返す）
+	public Category getCategoryById(Long id) {
 		return categoryRepository.findById(id).orElse(null);
 	}
-
 }

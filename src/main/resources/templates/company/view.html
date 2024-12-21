@@ -43,6 +43,10 @@
 								<div class="col" th:text="${company.establishedYear}"></div>
 							</div>
 							<div class="row py-2 border-bottom">
+								<div class="col-4 fw-bold">業務内容</div>
+								<div class="col" th:text="${company.services}"></div>
+							</div>
+							<div class="row py-2 border-bottom">
 								<div class="col-4 fw-bold">公式ウェブサイト</div>
 								<div class="col">
 									<a th:href="${company.websiteUrl}" target="_blank"
@@ -50,19 +54,6 @@
 								</div>
 							</div>
 						</div>
-
-						<!-- 一般ユーザー向け情報 -->
-						<section sec:authorize="hasRole('ROLE_GENERAL')" class="card shadow-sm p-4 mb-4">
-							<h2 class="h5">一般会員向け情報</h2>
-							<div class="row py-2 border-bottom">
-								<div class="col-4 fw-bold">業務内容</div>
-								<div class="col" th:text="${company.services}"></div>
-							</div>
-							<div class="row py-2">
-								<div class="col-4 fw-bold">概要</div>
-								<div class="col" th:text="${company.description}"></div>
-							</div>
-						</section>
 
 						<!-- プレミアムユーザー向け情報 -->
 						<section sec:authorize="hasRole('ROLE_PREMIUM_USER')" class="card shadow-sm p-4 mb-4">

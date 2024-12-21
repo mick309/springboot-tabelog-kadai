@@ -23,6 +23,7 @@ public class WebSecurityConfig {
 								"/favicon.ico")
 						.permitAll() // 認証不要のリクエスト
 						.requestMatchers("/admin/**").hasRole("ADMIN") // 管理者のみアクセス可能
+						.requestMatchers("/company/view").hasAnyRole("GENERAL", "ADMIN") // 一般ユーザーと管理者がアクセス可能
 						.anyRequest().authenticated()) // その他のリクエストは認証必須
 				.formLogin(form -> form
 						.loginPage("/login") // カスタムログインページ
@@ -40,17 +41,22 @@ public class WebSecurityConfig {
 		return http.build();
 	}
 
+	/**
+	 * パスワードを平文で扱うエンコーダー
+	 */
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new PasswordEncoder() {
 			@Override
 			public String encode(CharSequence rawPassword) {
-				return rawPassword.toString(); // パスワードをそのまま返す（平文比較）
+				// パスワードをそのまま返す（平文比較用）
+				return rawPassword.toString();
 			}
 
 			@Override
 			public boolean matches(CharSequence rawPassword, String encodedPassword) {
-				return rawPassword.toString().equals(encodedPassword); // 平文比較
+				// 平文同士を比較
+				return rawPassword.toString().equals(encodedPassword);
 			}
 		};
 	}

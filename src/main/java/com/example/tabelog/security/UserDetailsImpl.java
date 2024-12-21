@@ -1,8 +1,10 @@
 package com.example.tabelog.security;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.example.tabelog.entity.User;
@@ -12,52 +14,54 @@ public class UserDetailsImpl implements UserDetails {
 	private final User user;
 	private final Collection<GrantedAuthority> authorities;
 
-	public UserDetailsImpl(User user, Collection<GrantedAuthority> authorities) {
+	public UserDetailsImpl(User user) {
 		this.user = user;
-		this.authorities = authorities;
+		this.authorities = user.getRoles().stream()
+				.map(role -> role.getName().startsWith("ROLE_")
+						? new SimpleGrantedAuthority(role.getName())
+						: new SimpleGrantedAuthority("ROLE_" + role.getName()))
+				.collect(Collectors.toList());
 	}
 
 	public User getUser() {
 		return user;
 	}
 
-	// ハッシュ化済みのパスワードを返す
+	// 名前を取得するメソッドを追加
+	public String getFullName() {
+		return user.getName();
+	}
+
 	@Override
 	public String getPassword() {
 		return user.getPassword();
 	}
 
-	// ログイン時に利用するユーザー名（メールアドレス）を返す
 	@Override
 	public String getUsername() {
 		return user.getEmail();
 	}
 
-	// ロールのコレクションを返す
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return authorities;
 	}
 
-	// アカウントが期限切れでなければtrueを返す
 	@Override
 	public boolean isAccountNonExpired() {
 		return true;
 	}
 
-	// ユーザーがロックされていなければtrueを返す
 	@Override
 	public boolean isAccountNonLocked() {
 		return true;
 	}
 
-	// ユーザーのパスワードが期限切れでなければtrueを返す
 	@Override
 	public boolean isCredentialsNonExpired() {
 		return true;
 	}
 
-	// ユーザーが有効であればtrueを返す
 	@Override
 	public boolean isEnabled() {
 		return user.getEnabled();

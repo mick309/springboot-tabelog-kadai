@@ -1,5 +1,5 @@
 <!DOCTYPE html>
- <html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
 	<!-- metaとスタイルをフラグメントから読み込み -->
@@ -40,24 +40,22 @@
 				<h2 class="text-center mb-3">新着</h2>
 				<div class="row row-cols-lg-5 row-cols-2 g-3 mb-5">
 					<div class="col" th:each="newShop : ${newShops}">
-						<a th:href="@{/shops/__${newShop.getId()}__}" class="link-dark tabelog-card-link">
+						<a th:href="@{/shops/__${newShop.id}__}" class="link-dark tabelog-card-link">
 							<div class="card h-100">
-								<img th:if="${newShop.getImageName()}"
-									th:src="@{/storage/__${newShop.getImageName()}__}"
+								<img th:if="${newShop.imageName}" th:src="@{/storage/__${newShop.imageName}__}"
 									class="card-img-top tabelog-horizontal-card-image" alt="店舗画像">
-								<img th:unless="${newShop.getImageName()}" th:src="@{/images/noImage.png}"
+								<img th:unless="${newShop.imageName}" th:src="@{/images/noImage.png}"
 									class="card-img-top tabelog-horizontal-card-image" alt="NO IMAGE">
-
 								<div class="card-body">
-									<h3 class="card-title" th:text="${newShop.getShopName()}"></h3>
+									<h3 class="card-title" th:text="${newShop.shopName}"></h3>
 									<p class="card-text mb-1">
-										<small class="text-muted" th:text="${newShop.getAddress()}"></small>
+										<small class="text-muted" th:text="${newShop.address}"></small>
 									</p>
 									<p class="card-text">
 										<span
-											th:text="${#numbers.formatInteger(newShop.getPriceLower(), 1, 'COMMA') + '円 /上限'}"></span><br>
+											th:text="${#numbers.formatInteger(newShop.priceLower, 1, 'COMMA') + '円 /上限'}"></span><br>
 										<span
-											th:text="${#numbers.formatInteger(newShop.getPriceUpper(), 1, 'COMMA') + '円 /下限'}"></span>
+											th:text="${#numbers.formatInteger(newShop.priceUpper, 1, 'COMMA') + '円 /下限'}"></span>
 									</p>
 								</div>
 							</div>

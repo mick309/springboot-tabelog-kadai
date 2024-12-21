@@ -11,10 +11,12 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,76 +24,88 @@ import lombok.Setter;
 @Getter
 @Setter
 @Table(name = "users")
+@EqualsAndHashCode(of = "id")
 public class User {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@NotBlank
-	@Size(max = 50)
+	@NotBlank(message = "名前を入力してください")
+	@Size(max = 50, message = "名前は50文字以内で入力してください")
 	@Column(nullable = false)
 	private String name;
 
-	@NotBlank
-	@Size(max = 50)
+	@NotBlank(message = "フリガナを入力してください")
+	@Size(max = 50, message = "フリガナは50文字以内で入力してください")
 	private String furigana;
 
-	@NotBlank
-	@Size(max = 8) // 日本の郵便番号対応
+	@NotBlank(message = "郵便番号を入力してください")
+	@Size(max = 8, message = "郵便番号は8文字以内で入力してください")
 	@Column(name = "postal_code")
 	private String postalCode;
 
-	@NotBlank
-	@Size(max = 255)
+	@NotBlank(message = "住所を入力してください")
+	@Size(max = 255, message = "住所は255文字以内で入力してください")
 	private String address;
 
-	@NotBlank
-	@Size(max = 15)
+	@NotBlank(message = "電話番号を入力してください")
+	@Size(max = 15, message = "電話番号は15文字以内で入力してください")
 	@Column(name = "phone_number")
 	private String phoneNumber;
 
-	@NotBlank
-	@Email
-	@Size(max = 255)
+	@NotBlank(message = "メールアドレスを入力してください")
+	@Email(message = "有効なメールアドレスを入力してください")
+	@Size(max = 255, message = "メールアドレスは255文字以内で入力してください")
 	@Column(nullable = false, unique = true)
 	private String email;
 
-	@NotBlank
-	@Size(min = 8, max = 255)
+	@NotBlank(message = "パスワードを入力してください")
+	@Size(min = 8, max = 255, message = "パスワードは8文字以上255文字以内で入力してください")
 	@Column(nullable = false)
 	private String password;
 
+	@Column(nullable = false)
 	private Boolean enabled = true;
 
-	@Column(name = "is_premium", nullable = false)
+	@Column(name = "is_premium", nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
 	private Boolean isPremium = false;
 
-	@Column(name = "is_paid", nullable = false)
+	@Column(name = "is_paid", nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
 	private Boolean isPaid = false;
 
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-	private Set<Role> roles;
+	private Set<Role> roles;//サブロール
+
 	@Column(name = "customer_id")
 	private String customerId;
 
-	// 明確なゲッター/セッター（必要に応じて追加）
-	public Boolean getIsPremium() {
-		return isPremium;
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "role_id", referencedColumnName = "id")
+	private Role role; // メインロール
+
+		// カスタムメソッド
+	public void enablePremium() {
+		this.isPremium = true;
+		this.isPaid = true;
 	}
 
-	public void setIsPremium(Boolean isPremium) {
-		this.isPremium = isPremium;
+	public void disablePremium() {
+		this.isPremium = false;
+		this.isPaid = false;
 	}
 
-	public Boolean getIsPaid() {
-		return isPaid;
+	public Boolean isPremiumUser() {
+		return Boolean.TRUE.equals(this.isPremium);
 	}
 
-	public void setIsPaid(Boolean isPaid) {
-		this.isPaid = isPaid;
-		
-		
+	public Boolean isPaymentComplete() {
+		return Boolean.TRUE.equals(this.isPaid);
+	}
+
+	// ユーザーのロールを返す
+	public Set<Role> getRoles() {
+		return roles;
 	}
 }

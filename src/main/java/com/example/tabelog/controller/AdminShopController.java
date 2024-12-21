@@ -36,7 +36,7 @@ public class AdminShopController {
 		this.categoryService = categoryService;
 	}
 
-	// 店舗一覧ページ
+	// 📌 店舗一覧ページ
 	@GetMapping
 	public String index(Model model,
 			@PageableDefault(page = 0, size = 10, sort = "id", direction = Direction.ASC) Pageable pageable,
@@ -51,7 +51,7 @@ public class AdminShopController {
 		return "admin/shops/index";
 	}
 
-	// 店舗詳細ページ
+	// 📌 店舗詳細ページ
 	@GetMapping("/{id}")
 	public String show(@PathVariable(name = "id") Long id, Model model) {
 		Shop shop = shopService.findById(id);
@@ -63,7 +63,7 @@ public class AdminShopController {
 		return "admin/shops/show";
 	}
 
-	// 店舗登録フォーム表示
+	// 📌 店舗登録フォーム表示
 	@GetMapping("/register")
 	public String showShopRegisterForm(Model model) {
 		List<Category> categories = categoryService.findAll();
@@ -72,7 +72,7 @@ public class AdminShopController {
 		return "admin/shops/register";
 	}
 
-	// 店舗登録処理
+	// 📌 店舗登録処理
 	@PostMapping("/register")
 	public String registerShop(@ModelAttribute @Validated ShopRegisterForm shopRegisterForm,
 			BindingResult bindingResult,
@@ -105,7 +105,7 @@ public class AdminShopController {
 		return "redirect:/admin/shops";
 	}
 
-	// 店舗編集ページ
+	// 📌 店舗編集ページ
 	@GetMapping("/{id}/edit")
 	public String edit(@PathVariable(name = "id") Long id, Model model) {
 		Shop shop = shopService.findById(id);
@@ -134,11 +134,11 @@ public class AdminShopController {
 		return "admin/shops/edit";
 	}
 
-	// 店舗情報更新処理
+	// 📌 店舗情報更新処理
 	@PostMapping("/{id}/update")
 	public String update(@ModelAttribute @Validated ShopEditForm shopEditForm,
 			BindingResult bindingResult,
-			@PathVariable(name = "id") Integer id,
+			@PathVariable(name = "id") Long id,
 			Model model,
 			RedirectAttributes redirectAttributes) {
 		if (bindingResult.hasErrors()) {
@@ -151,11 +151,21 @@ public class AdminShopController {
 		return "redirect:/admin/shops";
 	}
 
-	// 店舗削除処理
+	// 📌 店舗削除処理
 	@PostMapping("/{id}/delete")
 	public String delete(@PathVariable(name = "id") Long id, RedirectAttributes redirectAttributes) {
 		shopService.delete(id);
 		redirectAttributes.addFlashAttribute("successMessage", "店舗を削除しました。");
 		return "redirect:/admin/shops";
 	}
+	
+	// 📌 新着店舗表示
+	@GetMapping("/new")
+	public String showNewShops(Model model) {
+	    List<Shop> newShops = shopService.findTop10ByOrderByCreatedAtDesc();
+	    model.addAttribute("newShops", newShops);
+	    return "index"; // 新着店舗を表示するテンプレート
+	}
+	
+	
 }

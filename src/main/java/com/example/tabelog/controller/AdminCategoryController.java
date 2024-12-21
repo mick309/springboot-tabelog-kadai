@@ -1,15 +1,15 @@
 package com.example.tabelog.controller;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.tabelog.entity.Category;
 import com.example.tabelog.service.CategoryService;
@@ -18,53 +18,73 @@ import com.example.tabelog.service.CategoryService;
 @RequestMapping("/admin/categories")
 public class AdminCategoryController {
 
-	@Autowired
-	private CategoryService categoryService;
+    private final CategoryService categoryService;
 
-	// カテゴリー一覧表示
-	@GetMapping
-	public String showCategories(Model model) {
-		List<Category> categories = categoryService.findAll();
-		model.addAttribute("categories", categories);
-		return "admin/categories/index"; // categories/index.htmlにマッピング
-	}
+    public AdminCategoryController(CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
 
-	// 新規登録フォーム
-	@GetMapping("/new")
-	public String showCreateForm(Model model) {
-		model.addAttribute("category", new Category());
-		return "admin/categories/register";
-	}
+    // 📌 カテゴリ一覧ページ
+    @GetMapping
+    public String index(Model model) {
+        model.addAttribute("categories", categoryService.findAll());
+        return "admin/categories/index";
+    }
 
-	// 編集フォーム
-	@GetMapping("/{id}/edit")
-	public String showEditForm(@PathVariable Integer id, Model model) {
-		// Optional<Category> を返すので、orElseThrowで値を取り出す
-		Category category = categoryService.findById(id)
-				.orElseThrow(() -> new IllegalArgumentException("Invalid category ID: " + id));
-		model.addAttribute("category", category);
-		return "admin/categories/edit"; // edit.htmlを返す
-	}
+    // 📌 カテゴリ登録ページ
+    @GetMapping("/register")
+    public String showRegisterForm(Model model) {
+        model.addAttribute("category", new Category());
+        return "admin/categories/register";
+    }
 
-	// 登録処理
-	@PostMapping
-	public String createCategory(@ModelAttribute Category category) {
-		categoryService.save(category);
-		return "redirect:/admin/categories";
-	}
+    // 📌 カテゴリ登録処理
+    @PostMapping("/register")
+    public String registerCategory(@ModelAttribute @Validated Category category,
+                                   BindingResult bindingResult,
+                                   RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            return "admin/categories/register";
+        }
 
-	// 更新処理
-	@PostMapping("/{id}/edit")
-	public String updateCategory(@PathVariable Integer id, @ModelAttribute Category category) {
-		category.setId(id); // IDをセットして更新
-		categoryService.save(category); // 更新処理
-		return "redirect:/admin/categories"; // 更新後、一覧ページへリダイレクト
-	}
+        categoryService.save(category);
+        redirectAttributes.addFlashAttribute("successMessage", "カテゴリを登録しました。");
+        return "redirect:/admin/categories";
+    }
 
-	// 削除処理
-	@PostMapping("/{id}/delete")
-	public String deleteCategory(@PathVariable Integer id) {
-		categoryService.deleteById(id);
-		return "redirect:/admin/categories"; // カテゴリー一覧ページにリダイレクト
-	}
+    // 📌 カテゴリ編集ページ
+    @GetMapping("/{id}/edit")
+    public String edit(@PathVariable("id") Long id, Model model) {
+        Category category = categoryService.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("無効なカテゴリID: " + id));
+        model.addAttribute("category", category);
+        return "admin/categories/edit";
+    }
+
+    // 📌 カテゴリ更新処理
+    @PostMapping("/{id}/update")
+    public String updateCategory(@PathVariable("id") Long id,
+                                 @ModelAttribute @Validated Category category,
+                                 BindingResult bindingResult,
+                                 RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            return "admin/categories/edit";
+        }
+
+        // 明示的にIDを設定
+        category.setId(id);
+
+        categoryService.save(category);
+        redirectAttributes.addFlashAttribute("successMessage", "カテゴリを更新しました。");
+        return "redirect:/admin/categories";
+    }
+
+    // 📌 カテゴリ削除処理
+    @PostMapping("/{id}/delete")
+    public String deleteCategory(@PathVariable("id") Long id,
+                                 RedirectAttributes redirectAttributes) {
+        categoryService.deleteById(id); // `delete`ではなく`deleteById`を使用
+        redirectAttributes.addFlashAttribute("successMessage", "カテゴリを削除しました。");
+        return "redirect:/admin/categories";
+    }
 }
