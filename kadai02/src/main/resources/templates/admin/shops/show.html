@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<<<<<<< HEAD
+<html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+=======
+ <html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+>>>>>>> branch 'main' of https://github.com/mick309/springboot-tabelog-kadai.git
+
+<head>
+	<div th:replace="~{fragment :: meta}"></div>
+	<div th:replace="~{fragment :: styles}"></div>
+
+	<title>店舗詳細</title>
+</head>
+
+<body>
+	<div class="tabelog-wrapper">
+		<!-- ヘッダー -->
+		<div th:replace="~{fragment :: header}"></div>
+
+		<main>
+			<div class="container pt-4 pb-5 tabelog-container">
+				<div class="row justify-content-center">
+					<div class="col-xl-5 col-lg-6 col-md-8">
+						<nav class="mb-4" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+							<ol class="breadcrumb mb-0">
+								<li class="breadcrumb-item"><a th:href="@{/admin/shops}">店舗一覧</a></li>
+								<li class="breadcrumb-item active" aria-current="page">店舗詳細</li>
+							</ol>
+						</nav>
+
+						<h1 class="mb-4 text-center" th:text="${shop.shopName}"></h1>
+
+						<div class="d-flex justify-content-end align-items-end mb-3">
+							<div>
+								<a th:href="@{/admin/shops/{id}/edit(id=${shop.id})}">編集</a>
+							</div>
+						</div>
+
+						<!-- 店舗画像 -->
+						<div class="mb-3">
+							<img th:if="${shop.imageName}" th:src="@{/storage/{imageName}(imageName=${shop.imageName})}"
+								class="w-100" alt="店舗画像">
+							<img th:unless="${shop.imageName}" th:src="@{/images/noImage.png}" class="w-100"
+								alt="NO IMAGE">
+						</div>
+
+						<!-- 店舗詳細情報 -->
+						<div class="container mb-4">
+							<div class="row pb-2 mb-2 border-bottom">
+								<div class="col-4">
+									<span class="fw-bold">店舗ID</span>
+								</div>
+								<div class="col">
+									<span th:text="${shop.id}"></span>
+								</div>
+							</div>
+
+							<div class="row pb-2 mb-2 border-bottom">
+								<div class="col-4">
+									<span class="fw-bold">カテゴリー名</span>
+								</div>
+								<div class="col">
+									<span th:text="${category != null ? category.getName() : 'カテゴリー未設定'}"></span>
+								</div>
+							</div>
+
+							<div class="row pb-2 mb-2 border-bottom">
+								<div class="col-4">
+									<span class="fw-bold">店舗名</span>
+								</div>
+								<div class="col">
+									<span th:text="${shop.shopName}"></span>
+								</div>
+							</div>
+
+							<div class="row pb-2 mb-2 border-bottom">
+								<div class="col-4">
+									<span class="fw-bold">説明</span>
+								</div>
+								<div class="col">
+									<span th:text="${shop.description}"></span>
+								</div>
+							</div>
+
+							<div class="row pb-2 mb-2 border-bottom">
+								<div class="col-4">
+									<span class="fw-bold">価格帯(下限)</span>
+								</div>
+								<div class="col">
+									<span th:text="${#numbers.formatInteger(shop.priceLower, 1, 'COMMA') + '円'}"></span>
+								</div>
+							</div>
+
+							<div class="row pb-2 mb-2 border-bottom">
+								<div class="col-4">
+									<span class="fw-bold">価格帯(上限)</span>
+								</div>
+								<div class="col">
+									<span th:text="${#numbers.formatInteger(shop.priceUpper, 1, 'COMMA') + '円'}"></span>
+								</div>
+							</div>
+
+							<div class="row pb-2 mb-2 border-bottom">
+								<div class="col-4">
+									<span class="fw-bold">営業時間(開店)</span>
+								</div>
+								<div class="col">
+									<span th:text="${shop.hoursOpen}"></span>
+								</div>
+							</div>
+
+							<div class="row pb-2 mb-2 border-bottom">
+								<div class="col-4">
+									<span class="fw-bold">営業時間(閉店)</span>
+								</div>
+								<div class="col">
+									<span th:text="${shop.hoursClose}"></span>
+								</div>
+							</div>
+
+							<div class="row pb-2 mb-2 border-bottom">
+								<div class="col-4">
+									<span class="fw-bold">定休日</span>
+								</div>
+								<div class="col">
+									<span th:text="${shop.closedDay}"></span>
+								</div>
+							</div>
+
+							<div class="row pb-2 mb-2 border-bottom">
+								<div class="col-4">
+									<span class="fw-bold">郵便番号</span>
+								</div>
+								<div class="col">
+									<span th:text="${shop.postalCode}"></span>
+								</div>
+							</div>
+
+							<div class="row pb-2 mb-2 border-bottom">
+								<div class="col-4">
+									<span class="fw-bold">住所</span>
+								</div>
+								<div class="col">
+									<span th:text="${shop.address}"></span>
+								</div>
+							</div>
+
+							<div class="row pb-2 mb-2 border-bottom">
+								<div class="col-4">
+									<span class="fw-bold">電話番号</span>
+								</div>
+								<div class="col">
+									<span th:text="${shop.phoneNumber}"></span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</main>
+
+		<!-- フッター -->
+		<div th:replace="~{fragment :: footer}"></div>
+	</div>
+
+	<div th:replace="~{fragment :: scripts}"></div>
+</body>
+
+</html>

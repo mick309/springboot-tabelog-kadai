@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<<<<<<< HEAD
+<html xmlns:th="https://www.thymeleaf.org">
+=======
+<html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+>>>>>>> branch 'main' of https://github.com/mick309/springboot-tabelog-kadai.git
+
+<head>
+	<div th:replace="~{fragment :: meta}"></div>
+	<div th:replace="~{fragment :: styles}"></div>
+	<title>カテゴリー一覧</title>
+</head>
+
+<body>
+	<div class="tabelog-wrapper">
+		<!-- ヘッダー -->
+		<div th:replace="~{fragment :: header}"></div>
+		<main>
+			<div class="container pt-4 pb-5 tabelog-container">
+				<div class="row justify-content-center">
+					<div class="col-xxl-9 col-xl-10 col-lg-11">
+						<nav class="mb-4" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+							<ol class="breadcrumb mb-0">
+								<li class="breadcrumb-item"><a th:href="@{/}">ホーム</a></li>
+								<li class="breadcrumb-item active">カテゴリー一覧</li>
+							</ol>
+						</nav>
+
+						<h1 class="mb-3 text-center">カテゴリー一覧</h1>
+
+						<div class="text-center mb-4">
+							<a class="btn text-white shadow-sm tabelog-btn" th:href="@{/admin/categories/new}"
+								sec:authorize="hasRole('ROLE_ADMIN')">新規カテゴリー登録</a>
+						</div>
+
+						<div class="table-responsive">
+							<table class="table table-bordered">
+								<thead class="table-light">
+									<tr>
+										<th>ID</th>
+										<th>名前</th>
+										<th>操作</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="category : ${categories}">
+										<td th:text="${category.id}"></td>
+										<td th:text="${category.name}"></td>
+										<td>
+											<a class="btn btn-sm btn-warning"
+												th:href="@{'/admin/categories/' + ${category.id} + '/edit'}">編集</a>
+											<a class="btn btn-sm btn-danger" href="#" data-bs-toggle="modal"
+												th:data-bs-target="${'#deleteCategoryModal' + category.id}">削除</a>
+
+											<!-- 削除モーダル -->
+											<div class="modal fade" th:id="${'deleteCategoryModal' + category.id}"
+												tabindex="-1" aria-labelledby="deleteCategoryModalLabel">
+												<div class="modal-dialog">
+													<div class="modal-content">
+														<div class="modal-header">
+															<h5 class="modal-title" id="deleteCategoryModalLabel"
+																th:text="'カテゴリー: ' + ${category.name} + ' を削除しますか？'">
+															</h5>
+															<button type="button" class="btn-close"
+																data-bs-dismiss="modal" aria-label="閉じる"></button>
+														</div>
+														<div class="modal-footer">
+															<form
+																th:action="@{'/admin/categories/' + ${category.id} + '/delete'}"
+																method="post">
+																<input type="hidden" name="_csrf"
+																	th:value="${_csrf.token}" />
+																<button type="submit"
+																	class="btn tabelog-btn-danger text-white shadow-sm">削除</button>
+															</form>
+														</div>
+													</div>
+												</div>
+											</div>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</main>
+		<!-- フッター -->
+		<div th:replace="~{fragment :: footer}"></div>
+	</div>
+	<div th:replace="~{fragment :: scripts}"></div>
+</body>
+
+</html>

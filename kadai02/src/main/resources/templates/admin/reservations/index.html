@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+	<div th:replace="~{fragment :: meta}"></div>
+	<div th:replace="~{fragment :: styles}"></div>
+	<title>予約一覧</title>
+</head>
+
+<body>
+	<div class="tabelog-wrapper">
+		<!-- ヘッダー -->
+		<div th:replace="~{fragment :: header}"></div>
+
+		<main>
+			<div class="container pt-4 pb-5 tabelog-container">
+				<div class="row justify-content-center">
+					<div class="col-xxl-9 col-xl-10 col-lg-11">
+						<h1 class="mb-4 text-center">予約一覧</h1>
+
+						<!-- 予約フォームボタン -->
+						<div class="d-flex justify-content-end mb-3">
+							<a href="/admin/reservations/form" class="btn text-white shadow-sm tabelog-btn mb-3">新規予約</a>
+						</div>
+
+						<!-- 成功メッセージ -->
+						<div th:if="${successMessage}" class="alert alert-info">
+							<span th:text="${successMessage}"></span>
+						</div>
+
+						<!-- 予約がない場合 -->
+						<div th:if="${reservationPage.empty}" class="alert alert-warning text-center">
+							現在、予約はありません。
+						</div>
+
+						<!-- 予約テーブル -->
+						<table class="table" th:if="${!reservationPage.empty}">
+							<thead>
+								<tr>
+									<th scope="col">ID</th>
+									<th scope="col">店舗名</th>
+									<th scope="col">予約者名</th>
+									<th scope="col">予約時間</th>
+									<th scope="col">予約人数</th>
+									<th scope="col">作成日時</th>
+									<th scope="col">操作</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="reservation : ${reservationPage.content}">
+									<td th:text="${reservation.id}"></td>
+									<td>
+										<a th:if="${reservation.shop != null}"
+											th:href="@{/shops/{id}(id=${reservation.shop.id})}"
+											th:text="${reservation.shop.shopName}"></a>
+										<span th:if="${reservation.shop == null}">店舗情報なし</span>
+									</td>
+									<td th:text="${reservation.user.name}"></td>
+									<td th:text="${reservation.reservationTime}"></td>
+									<td th:text="${reservation.numberOfPeople + '名'}"></td>
+									<td th:text="${reservation.createdAt}"></td>
+									<td>
+										<!-- 詳細ボタン -->
+										<a th:href="@{/admin/reservations/{id}/show(id=${reservation.id})}"
+											class="btn btn-info">詳細</a>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+
+						<!-- ページネーション -->
+						<div th:if="${reservationPage.totalPages > 1}" class="d-flex justify-content-center mt-4">
+							<nav aria-label="予約一覧ページ">
+								<ul class="pagination">
+									<!-- 前のページ -->
+									<li class="page-item">
+										<a th:if="${!reservationPage.first}"
+											th:href="@{/admin/reservations(page=${reservationPage.number - 1})}"
+											class="page-link tabelog-page-link">前</a>
+										<span th:if="${reservationPage.first}" class="page-link disabled">前</span>
+									</li>
+									<!-- ページ番号 -->
+									<li th:each="i : ${#numbers.sequence(0, reservationPage.totalPages - 1)}"
+										class="page-item">
+										<a th:if="${i != reservationPage.number}"
+											th:href="@{/admin/reservations(page=${i})}"
+											class="page-link tabelog-page-link" th:text="${i + 1}"></a>
+										<span th:if="${i == reservationPage.number}"
+											class="page-link active tabelog-active" th:text="${i + 1}"></span>
+									</li>
+									<!-- 次のページ -->
+									<li class="page-item">
+										<a th:if="${!reservationPage.last}"
+											th:href="@{/admin/reservations(page=${reservationPage.number + 1})}"
+											class="page-link tabelog-page-link">次</a>
+										<span th:if="${reservationPage.last}" class="page-link disabled">次</span>
+									</li>
+								</ul>
+							</nav>
+						</div>
+					</div>
+				</div>
+			</div>
+		</main>
+
+		<!-- フッター -->
+		<div th:replace="~{fragment :: footer}"></div>
+	</div>
+
+	<!-- スクリプト -->
+	<div th:replace="~{fragment :: scripts}"></div>
+</body>
+
+</html>

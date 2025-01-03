@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+	<div th:replace="~{fragment :: meta}"></div>
+	<div th:replace="~{fragment :: styles}"></div>
+	<title>PREMIUM会員登録</title>
+	<script src="https://js.stripe.com/v3/"></script>
+</head>
+
+<body>
+	<div class="tabelog-wrapper">
+		<!-- ヘッダー -->
+		<div th:replace="~{fragment :: header}"></div>
+
+		<main>
+			<div class="container pt-4 pb-5 tabelog-container">
+				<div class="row justify-content-center">
+					<div class="col-xl-5 col-lg-6 col-md-8">
+						<nav class="mb-4" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+							<ol class="breadcrumb mb-0">
+								<li class="breadcrumb-item"><a th:href="@{/users/register}">会員登録</a></li>
+								<li class="breadcrumb-item active" aria-current="page">PREMIUM会員登録</li>
+							</ol>
+						</nav>
+
+						<h1 class="mb-4 text-center">PREMIUM会員登録</h1>
+
+						<p class="text-center">PREMIUM会員になると以下の特典が利用できます：</p>
+						<ul class="list-group mb-4">
+							<li class="list-group-item">特典1: プレミアム限定機能</li>
+							<li class="list-group-item">特典2: 広告の非表示</li>
+							<li class="list-group-item">特典3: 追加サポート</li>
+						</ul>
+
+						<!-- Stripe Checkout ボタン -->
+						<div class="text-center">
+							<button id="checkout-button" class="btn btn-warning shadow-sm w-75">
+								PREMIUM会員になる (500円/月)
+							</button>
+						</div>
+
+						<script th:inline="javascript">
+							/*<![CDATA[*/
+							// Stripe 公開キー（サーバーから渡す）
+							const stripePublicKey = /*[[${stripePublicKey}]]*/ "[[${stripePublicKey}]]";
+
+							// Stripeインスタンスを作成
+							const stripe = Stripe(stripePublicKey);
+
+							// ボタンのクリックイベント
+							document.getElementById("checkout-button").addEventListener("click", function () {
+								fetch("/api/stripe/create-checkout-session", {
+									method: "POST",
+								})
+									.then((response) => response.json())
+									.then((session) => {
+										return stripe.redirectToCheckout({sessionId: session.id});
+									})
+									.catch((error) => console.error("Error:", error));
+							});
+							/*]]>*/
+						</script>
+					</div>
+				</div>
+			</div>
+		</main>
+
+		<!-- フッター -->
+		<div th:replace="~{fragment :: footer}"></div>
+	</div>
+
+	<div th:replace="~{fragment :: scripts}"></div>
+</body>
+
+</html>

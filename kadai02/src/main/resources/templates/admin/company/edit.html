@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+ <html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	<div th:replace="~{fragment :: meta}"></div>
+	<div th:replace="~{fragment :: styles}"></div>
+	<title>会社情報編集</title>
+</head>
+
+<body>
+	<div class="tabelog-wrapper">
+		<!-- ヘッダー -->
+		<div th:replace="~{fragment :: header}"></div>
+
+		<main>
+			<div class="container pt-4 pb-5 tabelog-container">
+				<div class="row justify-content-center">
+					<div class="col-xl-6 col-lg-8 col-md-10">
+						<h1 class="mb-4 text-center">会社情報編集</h1>
+
+						<form th:action="@{/admin/company/edit}" th:object="${companyForm}" method="post">
+							<!-- CSRF トークン -->
+							<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+
+							<!-- hidden id フィールド -->
+							<input type="hidden" th:field="*{id}" />
+
+							<div class="form-group mb-3">
+								<label for="companyName" class="form-label">会社名</label>
+								<input type="text" class="form-control" id="companyName" th:field="*{companyName}" />
+								<div th:if="${#fields.hasErrors('companyName')}" class="text-danger small">
+									<span th:errors="*{companyName}"></span>
+								</div>
+							</div>
+
+							<div class="form-group mb-3">
+								<label for="address" class="form-label">住所</label>
+								<input type="text" class="form-control" id="address" th:field="*{address}" />
+								<div th:if="${#fields.hasErrors('address')}" class="text-danger small">
+									<span th:errors="*{address}"></span>
+								</div>
+							</div>
+
+							<div class="form-group mb-3">
+								<label for="phoneNumber" class="form-label">電話番号</label>
+								<input type="text" class="form-control" id="phoneNumber" th:field="*{phoneNumber}" />
+								<div th:if="${#fields.hasErrors('phoneNumber')}" class="text-danger small">
+									<span th:errors="*{phoneNumber}"></span>
+								</div>
+							</div>
+
+							<div class="form-group mb-3">
+								<label for="contactEmail" class="form-label">メールアドレス</label>
+								<input type="email" class="form-control" id="contactEmail" th:field="*{contactEmail}" />
+								<div th:if="${#fields.hasErrors('contactEmail')}" class="text-danger small">
+									<span th:errors="*{contactEmail}"></span>
+								</div>
+							</div>
+
+							<div class="d-flex justify-content-center">
+								<button type="submit" class="btn btn-primary shadow-sm">更新</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</main>
+
+		<!-- フッター -->
+		<div th:replace="~{fragment :: footer}"></div>
+	</div>
+
+	<div th:replace="~{fragment :: scripts}"></div>
+</body>
+
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <div th:replace="~{fragment :: meta}"></div>
+    <div th:replace="~{fragment :: styles}"></div>
+
+    <title>予約フォーム</title>
+</head>
+<body>
+    <div class="tabelog-wrapper">
+        <!-- ヘッダー -->
+        <div th:replace="~{fragment :: header}"></div>
+
+        <main>
+            <div class="container pt-4 pb-5 tabelog-container">
+                <div class="row justify-content-center">
+                    <div class="col-xl-4 col-lg-5 col-md-7 col-sm-9">
+                        <h1 class="mb-4 text-center">予約フォーム</h1>
+                        
+                        <form method="post" th:action="@{/reservations}" th:object="${reservationInputForm}">
+                            <div class="form-group">
+                                <label for="reservationsDate">予約日</label>
+                                <div th:if="${#fields.hasErrors('reservationsDate')}" class="text-danger small">
+                                    <p th:errors="*{reservationsDate}">無効な予約日です</p>
+                                </div>
+                                <input type="date" th:field="*{reservationsDate}" class="form-control" id="reservationsDate">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="reservationTime">予約時間</label>
+                                <div th:if="${#fields.hasErrors('reservationTime')}" class="text-danger small">
+                                    <p th:errors="*{reservationTime}">無効な予約時間です</p>
+                                </div>
+                                <input type="time" th:field="*{reservationTime}" class="form-control" id="reservationTime">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="numberOfPeople">予約人数</label>
+                                <div th:if="${#fields.hasErrors('numberOfPeople')}" class="text-danger small">
+                                    <p th:errors="*{numberOfPeople}">無効な予約人数です</p>
+                                </div>
+                                <input type="number" th:field="*{numberOfPeople}" class="form-control" id="numberOfPeople" min="1">
+                            </div>
+                            
+                            <button type="submit" class="btn text-white shadow-sm w-100 tabelog-btn">予約する</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- フッター -->
+        <div th:replace="~{fragment :: footer}"></div>
+    </div>
+
+    <div th:replace="~{fragment :: scripts}"></div>
+</body>
+</html>

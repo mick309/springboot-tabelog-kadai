@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+ <html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+	<div th:replace="~{fragment :: meta}"></div>
+	<div th:replace="~{fragment :: styles}"></div>
+	<title>会社情報</title>
+</head>
+
+<body>
+	<div class="tabelog-wrapper">
+		<!-- ヘッダー -->
+		<div th:replace="~{fragment :: header}"></div>
+
+		<main>
+			<div class="container pt-4 pb-5 tabelog-container">
+				<div class="row justify-content-center">
+					<div class="col-xl-6 col-lg-8 col-md-10">
+
+						<h1 class="mb-4 text-center">会社情報</h1>
+
+						<!-- 会社情報の詳細 -->
+						<div class="container mb-4">
+							<div class="row pb-2 mb-2 border-bottom">
+								<div class="col-4">
+									<span class="fw-bold">会社名</span>
+								</div>
+								<div class="col">
+									<span th:text="${company.companyName}"></span>
+								</div>
+							</div>
+
+							<div class="row pb-2 mb-2 border-bottom">
+								<div class="col-4">
+									<span class="fw-bold">住所</span>
+								</div>
+								<div class="col">
+									<span th:text="${company.address}"></span>
+								</div>
+							</div>
+
+							<div class="row pb-2 mb-2 border-bottom">
+								<div class="col-4">
+									<span class="fw-bold">電話番号</span>
+								</div>
+								<div class="col">
+									<span th:text="${company.phoneNumber}"></span>
+								</div>
+							</div>
+
+							<div class="row pb-2 mb-2 border-bottom">
+								<div class="col-4">
+									<span class="fw-bold">メールアドレス</span>
+								</div>
+								<div class="col">
+									<span th:text="${company.contactEmail}"></span>
+								</div>
+							</div>
+						</div>
+
+						<!-- ボタン -->
+						<div class="d-flex justify-content-between">
+							<a th:href="@{/admin/company/edit}" class="btn text-white"
+								style="background-color: #66cdaa;">編集</a>
+							<a th:href="@{/}" class="btn btn-secondary">戻る</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</main>
+
+		<!-- フッター -->
+		<div th:replace="~{fragment :: footer}"></div>
+	</div>
+
+	<div th:replace="~{fragment :: scripts}"></div>
+</body>
+
+</html>
