@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+	<div th:replace="~{fragment :: meta}"></div>
+	<div th:replace="~{fragment :: styles}"></div>
+	<title>予約詳細</title>
+</head>
+
+<body>
+	<div class="tabelog-wrapper">
+		<!-- ヘッダー -->
+		<div th:replace="~{fragment :: header}"></div>
+
+		<main>
+			<div class="container pt-4 pb-5 tabelog-container">
+				<div class="row justify-content-center">
+					<div class="col-xl-6 col-lg-8 col-md-10">
+						<nav class="mb-4" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+							<ol class="breadcrumb mb-0">
+								<li class="breadcrumb-item"><a th:href="@{/admin/reservations}">予約一覧</a></li>
+								<li class="breadcrumb-item active" aria-current="page">予約詳細</li>
+							</ol>
+						</nav>
+
+						<!-- 編集ボタンを右上に配置 -->
+						<div class="d-flex justify-content-end mb-3">
+							<a th:href="@{/admin/reservations/{id}/edit(id=${reservation.id})}"
+								class="btn text-white shadow-sm tabelog-btn mb-3">
+								編集
+							</a>
+						</div>
+
+						<h1 class="mb-4 text-center">予約詳細</h1>
+
+						<div class="card shadow-sm">
+							<div class="card-body">
+								<div class="row mb-3">
+									<div class="col-4 fw-bold">予約ID:</div>
+									<div class="col" th:text="${reservation.id}"></div>
+								</div>
+
+								<div class="row mb-3">
+									<div class="col-4 fw-bold">店舗名:</div>
+									<div class="col">
+										<a th:href="@{/shops/{id}(id=${reservation.shop.id})}"
+											th:text="${reservation.shop.shopName}"></a>
+									</div>
+								</div>
+
+								<div class="row mb-3">
+									<div class="col-4 fw-bold">予約者名:</div>
+									<div class="col">
+										<a th:href="@{/admin/users/{id}(id=${reservation.user.id})}"
+											th:text="${reservation.user.name}"></a>
+									</div>
+								</div>
+
+								<div class="row mb-3">
+									<div class="col-4 fw-bold">予約日:</div>
+									<div class="col" th:text="${reservation.reservationsDate}"></div>
+								</div>
+
+								<div class="row mb-3">
+									<div class="col-4 fw-bold">予約時間:</div>
+									<div class="col" th:text="${reservation.reservationTime}"></div>
+								</div>
+
+								<div class="row mb-3">
+									<div class="col-4 fw-bold">予約人数:</div>
+									<div class="col" th:text="${reservation.numberOfPeople + ' 名'}"></div>
+								</div>
+
+								<div class="row mb-3">
+									<div class="col-4 fw-bold">作成日時:</div>
+									<div class="col" th:text="${reservation.createdAt}"></div>
+								</div>
+							</div>
+						</div>
+
+						<!-- 戻るボタンと削除ボタンを平行に配置 -->
+						<div class="mt-4 d-flex justify-content-between">
+							<!-- 戻るボタン -->
+							<a th:href="@{/admin/reservations}" class="btn btn-secondary">
+								戻る
+							</a>
+
+							<!-- 削除ボタン -->
+							<a href="#" class="btn btn-danger" data-bs-toggle="modal"
+								th:data-bs-target="${'#deleteReservationModal' + reservation.id}">
+								削除
+							</a>
+						</div>
+
+						<!-- 削除モーダル -->
+						<div class="modal fade" th:id="${'deleteReservationModal' + reservation.id}" tabindex="-1"
+							aria-labelledby="deleteReservationModalLabel" aria-hidden="true">
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h5 class="modal-title" id="deleteReservationModalLabel"
+											th:text="'予約ID: ' + ${reservation.id} + ' を削除しますか？'"></h5>
+										<button type="button" class="btn-close" data-bs-dismiss="modal"
+											aria-label="閉じる"></button>
+									</div>
+									<div class="modal-footer">
+										<form th:action="@{/admin/reservations/{id}/delete(id=${reservation.id})}"
+											method="post">
+											<input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+											<button type="submit" class="btn btn-danger">削除</button>
+										</form>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</main>
+
+		<!-- フッター -->
+		<div th:replace="~{fragment :: footer}"></div>
+	</div>
+
+	<div th:replace="~{fragment :: scripts}"></div>
+</body>
+
+</html>

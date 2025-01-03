@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+	<div th:replace="~{fragment :: meta}"></div>
+	<div th:replace="~{fragment :: styles}"></div>
+	<title>レビュー一覧</title>
+	<style>
+		.table th {
+			text-align: center;
+			vertical-align: middle;
+		}
+
+		.table th:nth-child(4) {
+			width: 100px;
+			/* 評価列の幅を固定 */
+		}
+	</style>
+</head>
+
+<body>
+	<div class="tabelog-wrapper">
+		<!-- ヘッダー -->
+		<div th:replace="~{fragment :: header}"></div>
+
+		<main>
+			<div class="container pt-4 pb-5 tabelog-container">
+				<div class="row justify-content-center">
+					<div class="col-xxl-9 col-xl-10 col-lg-11">
+						<h1 class="mb-4 text-center">レビュー一覧</h1>
+
+						<table class="table">
+							<thead>
+								<tr>
+									<th scope="col">ID</th>
+									<th scope="col">店舗名</th>
+									<th scope="col">ユーザー名</th>
+									<th scope="col">評価</th>
+									<th scope="col">レビュー内容</th>
+									<th scope="col">作成日時</th>
+									<th scope="col">操作</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="review : ${reviewPage.content}">
+									<td th:text="${review.id}"></td>
+									<td>
+										<a th:href="@{/shops/{id}(id=${review.shop.id})}"
+											th:text="${review.shop.shopName}"></a>
+									</td>
+									<td th:text="${review.user.name}"></td>
+									<td th:text="${review.evaluation}"></td>
+									<td th:text="${review.reviewComment}"></td>
+									<td th:text="${#dates.format(review.createdAt, 'yyyy/MM/dd HH:mm')}"></td>
+									<td>
+										<!-- 削除ボタン -->
+										<form th:action="@{/admin/review/{reviewId}/delete(reviewId=${review.id})}"
+											method="post" style="display:inline;">
+											<button type="submit" class="btn btn-danger btn-sm"
+												onclick="return confirm('本当に削除しますか？この操作は元に戻せません。')">削除</button>
+										</form>
+
+									</td>
+								</tr>
+							</tbody>
+						</table>
+
+						<!-- ページネーション -->
+						<div th:if="${reviewPage.totalPages > 1}" class="d-flex justify-content-center mt-4">
+							<nav aria-label="レビュー一覧ページ">
+								<ul class="pagination">
+									<li class="page-item">
+										<a th:if="${!reviewPage.first}"
+											th:href="@{/admin/review(page=${reviewPage.number - 1})}"
+											class="page-link tabelog-page-link">前</a>
+										<span th:if="${reviewPage.first}" class="page-link disabled">前</span>
+									</li>
+									<li th:each="i : ${#numbers.sequence(0, reviewPage.totalPages - 1)}"
+										class="page-item">
+										<a th:if="${i != reviewPage.number}" th:href="@{/admin/review(page=${i})}"
+											class="page-link tabelog-page-link" th:text="${i + 1}"></a>
+										<span th:if="${i == reviewPage.number}" class="page-link active tabelog-active"
+											th:text="${i + 1}"></span>
+									</li>
+									<li class="page-item">
+										<a th:if="${!reviewPage.last}"
+											th:href="@{/admin/review(page=${reviewPage.number + 1})}"
+											class="page-link tabelog-page-link">次</a>
+										<span th:if="${reviewPage.last}" class="page-link disabled">次</span>
+									</li>
+								</ul>
+							</nav>
+						</div>
+					</div>
+				</div>
+			</div>
+		</main>
+
+		<!-- フッター -->
+		<div th:replace="~{fragment :: footer}"></div>
+	</div>
+
+	<!-- スクリプト -->
+	<div th:replace="~{fragment :: scripts}"></div>
+</body>
+
+</html>

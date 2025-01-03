@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+	<div th:replace="~{fragment :: meta}"></div>
+	<div th:replace="~{fragment :: styles}"></div>
+	<title>店舗一覧</title>
+</head>
+
+<body>
+	<div class="tabelog-wrapper">
+		<!-- ヘッダー -->
+		<div th:replace="~{fragment :: header}"></div>
+
+		<main>
+			<div class="container pt-4 pb-5 tabelog-container">
+				<div class="row justify-content-center">
+					<div class="col-xxl-9 col-xl-10 col-lg-11">
+
+						<h1 class="mb-4 text-center">店舗一覧</h1>
+
+						<!-- 検索フォーム -->
+						<div class="d-flex justify-content-between align-items-end flex-wrap">
+							<form method="get" th:action="@{/admin/shops}" class="mb-3">
+								<div class="input-group">
+									<input type="text" class="form-control" name="keyword" th:value="${keyword}"
+										placeholder="店舗名で検索">
+									<button type="submit" class="btn text-white shadow-sm tabelog-btn">検索</button>
+								</div>
+							</form>
+							<a th:href="@{/admin/shops/register}"
+								class="btn text-white shadow-sm tabelog-btn mb-3">新規作成</a>
+						</div>
+
+						<!-- 成功メッセージ -->
+						<div th:if="${successMessage}" class="alert alert-info">
+							<span th:text="${successMessage}"></span>
+						</div>
+
+						<!-- 店舗テーブル -->
+						<table class="table">
+							<thead>
+								<tr>
+									<th scope="col">ID</th>
+									<th scope="col">店舗名</th>
+									<th scope="col">カテゴリ名</th>
+									<th scope="col">住所</th>
+									<th scope="col">電話番号</th>
+									<th scope="col">定休日</th>
+									<th scope="col">開店時間</th>
+									<th scope="col">閉店時間</th>
+									<th scope="col">操作</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="shop : ${shopPage.content}">
+									<td th:text="${shop.id}"></td>
+									<td th:text="${shop.shopName}"></td>
+									<td th:text="${shop.category.name}"></td>
+									<td th:text="${shop.address}"></td>
+									<td th:text="${shop.phoneNumber}"></td>
+									<td th:text="${shop.closedDay}"></td>
+									<td th:text="${shop.hoursOpen}"></td>
+									<td th:text="${shop.hoursClose}"></td>
+									<td>
+										<div class="d-flex gap-2">
+											<a th:href="@{/admin/shops/{id}/edit(id=${shop.id})}"
+												class="btn btn-primary btn-sm text-white">編集</a>
+											<a th:href="@{/admin/shops/{id}(id=${shop.id})}"
+												class="btn btn-secondary btn-sm text-white">詳細</a>
+											<form th:action="@{/admin/shops/{id}/delete(id=${shop.id})}" method="post"
+												class="d-inline">
+												<input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+												<button type="submit"
+													class="btn btn-danger btn-sm text-white">削除</button>
+											</form>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+
+						<!-- ページネーション -->
+						<div th:if="${shopPage.totalPages > 1}" class="d-flex justify-content-center mt-4">
+							<nav aria-label="店舗一覧ページ">
+								<ul class="pagination">
+									<!-- 前のページ -->
+									<li class="page-item">
+										<a th:if="${!shopPage.first}"
+											th:href="@{/admin/shops(page=${shopPage.number - 1}, keyword=${keyword})}"
+											class="page-link tabelog-page-link">前</a>
+										<span th:if="${shopPage.first}" class="page-link disabled">前</span>
+									</li>
+									<!-- ページ番号 -->
+									<li th:each="i : ${#numbers.sequence(0, shopPage.totalPages - 1)}"
+										class="page-item">
+										<a th:if="${i != shopPage.number}"
+											th:href="@{/admin/shops(page=${i}, keyword=${keyword})}"
+											class="page-link tabelog-page-link" th:text="${i + 1}"></a>
+										<span th:if="${i == shopPage.number}" class="page-link active tabelog-active"
+											th:text="${i + 1}"></span>
+									</li>
+									<!-- 次のページ -->
+									<li class="page-item">
+										<a th:if="${!shopPage.last}"
+											th:href="@{/admin/shops(page=${shopPage.number + 1}, keyword=${keyword})}"
+											class="page-link tabelog-page-link">次</a>
+										<span th:if="${shopPage.last}" class="page-link disabled">次</span>
+									</li>
+								</ul>
+							</nav>
+						</div>
+					</div>
+				</div>
+			</div>
+		</main>
+
+		<!-- フッター -->
+		<div th:replace="~{fragment :: footer}"></div>
+	</div>
+
+	<!-- スクリプト -->
+	<div th:replace="~{fragment :: scripts}"></div>
+</body>
+
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+	<div th:replace="~{fragment :: meta}"></div>
+	<div th:replace="~{fragment :: styles}"></div>
+	<title>会員情報編集</title>
+</head>
+
+<body>
+	<div class="tabelog-wrapper">
+		<!-- ヘッダー -->
+		<div th:replace="~{fragment :: header}"></div>
+
+		<main>
+			<div class="container pt-4 pb-5 tabelog-container">
+				<div class="row justify-content-center">
+					<div class="col-xl-5 col-lg-6 col-md-8">
+						<nav class="mb-4" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+							<ol class="breadcrumb mb-0">
+								<li class="breadcrumb-item"><a th:href="@{/admin/users}">会員一覧</a></li>
+								<li class="breadcrumb-item active" aria-current="page">会員情報編集</li>
+							</ol>
+						</nav>
+
+						<h1 class="mb-4 text-center">会員情報編集</h1>
+
+						<!-- ユーザー編集フォーム -->
+						<form th:action="@{/admin/users/{id}/edit(id=${userEditForm.id})}" th:object="${userEditForm}"
+							method="post">
+							<input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+
+							<!-- 全体エラーメッセージ表示 -->
+							<div th:if="${#fields.hasErrors()}" class="alert alert-danger">
+								<ul>
+									<li th:each="err : ${#fields.errors()}" th:text="${err}"></li>
+								</ul>
+							</div>
+
+							<!-- 各フィールド -->
+							<div class="form-group mb-3">
+								<label for="name" class="fw-bold">氏名</label>
+								<input type="text" id="name" class="form-control" th:field="*{name}" placeholder="氏名"
+									required />
+								<div th:if="${#fields.hasErrors('name')}" class="text-danger small">
+									<span th:errors="*{name}"></span>
+								</div>
+							</div>
+
+							<div class="form-group mb-3">
+								<label for="furigana" class="fw-bold">フリガナ</label>
+								<input type="text" id="furigana" class="form-control" th:field="*{furigana}"
+									placeholder="フリガナ" required />
+								<div th:if="${#fields.hasErrors('furigana')}" class="text-danger small">
+									<span th:errors="*{furigana}"></span>
+								</div>
+							</div>
+
+							<div class="form-group mb-3">
+								<label for="postalCode" class="fw-bold">郵便番号</label>
+								<input type="text" id="postalCode" class="form-control" th:field="*{postalCode}"
+									placeholder="郵便番号" required />
+								<div th:if="${#fields.hasErrors('postalCode')}" class="text-danger small">
+									<span th:errors="*{postalCode}"></span>
+								</div>
+							</div>
+
+							<div class="form-group mb-3">
+								<label for="address" class="fw-bold">住所</label>
+								<input type="text" id="address" class="form-control" th:field="*{address}"
+									placeholder="住所" required />
+								<div th:if="${#fields.hasErrors('address')}" class="text-danger small">
+									<span th:errors="*{address}"></span>
+								</div>
+							</div>
+
+							<div class="form-group mb-3">
+								<label for="phoneNumber" class="fw-bold">電話番号</label>
+								<input type="text" id="phoneNumber" class="form-control" th:field="*{phoneNumber}"
+									placeholder="電話番号" required />
+								<div th:if="${#fields.hasErrors('phoneNumber')}" class="text-danger small">
+									<span th:errors="*{phoneNumber}"></span>
+								</div>
+							</div>
+
+							<div class="form-group mb-3">
+								<label for="email" class="fw-bold">メールアドレス</label>
+								<input type="email" id="email" class="form-control" th:field="*{email}"
+									placeholder="メールアドレス" required />
+								<div th:if="${#fields.hasErrors('email')}" class="text-danger small">
+									<span th:errors="*{email}"></span>
+								</div>
+							</div>
+
+							<div class="form-group mb-3">
+								<label for="password" class="fw-bold">新しいパスワード (任意)</label>
+								<input type="password" id="password" class="form-control" th:field="*{password}"
+									placeholder="新しいパスワード" />
+								<div th:if="${#fields.hasErrors('password')}" class="text-danger small">
+									<span th:errors="*{password}"></span>
+								</div>
+							</div>
+
+							<div class="form-group mb-3">
+								<label for="passwordConfirmation" class="fw-bold">新しいパスワード確認 (任意)</label>
+								<input type="password" id="passwordConfirmation" class="form-control"
+									th:field="*{passwordConfirmation}" placeholder="新しいパスワード確認" />
+								<div th:if="${#fields.hasErrors('passwordConfirmation')}" class="text-danger small">
+									<span th:errors="*{passwordConfirmation}"></span>
+								</div>
+							</div>
+
+							<!-- ロール選択 -->
+							<div class="form-group mb-3">
+								<label for="roleId" class="fw-bold">ロールを選択してください</label>
+								<select id="roleId" class="form-control" th:field="*{roleId}" required>
+									<option value="" disabled selected>選択してください</option>
+									<option th:each="role : ${roles}" th:value="${role.id}" th:text="${role.name}">
+									</option>
+								</select>
+								<div th:if="${#fields.hasErrors('roleId')}" class="text-danger small">
+									<span th:errors="*{roleId}"></span>
+								</div>
+							</div>
+
+							<!-- 更新ボタン -->
+							<div class="d-flex justify-content-center">
+								<button type="submit" class="btn text-white shadow-sm w-50 tabelog-btn">更新</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</main>
+
+		<!-- フッター -->
+		<div th:replace="~{fragment :: footer}"></div>
+	</div>
+
+	<div th:replace="~{fragment :: scripts}"></div>
+</body>
+
+</html>

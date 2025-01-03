@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+	<div th:replace="~{fragment :: meta}"></div>
+	<div th:replace="~{fragment :: styles}"></div>
+	<title>PREMIUM会員登録</title>
+</head>
+
+<body>
+	<div class="tabelog-wrapper">
+		<!-- ヘッダー -->
+		<div th:replace="~{fragment :: header}"></div>
+
+		<main>
+			<div class="container pt-4 pb-5 tabelog-container">
+				<div class="row justify-content-center">
+					<div class="col-xl-5 col-lg-6 col-md-8">
+						<nav class="mb-4" style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+							<ol class="breadcrumb mb-0">
+								<li class="breadcrumb-item"><a th:href="@{/admin/users}">会員一覧</a></li>
+								<li class="breadcrumb-item active" aria-current="page">PREMIUM会員登録</li>
+							</ol>
+						</nav>
+
+						<h1 class="mb-4 text-center">PREMIUM会員登録</h1>
+
+						<!-- プレミアム登録フォーム -->
+						<form th:action="@{/admin/users/new}" th:object="${userCreateForm}" method="post">
+							<input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+
+							<!-- 全体エラーメッセージ表示 -->
+							<div th:if="${#fields.hasErrors()}" class="alert alert-danger">
+								<ul>
+									<li th:each="err : ${#fields.errors()}" th:text="${err}"></li>
+								</ul>
+							</div>
+
+							<!-- 各フィールド -->
+							<div class="form-group mb-3">
+								<label for="name" class="fw-bold">氏名</label>
+								<input type="text" id="name" class="form-control" th:field="*{name}" placeholder="氏名"
+									required />
+								<div th:if="${#fields.hasErrors('name')}" class="text-danger small">
+									<span th:errors="*{name}"></span>
+								</div>
+							</div>
+
+							<div class="form-group mb-3">
+								<label for="email" class="fw-bold">メールアドレス</label>
+								<input type="email" id="email" class="form-control" th:field="*{email}"
+									placeholder="メールアドレス" required />
+								<div th:if="${#fields.hasErrors('email')}" class="text-danger small">
+									<span th:errors="*{email}"></span>
+								</div>
+							</div>
+
+							<div class="form-group mb-3">
+								<label for="password" class="fw-bold">パスワード</label>
+								<input type="password" id="password" class="form-control" th:field="*{password}"
+									placeholder="パスワード" required />
+								<div th:if="${#fields.hasErrors('password')}" class="text-danger small">
+									<span th:errors="*{password}"></span>
+								</div>
+							</div>
+
+							<div class="form-group mb-3">
+								<label for="passwordConfirmation" class="fw-bold">パスワード確認</label>
+								<input type="password" id="passwordConfirmation" class="form-control"
+									th:field="*{passwordConfirmation}" placeholder="パスワード確認" required />
+								<div th:if="${#fields.hasErrors('passwordConfirmation')}" class="text-danger small">
+									<span th:errors="*{passwordConfirmation}"></span>
+								</div>
+							</div>
+
+							<!-- 登録ボタン -->
+							<div class="d-flex justify-content-center">
+								<button type="submit" class="btn text-white shadow-sm w-50 tabelog-btn">登録</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</main>
+
+		<!-- フッター -->
+		<div th:replace="~{fragment :: footer}"></div>
+	</div>
+
+	<div th:replace="~{fragment :: scripts}"></div>
+</body>
+
+</html>
